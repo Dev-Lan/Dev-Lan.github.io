@@ -1,0 +1,104 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Cooperative Mapping Visualization</title>
+    <style>
+    body {
+      color: #000;
+      font-family:Monospace;
+      font-size:13px;
+      text-align:center;
+      font-weight: bold;
+
+      background-color: #fff;
+      margin: 0px;
+      overflow: hidden;
+    }
+    .buttonArray {
+      position: absolute;
+      bottom: 10px;
+      left: 10px;
+    }
+    .uiButton {
+      color: black;
+      background: rgb(220, 220, 220);
+      padding: 7px;
+      -webkit-border-radius: 4px;
+      -moz-border-radius: 4px;
+      border-radius: 4px;
+      border: 1px;
+    }
+    .uiButton:hover {
+      background: rgb(175, 175, 175);
+    }
+    .uiButton:active {
+      background: rgb(100, 100, 100);
+    }
+    .uiButton2 {
+      color: black;
+      font-size: 20px;
+      background: rgb(220, 220, 220);
+      padding: 2px;
+      -webkit-border-radius: 4px;
+      -moz-border-radius: 4px;
+      border-radius: 4px;
+      border: 1px;
+    }
+    .uiButton2:hover {
+      background: rgb(175, 175, 175);
+    }
+    .uiButton2:active {
+      background: rgb(100, 100, 100);
+    }
+    </style>
+  </head>
+  <body>
+    
+    <div class="buttonArray">
+      <button class="uiButton" onclick="pressPlayButton();">Toggle Play</button>
+      <button class="uiButton" onclick="pressViewButton();">Toggle View</button>
+      <button class="uiButton2" onclick="pressPrevButton();">☜</button>
+      <button class="uiButton2" onclick="pressNextButton();">☞</button>
+    </div>
+
+    <script type="x-shader/x-vertex" id="vertexshader">
+      attribute float alpha;
+      attribute float size;
+      varying float vAlpha;
+
+      void main() {
+          vAlpha = alpha;
+          vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );
+          gl_PointSize = size;
+          gl_Position = projectionMatrix * mvPosition;
+      }
+    </script>
+
+    <script type="x-shader/x-fragment" id="fragmentshader">
+      uniform vec3 color;
+      varying float vAlpha;
+      void main() {
+          gl_FragColor = vec4( color, vAlpha );
+      }
+    </script>
+
+    <script type="text/javascript" src="threejs/core/three.min.js"></script>
+    <script type="text/javascript" src="threejs/core/js/controls/OrbitControls.js"></script>
+		<script type="text/javascript" src='threejs/core/KeyboardState.js'></script>
+		<script type="text/javascript" src="threejs/core/dat.gui.min.js"></script>
+    <script type="text/javascript" src="threejs/core/js/libs/tween.min.js"></script>
+    <script type="text/javascript" src="threejs/core/js/Detector.js"></script>
+
+    <div id="container"></div> 
+    <script type="text/javascript" src="data/10m_Max/walter_1_traj.js"></script>
+    <script type="text/javascript" src="data/10m_Max/walter_2_traj.js"></script>
+    <script type="text/javascript" src="data/10m_Max/walter_3_traj.js"></script>
+    <script type="text/javascript" src="data/10m_Max/walter_4_traj.js"></script>
+
+    <script type="text/javascript" src="data/10m_Max/point_cloud.js"></script>
+    <script type="text/javascript" src="data/fake_pose_error_demo.js"></script>
+
+    <script type="text/javascript" src="threejs/main.js"></script>
+  </body>
+</html>
