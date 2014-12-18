@@ -9,6 +9,14 @@ var gui = new dat.GUI();
 var XAXIS = new THREE.Vector3(1,0,0);
 var XAXISQUAT = new THREE.Quaternion().setFromAxisAngle(XAXIS, Math.PI);
 
+var OrbitalLoc = {
+  roll: 0, 
+  pitch: 0,
+  yaw: 0,
+  ellipse: null,
+}
+ANGULARDISTANCE = false;
+
 var mmToPixel = 1/12;//0.003; // based on email from Google guys
 var cameraParams = {
   focalLength: {
@@ -410,18 +418,28 @@ function update() {
     // pointCloud.pcAttributes.color.needsUpdate = true; // important!
   }
 }
-
-var oldTime = 0;
+ var OldTime = 0;
 function updateCameraPosePointCloud(time) {
-  var dt = time/1000;
-  
-  var quat = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(CURRENT_POSE.poseError[3], CURRENT_POSE.poseError[4], CURRENT_POSE.poseError[5]).normalize(), dt);
-  //quat.normalize();
-  
-  var transformation = new THREE.Matrix4().makeRotationFromQuaternion(quat);
+  if (isNaN(OldTime)) return;
+  var dt = (time-OldTime)/1000;
+  OldTime = time;
 
-  //var transformation = new THREE.Matrix4().makeRotationFromEuler(new THREE.Euler(CURRENT_POSE.poseError[3] * dt, CURRENT_POSE.poseError[4] * dt, CURRENT_POSE.poseError[5] * dt, 'XYZ'));
-  CURRENT_POSE_OBJECT.rotationalPoints.matrix.copy(transformation);
+  OrbitalLoc.roll = OrbitalLoc.roll + dt * CURRENT_POSE.poseError[3];
+  if (OrbitalLoc.roll >= 1) OrbitalLoc.roll -= 1;
+  OrbitalLoc.pitch += dt * CURRENT_POSE.poseError[4];
+  if (OrbitalLoc.pitch >= 1) OrbitalLoc.pitch -= 1;
+  OrbitalLoc.yaw += dt * CURRENT_POSE.poseError[5];
+  if (OrbitalLoc.yaw >= 1) OrbitalLoc.yaw -= 1;
+
+  if (ANGULARDISTANCE) {
+    CURRENT_POSE_OBJECT.orbital.rollSphere.position.set(OrbitalLoc.ellipse.getPoint(OrbitalLoc.roll).x, OrbitalLoc.ellipse.getPoint(OrbitalLoc.roll).y, 0);
+    CURRENT_POSE_OBJECT.orbital.pitchSphere.position.set(OrbitalLoc.ellipse.getPoint(OrbitalLoc.pitch).x, 0, OrbitalLoc.ellipse.getPoint(OrbitalLoc.pitch).y);
+    CURRENT_POSE_OBJECT.orbital.yawSphere.position.set(0, OrbitalLoc.ellipse.getPoint(OrbitalLoc.yaw).x, OrbitalLoc.ellipse.getPoint(OrbitalLoc.yaw).y);
+  } else { // use actual distance traveled
+    CURRENT_POSE_OBJECT.orbital.rollSphere.position.set(OrbitalLoc.ellipse.getPointAt(OrbitalLoc.roll).x, OrbitalLoc.ellipse.getPointAt(OrbitalLoc.roll).y, 0);
+    CURRENT_POSE_OBJECT.orbital.pitchSphere.position.set(OrbitalLoc.ellipse.getPointAt(OrbitalLoc.pitch).x, 0, OrbitalLoc.ellipse.getPointAt(OrbitalLoc.pitch).y);
+    CURRENT_POSE_OBJECT.orbital.yawSphere.position.set(0, OrbitalLoc.ellipse.getPointAt(OrbitalLoc.yaw).x, OrbitalLoc.ellipse.getPointAt(OrbitalLoc.yaw).y);
+  }
 }
 
 var oldCameraPosition;
@@ -715,23 +733,23 @@ function createPoses () {
   CURRENT_POSE_OBJECT = new THREE.Object3D();
   var radius = 1.0;
 
-  var rollEllipse = new THREE.EllipseCurve( 0,  0, radius, radius, 0,  2 * Math.PI, false);
-  var pitchEllipse = new THREE.EllipseCurve( 0,  0, radius, radius, 0,  2 * Math.PI, false);
-  var yawEllipse = new THREE.EllipseCurve( 0,  0, radius, radius, 0,  2 * Math.PI, false);
+  CURRENT_POSE_OBJECT.orbital = new THREE.Object3D();
+  var ellipse = new THREE.EllipseCurve( 0,  0, radius, radius, 0,  2 * Math.PI, false);
+  OrbitalLoc.ellipse = ellipse;
 
   var verticesInEllipse = 100;
-  var path = new THREE.Path( rollEllipse.getPoints(verticesInEllipse) );
+  var path = new THREE.Path( ellipse.getPoints(verticesInEllipse) );
   var geometry = path.createPointsGeometry( verticesInEllipse );
   var material = new THREE.LineBasicMaterial( { color: 0x0000ff } );
   var roll_orbital = new THREE.Line( geometry, material );
   CURRENT_POSE_OBJECT.add(roll_orbital);
-  var path = new THREE.Path( pitchEllipse.getPoints(verticesInEllipse) );
+  var path = new THREE.Path( ellipse.getPoints(verticesInEllipse) );
   var geometry = path.createPointsGeometry( verticesInEllipse );
   var material = new THREE.LineBasicMaterial( { color: 0xff0000 } );
   var pitch_orbital = new THREE.Line( geometry, material );
   pitch_orbital.rotation.x = Math.PI / 2.0;
   CURRENT_POSE_OBJECT.add(pitch_orbital);
-  var path = new THREE.Path( yawEllipse.getPoints(verticesInEllipse) );
+  var path = new THREE.Path( ellipse.getPoints(verticesInEllipse) );
   var geometry = path.createPointsGeometry( verticesInEllipse );
   var material = new THREE.LineBasicMaterial( { color: 0x00ff00 } );
   var yaw_orbital = new THREE.Line( geometry, material );
@@ -776,26 +794,22 @@ function createPoses () {
   var line = new THREE.Line( geometry, material );
   CURRENT_POSE_OBJECT.add( line );*/
   
-  var pointCount = 300;
-  var boundary = new THREE.Sphere(new THREE.Vector3(0, 0, 0), radius);
-  var pointsGeometry = new THREE.Geometry();
-  for (var i = 0; i < pointCount; i++) {
-    var point = new THREE.Vector3(Math.random() * 2 * radius - radius, Math.random() * 2 * radius - radius, Math.random() * 2 * radius - radius);
-    var length = point.length();
-    if (length > radius) {
-      point.setLength(radius);
-    }
-    boundary.clampPoint(point);
-    pointsGeometry.vertices.push(point);
-  }
-  
-  var particleImage = THREE.ImageUtils.loadTexture( POINT_CLOUD_TEXTURE );
-  var pointsMaterial = new THREE.PointCloudMaterial({size: 0.15, transparent: true, opacity: 0.6, color:0xffff00, map: particleImage});
-  
-  var pointsObject = new THREE.PointCloud(pointsGeometry, pointsMaterial);
-  pointsObject.matrixAutoUpdate = false;
-  CURRENT_POSE_OBJECT.rotationalPoints = pointsObject;
-  CURRENT_POSE_OBJECT.add(pointsObject);
+  // Add in orbital particles
+  var particleGeometry = new THREE.SphereGeometry( 0.075 );
+
+  var material = new THREE.MeshLambertMaterial( { color: 0x0000ff } );
+  CURRENT_POSE_OBJECT.orbital.rollSphere = new THREE.Mesh( particleGeometry, material );
+  CURRENT_POSE_OBJECT.orbital.rollSphere.position.set(ellipse.getPoint(0).x, ellipse.getPoint(0).y, 0);
+  var material = new THREE.MeshLambertMaterial( { color: 0xff0000 } );
+  CURRENT_POSE_OBJECT.orbital.pitchSphere = new THREE.Mesh( particleGeometry, material );
+  CURRENT_POSE_OBJECT.orbital.pitchSphere.position.set(ellipse.getPoint(0).x, 0, ellipse.getPoint(0).y);
+  var material = new THREE.MeshLambertMaterial( { color: 0x00ff00 } );
+  CURRENT_POSE_OBJECT.orbital.yawSphere = new THREE.Mesh( particleGeometry, material );
+  CURRENT_POSE_OBJECT.orbital.yawSphere.position.set(0, ellipse.getPoint(0).x, ellipse.getPoint(0).y);
+
+  CURRENT_POSE_OBJECT.add(CURRENT_POSE_OBJECT.orbital.rollSphere);
+  CURRENT_POSE_OBJECT.add(CURRENT_POSE_OBJECT.orbital.pitchSphere);
+  CURRENT_POSE_OBJECT.add(CURRENT_POSE_OBJECT.orbital.yawSphere);
 
   material = new THREE.MeshLambertMaterial( { color: 0x000088, opacity: 0.55, transparent: true, wireframe: true } );
   geometry = new THREE.SphereGeometry( radius );
