@@ -1,32 +1,131 @@
 <!DOCTYPE html>
+
+<!-- First Assignment, Restaurants are Neat -->
+
 <html>
-<body>
+	<head>
+		<meta charset = "utf-8">
+		<title>Devin Likes To Eat!</title>
+		<!-- css style settings -->
+		<link rel = "stylesheet" type = "text/css" href = "Style.css">
+		<script src = "imagePreview.js"></script>
+		<script src = "mapViewer.js"></script>
+    	<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAHifjUvy-cq4jtx29YuzJrn_gibWn4neQ"></script>
+	</head>
 
-<div id="id01"></div>
+	<body>
+		<table>
+			<caption>
+				<strong>My 5 Favorite Restaurants</strong>
+			</caption>
 
-<script>
-var xmlhttp = new XMLHttpRequest();
-var url = "myTutorials.txt";
+			<thead>
+			<!-- table headers -->
+				<tr>
+					<th>Restaurant</th>
+					<th>Picture</th>
+					<th>Description</th>
+					<th>Address</th>
+					<th>Contact Number</th>
+					<th>Rating</th>
+					<th>Weekly Schedule</th>
+				</tr>
+			</thead>
 
-xmlhttp.onreadystatechange = function() {
-    if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-        var myArr = JSON.parse(xmlhttp.responseText);
-        myFunction(myArr);
-    }
-}
-xmlhttp.open("GET", url, true);
-xmlhttp.send();
+			<tbody>
+			<!-- five restaurants -->
+				<tr>
+					<td><strong><a href = "http://www.yelp.com/biz/espresso-expose-minneapolis">Espresso Expose</a></strong></td>
+					<td><Button class="logoViewer" data-image="logos/1.png" data-alttext="Coffee coffee coffee!!! Also Sandwiches">Picture</Button></td>
+					<td>A convenient cafe near campus that all the good
+					college studends go to eat lunch.</td>
+					<td>600 Washington Ave SE
+					Minneapolis, MN 55414
+					<br><Button onclick="mapme()" data-index="0">MapMe</Button>
+					</td>
+					<td>(612)&nbsp;378&#8209;9604</td>
+					<td>4/5</td>
+					<td>
+						Mon-Thur <em>6:30 am - 11:00 pm</em>,
+						Fri <em>6:30 am - 10:00 pm</em>,
+						Sat <em>8:00 am - 9:00 pm</em>,
+						Sun <em>8:00 am - 11:00 pm</em>
+					</td>
+				</tr>
+				<tr>
+					<td><strong><a href = "http://www.yelp.com/biz/obento-ya-minneapolis">Obento-Ya</a></strong></td>
+					<td><Button class="logoViewer" data-image="logos/2.png" data-alttext="One, cut a hole in a box. Two, put a fish in that box. Yum.">Picture</Button></td>
+					<td>This Japenese restaurant has some terrifically tasty food for a good price. I recommend the rectangular bento boxes.</td>
+					<td>1510 SE Como Ave
+					Minneapolis, MN 55414
+					<br><Button onclick="mapme()" data-index="1">MapMe</Button>
+					</td>
+					<td>(612)&nbsp;331&#8209;1432</td>
+					<td>5/5</td>
+					<td>
+						Mon <em>Closed</em>	
+						Tue-Fri <em>11:30 am - 2:30 pm,
+						4:30 pm - 9:30 pm</em>
+					</td>
+				</tr>
 
-function myFunction(arr) {
-    var out = "";
-    var i;
-    for(i = 0; i < arr.length; i++) {
-        out += '<a href="' + arr[i].url + '">' + 
-        arr[i].display + '</a><br>';
-    }
-    document.getElementById("id01").innerHTML = out;
-}
-</script>
+				<tr>
+					<td><strong><a href = "http://www.yelp.com/biz/the-egg-and-i-saint-paul-2">The Egg & I</a></strong></td>
+					<td><Button class="logoViewer" data-image="logos/3.png" data-alttext="I do not like green eggs and ham, so I eat regular eggs and other breakfast food here.">Picture</Button></td>
+					<td>Delicious breakfast food, and it is within walking distance of my house; so I go there on the weekend sometimes after a long night of, studying.</td>
+					<td>2550 University Ave W
+						Ste 125N
+						Saint Paul, MN 55114<br>
+						<Button onclick="mapme()" data-index="2">MapMe</Button>
+						</td>
+					<td>(651)&nbsp;647&#8209;1292</td>
+					<td>3.5/5</td>
+					<td>
+						Mon-Fri <em>6:00 am - 2:00 pm</em>,
+						Sat <em>7:30 am - 2:00 pm</em>,
+						Sun <em>8:00 am - 2:00 pm</em>
+					</td>
+				</tr>
 
-</body>
-</html>
+				<tr>
+					<td><strong><a href = "http://www.yelp.com/biz/mcdonalds-minneapolis-46">McDonald's</a></strong></td>
+					<td><Button class="logoViewer" data-image="logos/4.png" data-alttext="This comment has been removed due to copyright infringement.">Picture</Button></td>
+					<td>Fine college dining experience, the food is good and it's <strong><em>good for you too!</em></strong></td>
+					<td>407 15th Ave SE
+					Minneapolis, MN 55414
+					<br><Button onclick="mapme()" data-index="3">MapMe</Button>
+					</td>
+					<td>(612)&nbsp;331&#8209;6590</td>
+					<td>5/5 duh</td>
+					<td>
+						The internet says this establishment is only open
+						<em>6:00 am - 11:00 pm</em> everyday.
+						However, I am 100% positive I have been there later than
+						that on nights that I was caught up studying late at night
+						then got the sudden urge for McDonalds.
+					</td>
+				</tr>
+
+				<tr>
+					<td><strong><a href = "http://www.yelp.com/biz/dominos-pizza-minneapolis-3?osq=dominoes+pizza">Domino’s Pizza</a></strong></td>
+					<td><Button class="logoViewer" data-image="logos/5.png" data-alttext="Pizza has the highest possible area to perimeter value of any food.">Picture</Button></td>
+					<td>Are you lazy? Are you not too great at making your own food? Do you think fat and grease are magical ingredients that make everything tasty? Then Dominoes is a place that will have food delivered right to your front door!</td>
+					<td>215 Oak St Se
+					Minneapolis, MN 55414
+					<br><Button onclick="mapme()" data-index="4">MapMe</Button>
+					</td>
+					<td>(612)&nbsp;331&#8209;3030</td>
+					<td>4/5</td>
+					<td>
+						<strong>EVERY DAY OF THE WEEK </strong> <em>10:00 am - 3:00 am</em>
+					</td>
+				</tr>
+
+			</tbody>
+		</table>
+		<a class = "myButton" href="form.html">Add Restaurant</a>
+		<footer>
+			<em>*This page has been tested on Google Chrome.</em>
+		</footer>
+	</body>
+ </html>
