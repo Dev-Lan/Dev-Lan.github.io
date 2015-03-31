@@ -41,7 +41,6 @@ function start() {
 	// 			"long": "-93.226785"
 	// 			},
 	// 		]
-
 }
 
 function mapme() {
