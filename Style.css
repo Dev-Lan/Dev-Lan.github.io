@@ -1,0 +1,100 @@
+/*My beautiful handcrafted style sheet*/
+
+body {
+	background-image: url(background/tile-slow.gif);
+	background-attachment: fixed;
+	text-align: center;
+	/*transform: rotate(180deg);*/
+}
+table {
+	border-collapse: collapse;
+	box-shadow: 15px 15px 25px dimgrey;
+	border-radius: 5px;
+}
+
+/*caption, h1, div {*/
+.myCaption {
+	color: black;
+	background: #d0cba4;
+	padding: 10px;
+	font-size: xx-large;
+	box-shadow: 15px 15px 25px dimgrey;
+	border-radius: 10px;
+	border-style: solid;
+	border-width: medium;
+	border-color: #8b6347;
+	margin-bottom: 20px
+}
+
+.myDiv {
+	color: black;
+	background: #d0cba4;
+	padding: 10px;
+	font-size: xx-large;
+	box-shadow: 15px 15px 25px dimgrey;
+	border-radius: 10px;
+	border-style: solid;
+	border-width: medium;
+	border-color: #8b6347;
+	margin-bottom: 20px;
+
+	font-size: large;
+	margin-left: 40px;
+	margin-right: 40px;
+	background-color: #e2dfc6;
+	min-width: 300px;
+	min-height: 300px
+}
+
+table, td, th {
+	border-style: inset;
+	border-color: #8b6347;
+	background-color: #e2dfc6;
+	margin: 20px;
+}
+
+th {
+	background-color: #d0cba4;
+}
+
+td {
+	padding: 5px;
+}
+
+.myFooter {
+	position: absolute;
+	bottom: 0
+}
+
+.myImg {
+	position: absolute;
+	max-width: 300px;
+	max-height: 300px;
+	top: -9999px;
+	bottom: -9999px;
+	left: -9999px;
+	right: -9999px;
+	margin: auto;
+}
+
+.myButton {
+	color: black;
+	background: #c8a993;
+	padding: 15px;
+	font-size: xx-large;
+	border-radius: 15px;
+	box-shadow: 15px 15px 25px dimgrey;
+	border-style: solid;
+	border-color: #8b6347;
+	display: inline-block;
+	text-decoration: none;
+}
+
+.myButton:hover, .myButton:focus {
+	box-shadow: 12px 12px 20px dimgrey;
+	/*border-style: inset;*/
+}
+
+.myButton:active {
+	box-shadow: 9px 9px 15px dimgrey;
+}
