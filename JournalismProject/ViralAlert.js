@@ -8,14 +8,18 @@ var sites;
 var users;
 var exposedUsers;
 var totalNumberOfInternetUsers;
-
+var timestep;
+var totalTime;
+var timeElapsed;
+var stepper; // used to end doStep
+var tableRows; // used to update table
 var gameOver;
 
 function initializeData() {
-	percentDone = "10.0";
+	percentDone = "0.0";
 	peopleExposed = 1;
 	sites = ["facebook", "twitter", "reddit", "imgur", "instagram", "tumblr", "4chan", "google+", "youtube"];
-	users = [1415000000, 288000000, 70000000, 100000000, 300000000, 230000000, 300000000, 1000000000];
+	users = [1415000000, 288000000, 100000000, 100000000, 300000000, 230000000, 18000000, 300000000, 1000000000];
 	peopleExposed = 1;
 	exposedUsers = [1,0,0,0,0,0,0,0,0];
 	// user stats taken from the following sites
@@ -23,9 +27,15 @@ function initializeData() {
 	// http://www.quora.com/How-many-registered-users-does-Reddit-currently-have
 	// http://www.theatlantic.com/technology/archive/2013/12/imgur-the-biggest-little-site-in-the-world/281872/
 	// https://www.youtube.com/yt/press/statistics.html
+	// http://www.quora.com/How-many-active-users-does-4chan-have
 	totalNumberOfInternetUsers = 3000000000;
 	//http://www.internetlivestats.com/internet-users/
 	gameOver = false;
+	timestep = 200; // in milliseconds
+	totalTime = 48000; // 48 hours at one second per hour
+	timeElapsed = 0;
+	tableRows = [];
+
 }
 
 function initializeDom() {
@@ -45,31 +55,165 @@ function initializeDom() {
     infoDiv.setAttribute("class", "information");
     infoDiv.setAttribute("id", "aside");
     var heading = document.createElement("h2");
-    heading.innerText = "Have you heard about "+viralName+"?";
+    heading.innerText = "Have you heard about \""+viralName+"\"?";
+
+    var infoTable = document.createElement("table");
+    var infoTableCategories = document.createElement("tr");
+
+    var category = document.createElement('td');
+    category.innerText = "Website";
+    infoTableCategories.appendChild(category);
+
+    category = document.createElement('td');
+    category.innerText = "Exposed";
+    infoTableCategories.appendChild(category);
+
+ 	category = document.createElement('td');
+    category.innerText = "Ignorant";
+    infoTableCategories.appendChild(category);
+
+    category = document.createElement('td');
+    category.innerText = "Percent Exposed";
+    infoTableCategories.appendChild(category);
+
+    infoTable.appendChild(infoTableCategories);
+
+    for (var i = 0; i < sites.length; i++) {
+    	var tableRow = document.createElement('tr');
+
+    	var site = document.createElement('td');
+    	site.innerText = sites[i];
+    	tableRow.appendChild(site);
+
+    	var exposed = document.createElement('td');
+    	exposed.innerText = exposedUsers[i].toLocaleString();
+    	tableRow.appendChild(exposed);
+
+    	var ignorant = document.createElement('td');
+    	ignorant.innerText = (users[i] - exposedUsers[i]).toLocaleString();
+    	tableRow.appendChild(ignorant);
+
+    	var percent = document.createElement('td');
+    	var percentage = (exposedUsers[i] / users[i])*100;
+    	percent.innerText = percentage.toPrecision(4) + "%";
+    	tableRow.appendChild(percent);
+    	tableRows.push(tableRow);
+    	infoTable.appendChild(tableRow);
+    };
+
+    var finalRow = document.createElement('tr');
+    var site = document.createElement('td');
+    site.innerText = "All internet users";
+    finalRow.appendChild(site);
+
+    var exposed = document.createElement('td');
+    exposed.innerText = peopleExposed;
+    finalRow.appendChild(exposed);
+
+	var ignorant = document.createElement('td');
+	ignorant.innerText = (totalNumberOfInternetUsers - peopleExposed).toLocaleString();
+	finalRow.appendChild(ignorant);
+
+    var percent = document.createElement('td');
+    var percentage = (peopleExposed / totalNumberOfInternetUsers) * 100;
+    percent.innerText = percentage.toPrecision(4)+"%";
+    finalRow.appendChild(percent);
+    infoTable.appendChild(finalRow);
+
 
     infoDiv.appendChild(heading);
+    infoDiv.appendChild(infoTable);
     gameHolderDiv.appendChild(infoDiv);
 
-    // display site graph
+
+    // d3 code
+    var width = 960,
+    height = 500;
+
+    var force = d3.layout.force()
+    .charge(-480)
+    .linkDistance(150)
+    .size([width, height]);
+
+	var svg = d3.select(gameHolderDiv).append("svg")
+	    .attr("width", width)
+	    .attr("height", height);
+
+	d3.json("graph.json", function(error, graph) {
+	  force
+	      .nodes(graph.nodes)
+	      .links(graph.links)
+	      .start();
+
+	  var link = svg.selectAll(".link")
+	      .data(graph.links)
+	    .enter().append("line")
+	      .attr("class", "link")
+	      .style("stroke-width", function(d) { return Math.sqrt(d.value); });
+
+	  var node = svg.selectAll(".node")
+	      .data(graph.nodes)
+	    .enter().append("circle")
+	      .attr("class", "node")
+	      .attr("r", function(d) {return (d.size / 1415)*30 + 20; })
+	      .attr("id",function(d) {return d.name;})
+	      .style("fill", function(d) { return '#000000ff'; })
+	      .call(force.drag);
+
+	  node.append("title")
+	      .text(function(d) { return d.name; });
+
+	  force.on("tick", function() {
+	    link.attr("x1", function(d) { return d.source.x; })
+	        .attr("y1", function(d) { return d.source.y; })
+	        .attr("x2", function(d) { return d.target.x; })
+	        .attr("y2", function(d) { return d.target.y; });
+
+	    node.attr("cx", function(d) { return d.x; })
+	        .attr("cy", function(d) { return d.y; });
+	  });
+	});
+
 
 }
 
-// function updateSimulation() {
+function updateSimulation() {
+	timeElapsed += timestep;
+	percentDone = 100*(timeElapsed / totalTime);
+	// should use time.
+	for (var i = 0; i < users.length; i++) {
+		exposedUsers[i] += 100;
+	};
 
-// }
+}
 
-// function updateDom () {
+function updateDom () {
+	document.getElementById("progressBar").style.width = percentDone + "%";
+	for (var i = 0; i < tableRows.length; i++) {
+		children = tableRows[i].children;
+		children[1].innerText = exposedUsers[i].toLocaleString(); // exposed
+		children[2].innerText = (users[i]-exposedUsers[i]).toLocaleString(); // ignorant
+		
+		var percentage = (exposedUsers[i] / users[i])*100;
+    	children[3].innerText = percentage.toPrecision(4) + "%"; // percent exposed
+	};
+	// update final row
 
-// }
+}
+
+function doStep() {
+	updateSimulation();
+	updateDom();
+	if (percentDone >= 100) {
+		window.clearInterval(stepper);
+		// clean up.
+	}
+}
 
 function beginGameplay() {
 	initializeData();
 	initializeDom();
-	// while (!gameOver) {
-	// 	updateSimulation();
-	// 	updateDom();
-	// }
-
+	stepper = setInterval(doStep, timestep);
 }
 
 function initFormSubmit(e) {

@@ -1,12 +1,21 @@
 #aside {
 	width: 25%;
-	top: 150px;
-	bottom: 10px;
-	text-align: left;
+	margin-top: 25px;
+	text-align: center;
 	border-radius: 5px;
 	background-color: #F2A0A0;
-	position: absolute;
 	float: left;
+}
+
+.node {
+    fill: #ccc;
+    stroke: #fff;
+    stroke-width: 2px;
+}
+
+.link {
+    stroke: #777;
+    stroke-width: 2px;
 }
 
 html {
