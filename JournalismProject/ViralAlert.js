@@ -323,6 +323,7 @@ function doStep() {
 	}
 }
 function getStatus() {
+	var percentExposed = peopleExposed / totalNumberOfInternetUsers;
 	if(peopleExposed == 0) {
 			return "You have to click the graph!";
 	} else if (peopleExposed < 100) {
@@ -332,19 +333,19 @@ function getStatus() {
 	} else if (peopleExposed < 10000) {
 			return viralName +" has earned you microfame! Emphasis on micro...";
 	} else if (peopleExposed < 100000) {
-			return "";
+			return "\""+viralName+"\" is so famous it could be a meme.";
 	} else if (peopleExposed < 1000000) {
-			return "";
+			return "Chocolate Rain, more like \""+viralName+"\" rain!";
 	} else if (peopleExposed < 10000000) {
-			return "";
+			return "The evoluton of \""+viralName+"\"!";
 	} else if (peopleExposed < 100000000) {
-			return "";
-	} else if (peopleExposed < 1000000000) {
-			return "";
+			return "Who even remembers the Ice Bucket Challenge? It's all about the \""+viralName+"\" Challenge now!";
 	} else if (peopleExposed < 2000000000) {
-			return "";
-	} else if (peopleExposed == 3000000000) {
-			return viralName + " is the new Gangnam Style! Neato!";
+			return "Is \""+viralName+"\" black and blue or white and yellow? What a conundrum!";
+	} else if (peopleExposed < 3000000000) {
+			return "What does the \""+viralName+"\" say?";
+	} else if (peopleExposed == totalNumberOfInternetUsers) {
+			return "\"" + viralName + "\" is the new Gangnam Style! Neato!";
 	}
 
 	return "";
