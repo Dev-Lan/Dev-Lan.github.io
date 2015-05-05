@@ -1,4 +1,5 @@
 var gameHolderDiv;
+var clickDisplayDiv;
 var viralName;
 var viralType;
 
@@ -19,6 +20,13 @@ var MIN_SIZE;
 var MAX_SIZE;
 var AVE_PERCENT_INCREASE_PER_HOUR;
 var incrementAmount;
+
+var mouse = {x: 0, y: 0};
+
+document.addEventListener('mousemove', function(e){ 
+    mouse.x = e.clientX || e.pageX; 
+    mouse.y = e.clientY || e.pageY 
+}, false);
 
 function initializeData() {
 	percentDone = "0.0";
@@ -63,6 +71,11 @@ function tutorial() {
 
 
 function initializeDom() {
+	// click feedback holder
+	clickDisplayDiv = document.createElement("div");
+	clickDisplayDiv.setAttribute("id","clickDisplayDiv");
+	gameHolderDiv.appendChild(clickDisplayDiv);
+
 	//progess bar
     var progress = document.createElement("div");
     progress.setAttribute("class", "progress");
@@ -156,7 +169,7 @@ function initializeDom() {
     var width = 960,
     height = 500;
 
-    var force = d3.layout.force()
+    force = d3.layout.force()
     .charge(-480)
     .linkDistance(150)
     .size([width, height]);
@@ -175,7 +188,7 @@ function initializeDom() {
 	      .data(graph.links)
 	    .enter().append("line")
 	      .attr("class", "link")
-	      .style("stroke-width", function(d) { return Math.sqrt(d.value); });
+	      .style("stroke-width", function(d) { return Math.sqrt(2.0*d.value); });
 
 	  var node = svg.selectAll(".node")
 	      .data(graph.nodes)
@@ -193,7 +206,10 @@ function initializeDom() {
 	  node.append("use")
       .attr("xlink:href", function(d) {return "img/website-logos.svg#"+d.name ;} );
 
-      node.on('click', function(d) { return increaseCount(d.index);});
+      node.on('click', function(d) { if (gameInProgress) {
+      		displayClick(d);
+	      	increaseCount(d.index);
+	      }});
 
 	  force.on("tick", function() {
 	    link.attr("x1", function(d) { return d.source.x; })
@@ -210,8 +226,40 @@ function initializeDom() {
 
 }
 
+function displayClick(d) {
+	// var scaleAmt = (exposedUsers[d.index] / 1415000000) * (MAX_SIZE - MIN_SIZE) + MIN_SIZE;
+	// var x = d.x / scaleAmt;
+	// var y = d.y / scaleAmt;
+	// console.log(currentEvent);
+	var tempDisplayDiv = document.createElement("div");
+	tempDisplayDiv.innerHTML = "<h1 class=\"fancyText\">+"+incrementAmount+"</h1>";
+	// tempDisplayDiv.style.opacity = 1.0;
+	// tempDisplayDiv.style.display = 'initial';
+	tempDisplayDiv.style.position = "absolute";
+	tempDisplayDiv.style.left = mouse.x + "px";
+	tempDisplayDiv.style.top = mouse.y + "px";
+	clickDisplayDiv.appendChild(tempDisplayDiv);
+	fadeOut(tempDisplayDiv);
+}
+
+function fadeOut(el) {
+    var op = 1;  // initial opacity
+    var timer = setInterval(function () {
+        if (op <= 0.1){
+            clearInterval(timer);
+            clickDisplayDiv.removeChild(el);
+        }
+        // el.style.top = el.style.top + 1;
+        var top = el.style.top.replace("px","");
+        el.style.top = Math.round(top) + 4 + "px";
+        el.style.opacity = op;
+        el.style.filter = 'alpha(opacity=' + op * 100 + ")";
+        op -= op * 0.1;
+    }, 50);
+}
+
 function increaseCount(index) {
-	if (exposedUsers[index] < users[index] && gameInProgress) {
+	if (exposedUsers[index] < users[index]) {
 		exposedUsers[index] += incrementAmount;
 	}
 	return;
@@ -241,7 +289,7 @@ function updateSimulation() {
 
 
 	incrementAmount = Math.max(1, Math.round(0.01*peopleExposed));
-
+	force.alpha(0.2);
 }
 
 
