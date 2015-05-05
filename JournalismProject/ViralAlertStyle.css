@@ -18,6 +18,27 @@
     stroke-width: 2px;
 }
 
+.fancyText {
+	font-family: 'Indie Flower', cursive;
+}
+
+.overlayDiv {
+	position: absolute;
+	background: rgba(0,0,100,.4);;
+	width: 640px;
+	height: 500px;
+    top:0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    border: 5px solid black;
+    margin: auto;
+}
+
+img {
+	padding: 20px;
+}
+
 html {
 	/*background generated with the help of the tool at http://www.colorzilla.com/gradient-editor/ */
 	background: rgb(209,58,81); /* Old browsers */

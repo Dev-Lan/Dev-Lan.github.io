@@ -1,14 +1,14 @@
 {
 	"nodes":[
-		{"name":"facebook", "size":1415},
-		{"name":"twitter", "size":288},
-		{"name":"reddit", "size":100},
-		{"name":"imgur", "size":100},
-		{"name":"instagram", "size":300},
-		{"name":"tumblr", "size":230},
-		{"name":"4chan", "size":18},
-		{"name":"google+", "size":300},
-		{"name":"youtube", "size":1000}
+		{"name":"facebook", "size":1415, "index":0},
+		{"name":"twitter", "size":288, "index":1},
+		{"name":"reddit", "size":100, "index":2},
+		{"name":"imgur", "size":100, "index":3},
+		{"name":"instagram", "size":300, "index":4},
+		{"name":"tumblr", "size":230, "index":5},
+		{"name":"4chan", "size":18, "index":6},
+		{"name":"google+", "size":300, "index":7},
+		{"name":"youtube", "size":1000, "index":8}
 	],
 	"links":[
 		{"source":0,"target":1,"value":6},
