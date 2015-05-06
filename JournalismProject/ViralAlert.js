@@ -515,6 +515,7 @@ function createInitForm() {
 }
 
 function startGame() {
+	gameHolderDiv.removeChild(gameHolderDiv.children[1]);
 	gameHolderDiv.removeChild(gameHolderDiv.children[0]);
 	var initForm = createInitForm();
 	gameHolderDiv.appendChild(initForm);
