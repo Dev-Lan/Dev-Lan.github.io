@@ -18,6 +18,16 @@
         padding-top: 0px;
       }
     }*/
+
+
+
+  .carousel-inner > .item > img,
+  .carousel-inner > .item > a > img {
+      width: 100%;
+      margin: auto;
+  }
+  </style>
+
   </style>
 </head>
 <body>
@@ -25,7 +35,85 @@
 {% include navbar.html %}
 
 <div class="container-fluid">
-    <h1>Research information Coming soon.</h1>
+<!--     <h1>2015</h1>
+      <p>Multivariate trajectory visualization</p> -->
+<h1>2014</h1>
+
+<div class="row">
+  <div class="col-sm-6">
+      <div class="container-fluid">
+      <br>
+      <div id="Research14" class="carousel slide" data-ride="carousel">
+        <!-- Indicators -->
+        <ol class="carousel-indicators">
+          <li data-target="#Research14" data-slide-to="0" class="active"></li>
+          <li data-target="#Research14" data-slide-to="1"></li>
+          <li data-target="#Research14" data-slide-to="2"></li>
+          <li data-target="#Research14" data-slide-to="3"></li>
+          <li data-target="#Research14" data-slide-to="4"></li>
+        </ol>
+
+        <!-- Wrapper for slides -->
+        <div class="carousel-inner" role="listbox">
+          <div class="item active">
+            <img src="img/research/14/cara1-revised.png">
+             <div class="carousel-caption">
+                <p>A revised version of the 3D visualization used for publication.</p>
+            </div>
+          </div>
+
+          <div class="item">
+            <img src="img/research/14/cara2-flatOne.png">
+            <div class="carousel-caption">
+                <p>An trivial example Crowd Patch shown as a flat animation.</p>
+            </div>
+          </div>
+        
+          <div class="item">
+            <img src="img/research/14/cara3-expandedOne.png">
+            <div class="carousel-caption">
+                <p>The same Crowd Patch with time expanded upward to form a space-time cube.</p>
+            </div>
+          </div>
+
+          <div class="item">
+            <img src="img/research/14/cara4-connected.png">
+            <div class="carousel-caption">
+                <p>The expanded Crowd Patch connecting with another Crowd Patch.</p>
+            </div>
+          </div>
+
+          <div class="item">
+            <img src="img/research/14/cara5-connectedTwoFlat.png">
+            <div class="carousel-caption">
+                <p>The connected Crowd Patches back in a flat animation state.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Left and right controls -->
+        <a class="left carousel-control" href="#Research14" role="button" data-slide="prev">
+          <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+          <span class="sr-only">Previous</span>
+        </a>
+        <a class="right carousel-control" href="#Research14" role="button" data-slide="next">
+          <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+          <span class="sr-only">Next</span>
+        </a>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-6">
+    <p>
+        For the summer of 2014 I was fortunate enough to have the opportunity to perform research abroad at <a href="http://www.inria.fr/en/centre/rennes">Inria Rennes</a> under <a href="http://people.rennes.inria.fr/Julien.Pettre/">Julien Pettré.</a> This ended up being an education experience for me in many different domains of life. In terms of my academic pursuits the most prominent event was the chance to participate in the end process of publication. <a href="http://dl.acm.org/citation.cfm?id=2668094">Optimization-based computation of locomotion trajectories for crowd patches</a> became the first paper that I co-authored. I discovered a lot about the publication process while writing, editing and created diagrams for the paper. Most fondly I remember the late nights creating and editing a final video for our paper. As it turns out, the 3D visualization I hacked together for that video became an early inspiration for my multivariate trajectory visualization work. The rest of the summer I spent developing algorithms in C++ that expanded on those in the paper. I appreciate the practice I got, both technical and communicative from working within a larger project. However my favorite aspect of this job was ruminating on manipulating space-time paths both at and after work.
+      </p>
+  </div>
+</div>
+      
+<!--     <h1>2013</h1>
+      <p>
+        The summer after my freshman year of college I was excited to get my first ex
+      </p> -->
 </div>
 
 
