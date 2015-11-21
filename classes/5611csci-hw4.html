@@ -1,0 +1,157 @@
+---
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Dev-Lan</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+  <link rel="stylesheet" href="../style/darkly-bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+  <style type="text/css">
+    body {
+      padding-top: 65px;
+    }
+  .carousel-inner > .item > img,
+  .carousel-inner > .item > a > img {
+      width: 100%;
+      margin: auto;
+  }
+  </style>
+</head>
+<body>
+
+{% include navbar.html %}
+
+<div class="container-fluid">
+    <h1>Animation and Planning in Games</h1>
+    <h2>Assignment Four : Crowd Simulation</h2>
+    <p> For assignment four I wanted to implement <a href="http://www.red3d.com/cwr/boids/">Boids</a> Since I have already implemented <a href="http://www.researchgate.net/publication/1947096_Social_Force_Model_for_Pedestrian_Dynamics">Helbing's Social Force Model</a>, <a href="http://motion.cs.umn.edu/PowerLaw/">The Universal Power Law</a>, and have utilized the <a href="http://gamma.cs.unc.edu/ORCA/"> ORCA</a> library, <a href="http://gamma.cs.unc.edu/RVO2/"> RVO2</a>. Plus animating butteflies is easier than humans.
+
+    <p><a href="../applications/boiderflies.app.zip" download>DOWNLOAD MAC .APP FILE</a></p>
+
+    <p><a href="../source/boiderflies.zip" download>DOWNLOAD SOURCE</a></p>
+
+
+
+    <h3>Tools used</h3>
+    <ul>
+      <li>G3D (graphics engine) : <a href="http://g3d.sourceforge.net/">http://g3d.sourceforge.net/</a> </li>
+        <p>This basically serves as a wrapper around openGL calls, and provides utility classes such as Vectors and Cameras. I still wrote all the shaders for this project as well as all of the particle system code.</p>
+      <li>ArtRage (texture software) : <a href="https://www.artrage.com/">https://www.artrage.com/</a> </li>
+        <p>I used this software to create the buttefly wing texture.</p>
+      <li>GroundTexture : <a href="http://opengameart.org/node/11950">http://opengameart.org/node/11950/</a> </li>
+        <p>I used this nice open souce tileable ground texture.</p>
+      <li>Normal Map Creation : <a href="http://www.crazybump.com/">http://www.crazybump.com/</a> </li>
+        <p>This is a neat little program that creates normal maps from images. I used it on the ground texture to create a nice effect with phong shading.</p>
+    </ul>
+
+    <h3>Features</h3>
+      <ul>
+       <li>BOIDS, with basic planning requirements.</li>
+       <li>2.5D Navigation</li>
+       <li>Nicely Rendered ground and butteflies. (The obstacles are from candycane hell, and thus not nice.)</li>
+       <li>3D controlled camera (I used a G3D camera manipulator class)</li>
+       <li>Real-time user interaction with system, create obstacles, make new random goal.</li>
+      </ul>
+
+    <h3>Difficulties</h3>
+      <p>The biggest difficulty I had is avoiding collisions with obstacles, and in fact they still can and do occur occasionally. They do have a path that navigates them around the columns, but the Boid forces have such an impact that they can even go right through the middle of columns. To help prevent this I added forces repelling the agents away from the wall. This does reduce collisions, but adds a couple artifacts. I'm generally opposed to modeling walls with forces, but this looks ok for this short project.</p>
+
+
+    <h3>Butterflies!!</h3>
+    <p>Below are a few screenshots taken from my pretty Boiderflies.</p>
+
+
+<div class="row">
+
+<div class="col-sm-12">
+  <div class="container-fluid">
+    <div id="screenshots" class="carousel slide" data-interval="false">
+      <!-- Indicators -->
+      <ol class="carousel-indicators">
+        <li data-target="#screenshots" data-slide-to="0" class="active"></li>
+        <li data-target="#screenshots" data-slide-to="1"></li>
+        <li data-target="#screenshots" data-slide-to="2"></li>
+      </ol>
+
+      <!-- Wrapper for slides -->
+      <div class="carousel-inner" role="listbox">
+        <div class="item active">
+          <img src="../img/classes/5611csci/boiderfly1.png">
+           <div class="carousel-caption">
+              <p>"todo"</p>
+          </div>
+        </div>
+
+        <div class="item">
+          <img src="../img/classes/5611csci/boiderfly2.png">
+          <div class="carousel-caption">
+              <p>"todo"</p>
+          </div>
+        </div>
+      
+        <div class="item">
+          <img src="../img/classes/5611csci/boiderfly3.png">
+          <div class="carousel-caption">
+              <p>"todo"</p>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Left and right controls -->
+      <a class="left carousel-control" href="#screenshots" role="button" data-slide="prev">
+        <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+        <span class="sr-only">Previous</span>
+      </a>
+      <a class="right carousel-control" href="#screenshots" role="button" data-slide="next">
+        <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+        <span class="sr-only">Next</span>
+      </a>
+    </div>
+  </div>
+</div>
+
+</div>
+
+
+<div class="row">
+
+  <h3>Video Demonstration</h3>
+    
+<div class="col-sm-6">
+
+<!-- 16:9 aspect ratio -->
+<div class="embed-responsive embed-responsive-16by9">
+  <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/2sAIag6sN7g" frameborder="0" allowfullscreen></iframe>
+</div>
+
+</div>
+
+
+<div class="col-sm-6">
+  <h4>User Controls</h4>
+  <ul>
+  <ul>
+    <li>"1" - Toggle roadmap visibility.</li>
+    <li>"o" - Add obstacles. (o as in obstacle)</li>
+    <li>"p" - Toggle butterfly motion.</li>
+    <li>"9" - Toggle Slow Motion mode.</li>
+    <li>"r" - Generate a new random goal.</li>
+    <li>"space" - Shoot some butteflies out of your face.</li>
+  </ul>
+</div>
+
+
+
+</div>
+
+
+</div>
+
+<!-- http://dev-lan.github.io/JournalismProject/ViralAlert.html -> reroute this to new url -->
+</body>
+</html>
