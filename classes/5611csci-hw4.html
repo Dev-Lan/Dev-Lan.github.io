@@ -57,6 +57,9 @@
        <li>Real-time user interaction with system, create obstacles, make new random goal.</li>
       </ul>
 
+    <h3>Planning</h3>
+    <p>It's worth making a few notes on how I do planning. Firstly I wanted to use the code from the last assignment that did 2D path planning, but I wanted 3D Boids, so I ended up doing a bit of a hack. The path is planned in two dimensions, with disc obstacles, and the agent then moves in 3 dimensions, with cylinder obstacles. The agent then is never obstructed in the up direction, and can move directly towards the goal in that dimension. Second for the path planning I run a search from the goal node to all other nodes. For the sake of time I just did breadth first search. Then for each agent in order to find a path from a node to a goal an agent finds a nearby node and then back traces towards the goal node. This is nice because every node in the graph has the shorest path (in terms of number of edges) towards the goal. Then if I pick a new goal, I only have to run one search on the graph, instead of once for each agent. The major downside here is that all of these agents must have the same goal, which for a flock of bird like objects is not a huge limitation.</p>
+
     <h3>Difficulties</h3>
       <p>The biggest difficulty I had is avoiding collisions with obstacles, and in fact they still can and do occur occasionally. They do have a path that navigates them around the columns, but the Boid forces have such an impact that they can even go right through the middle of columns. To help prevent this I added forces repelling the agents away from the wall. This does reduce collisions, but adds a couple artifacts. I'm generally opposed to modeling walls with forces, but this looks ok for this short project.</p>
 
@@ -126,7 +129,7 @@
 
 <!-- 16:9 aspect ratio -->
 <div class="embed-responsive embed-responsive-16by9">
-  <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/2sAIag6sN7g" frameborder="0" allowfullscreen></iframe>
+  <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/y0LxSK8Q6U4" frameborder="0" allowfullscreen></iframe>
 </div>
 
 </div>
