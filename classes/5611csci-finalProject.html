@@ -1,0 +1,138 @@
+---
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Dev-Lan</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+  <link rel="stylesheet" href="../style/darkly-bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+  <style type="text/css">
+    body {
+      padding-top: 65px;
+    }
+  .carousel-inner > .item > img,
+  .carousel-inner > .item > a > img {
+      width: 100%;
+      margin: auto;
+  }
+  </style>
+</head>
+<body>
+
+{% include navbar.html %}
+
+<div class="container-fluid">
+    <h1>Animation and Planning in Games</h1>
+    <h2>Final Project : Plagiarized in Plain Sight</h2>
+    <h4>Group Members : Devin Lange, Sam Vipond, Josh Ford, Thomas Hvizdos</h4>
+
+    <p>For our final project we were inspired by the game <a href="http://adamspragggames.blogspot.com/">Hidden in Plain Sight.</a> A super fun game which you should all buy copies of <a href="http://store.steampowered.com/app/303590/">here</a> and <a href="http://marketplace.xbox.com/en-US/Product/Hidden-in-Plain-Sight/66acd000-77fe-1000-9115-d802585509e7">here</a>. The most interesting aspect to us is that a major goal of the player is to move in a way that convinces other players it is a bot. However we wanted to extend the original agents motion to have more realistic crowd motion. So in short we implemented Ninja Party, our favorite game mode in Hidden in Plain Sight with more realistic crowd motion, animation, and rendering.</p>
+
+    <p><a href="../applications/boiderflies.app.zip" download>DOWNLOAD MAC .APP FILE</a></p>
+    <p><a href="../applications/boiderflies.app.zip" download>DOWNLOAD WINDOWS .EXE FILE</a></p>
+
+    <p><a href="../source/boiderflies.zip" download>DOWNLOAD SOURCE</a></p>
+
+
+
+    <h3>External Resources</h3>
+    <ul>
+      <li>Unity Game Engine : <a href="http://unity3d.com/">http://unity3d.com/</a> </li>
+        <p>We used the popular game engine Unity to accelerate our development process. This helped us with rendering, scene setup, character animation, character assets, controller input, particle system, sound, and deployment.</p>
+
+
+
+      <li>Soundtrack : <div xmlns:cc="http://creativecommons.org/ns#" about="urn:sha1:42I5GWGUOGKNQKSKLNU5E2TNGVHQQFWY"><a rel="cc:attributionURL" property="cc:attributionName" href="http://ccmixter.org/files/texasradiofish/51247"> texasradiofish</a> / <a rel="license" href="http://creativecommons.org/licenses/by-nc/3.0/">CC BY-NC 3.0</a></div> </li>
+        <p>We found this sick beat for our background music.</p>
+
+      <li>Lamppost : <a href="http://www.turbosquid.com/3d-models/street-lamp-3d-model/473402">http://www.turbosquid.com/3d-models/street-lamp-3d-model/473402</a> </li>
+        <p>I used this nice open souce 3D model of a lamppost.</p>
+
+
+      <li>GroundTexture : <a href="http://opengameart.org/content/stone-pavement-ground-tile">http://opengameart.org/content/stone-pavement-ground-tile</a> </li>
+        <p>I used this nice open souce tileable ground texture.</p>
+
+
+      <li>Normal Map Creation : <a href="http://www.crazybump.com/">http://www.crazybump.com/</a> </li>
+        <p>This is a neat little program that creates normal maps from images. I used it on the ground texture to create a nice effect with shading.</p>
+    </ul>
+
+
+    <h3>Gameplay</h3>
+    <p>Below are a few screenshots and a video of our game.</p>
+
+
+<div class="row">
+
+<div class="col-sm-6">
+  <div class="container-fluid">
+    <div id="screenshots" class="carousel slide" data-interval="false">
+      <!-- Indicators -->
+      <ol class="carousel-indicators">
+        <li data-target="#screenshots" data-slide-to="0" class="active"></li>
+        <li data-target="#screenshots" data-slide-to="1"></li>
+        <li data-target="#screenshots" data-slide-to="2"></li>
+        <li data-target="#screenshots" data-slide-to="3"></li>
+      </ol>
+
+      <!-- Wrapper for slides -->
+      <div class="carousel-inner" role="listbox">
+        <div class="item active">
+          <img src="../img/classes/5611csci/pips1.png">
+           <div class="carousel-caption">
+          </div>
+        </div>
+
+        <div class="item">
+          <img src="../img/classes/5611csci/pips2.png">
+          <div class="carousel-caption">
+          </div>
+        </div>
+      
+        <div class="item">
+          <img src="../img/classes/5611csci/pips3.png">
+          <div class="carousel-caption">
+          </div>
+        </div>
+
+        <div class="item">
+          <img src="../img/classes/5611csci/pips4.png">
+          <div class="carousel-caption">
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Left and right controls -->
+      <a class="left carousel-control" href="#screenshots" role="button" data-slide="prev">
+        <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+        <span class="sr-only">Previous</span>
+      </a>
+      <a class="right carousel-control" href="#screenshots" role="button" data-slide="next">
+        <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+        <span class="sr-only">Next</span>
+      </a>
+    </div>
+  </div>
+</div>
+
+    
+<div class="col-sm-6">
+
+<!-- 16:9 aspect ratio -->
+<div class="embed-responsive embed-responsive-16by9">
+  <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/y0LxSK8Q6U4" frameborder="0" allowfullscreen></iframe>
+</div>
+
+
+</div>
+
+
+</div>
+
+</body>
+</html>
