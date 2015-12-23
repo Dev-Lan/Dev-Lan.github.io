@@ -1,0 +1,22 @@
+.btn {
+    border-radius: 0px;
+}
+
+.btn-image {
+  display:block;
+  text-shadow: 9px 9px 10px #000000;
+  color: #ffffff;
+  /*width: 600px;*/
+  height: 600px;
+  font-size: 40px;
+  padding: 10px 20px 10px 20px;
+  border: solid #000000 2px;
+  text-decoration: none;
+}
+
+.btn-image:hover {
+  text-decoration: none;
+  -webkit-box-shadow: 0px 0px 100px #256a4a;
+  -moz-box-shadow: 0px 0px 100px #256a4a;
+  box-shadow: 0px 0px 100px #256a4a;
+}
