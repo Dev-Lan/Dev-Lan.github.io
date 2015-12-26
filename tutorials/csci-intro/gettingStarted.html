@@ -15,13 +15,16 @@
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></script>
     <style type="text/css">
         body {
                 padding-top: 65px;
             }
-        }
-    </style>
 
+        li.L0, li.L1, li.L2, li.L3,
+        li.L5, li.L6, li.L7, li.L8
+        { list-style-type: decimal !important }
+    </style>
 <body>
 
 {% include navbar.html %}
@@ -39,7 +42,26 @@
                 <div class="row">
                     <div class="col-lg-12">
                         <h1>Getting started with Processing!</h1>
-                        <p>todo</p>
+                        <p>
+                        The main goal of this course is to teach the important theories behind computer science. With that in mind all of the lessons will have a programming component. When you get to code something one of the first things you have to decide is the language you will program in. Programming languages are not like human languages, but rather a way for humans to comunicate to computers what we want them to do. Choosing the right language for a job can be a difficult task for inexperienced programmers. Fortunately I have already chosen Processing for you! Processing is a fun language that should be easy to get up and running quickly. Additionally you can create digital art, interactive experiences, and data visualizations with it. AND if that wasn't enough for you it is so similar to Java, an extremely popular choice nowadays, that if you become proficient in Processing you will be able to transfer that knowledge to Java. For some inspiration on what you may be able to create with Processing I invite you to check out the gifs at <a href="http://beesandbombs.tumblr.com/">Bees & Bombs</a> a personal favorite of mine. They create all of their gifs programmatically using Processing.
+                        </p>
+
+                        <p>
+                        Another benefit to using Processing is its general popularity. This means if you get stuck on something you can likely find assistance on the internet. The first thing you should be aware of though is its <a href="https://processing.org/">homepage</a>, which has lots of useful links to tutorials on Processing. In particular their <a href="https://processing.org/reference/">reference</a> page is something that is exceptionally useful. But before we get to all of that you will have to download Processing <a href="https://processing.org/download/">HERE</a>. They support all major operating systems so you should be covered. This will provide you with the Processing application. When you open it you will be able type your code and run your program. The first time you run the application there will be some initial setup, just follow the onscreen instructions.
+
+
+                        todo : running a program, with images.
+                        </p>
+
+                        <pre class="prettyprint lang-java linenums">
+background(0,0,0);
+size(400,400);
+fill(255,255,0);
+arc(200, 200, 360, 360, QUARTER_PI, 7 * QUARTER_PI, PIE);</pre>
+
+                        <p>
+                        Conclusion
+                        </p>
                     </div>
                 </div>
             </div>
