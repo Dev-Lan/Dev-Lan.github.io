@@ -8,6 +8,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
   <link rel="stylesheet" href="../style/darkly-bootstrap.min.css">
+  <link rel="stylesheet" href="../style/devlan-style.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
   <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
   <style type="text/css">
@@ -25,7 +26,12 @@
 
 {% include navbar.html %}
 
-<div class="container-fluid">
+<div id="checker" class="parallax">
+<div class="container">
+
+<div class="row row-centered">
+<div class="col-lg-10 col-md-10 col-sm-12 col-xs-12 col-centered">
+
     <h1><a href="5611csci.html">Animation and Planning in Games</a></h1>
     <h2>Assignment One : Particle Systems</h2>
     <p>For this assignment I created an array of different particle systems. A screenshot of each system is below as well as a video presentation of all systems with descriptions of each. One of my overarching goals for this assignment was to render the particle systems in a painterly fashion. My main strategy to this end was to use textures I created using <a href="https://www.artrage.com/">ArtRage</a>, a painting application, and dynamically use subsections of the texture for each glyph.</p>
@@ -83,10 +89,6 @@
        <li>Using the normal map of the ground texture when computing the bounces.</li>
       </ul>
 
-
-<div class="row">
-
-<div class="col-sm-6">
   <div class="container-fluid">
     <div id="screenshots" class="carousel slide" data-interval="false">
       <!-- Indicators -->
@@ -134,7 +136,6 @@
               <p>BUBBLES!!</p>
           </div>
         </div>
-
       </div>
 
       <!-- Left and right controls -->
@@ -148,23 +149,19 @@
       </a>
     </div>
   </div>
-</div>
 
-<div class="col-sm-6">
-
-<!-- 16:9 aspect ratio -->
+<p></p>
+  
 <div class="embed-responsive embed-responsive-16by9">
   <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/xj9x5OjO2Z8" frameborder="0" allowfullscreen></iframe>
 </div>
 
-</div>
-
-</div>
-
 <h2>Art Contest submission : "Smokey Bear's Nightmare Fuel"</h2>
-<img src="../img/classes/5611csci/art1.png" 
-   class="img-rounded">
+<img src="../img/classes/5611csci/art1.png"  class="img-rounded img-responsive">
 
+  </div>
+  </div>
+</div>
 </div>
 
 </body>
