@@ -16,7 +16,7 @@
     }
   .carousel-inner > .item > img,
   .carousel-inner > .item > a > img {
-      width: 100%;
+      max-width: 100%;
       margin: auto;
   }
   </style>
@@ -25,7 +25,11 @@
 
 {% include navbar.html %}
 
-<div class="container-fluid">
+
+<div id="scroll-wrapper" class="scroll-wrapper"><div class="container-fluid"><div id="checker" class="parallax">
+  <div class="row row-centered">
+    <div class="col-lg-10 col-md-10 col-sm-12 col-xs-12 col-centered">
+
     <h1><a href="5611csci.html">Animation and Planning in Games</a></h1>
     <h2>Assignment Two : Physics Based Animations</h2>
     <p>For assignment two I took two approaches for simulating water. My first attempt was to replicate the method in <a href="http://www.ligum.umontreal.ca/Clavet-2005-PVFS/">Particle-based Viscoelastic Fluid Simulation</a>. I ended up with a working implemtation of their method without the viscoelasticity. My second approach solves the less general problem of shallow water dynamics, but ends up with a nice visual in the end..</p>
@@ -63,9 +67,7 @@
     <p>I wanted to share more than one image from my shallow water method, so here is my album titled "The World is a Beautiful Place at Four in the Morning." If I had to choose one for the art contest I would submit the 4th one in the album aka "Bloooop blooop bloop blop plob plib".</p>
 
 
-<div class="row">
 
-<div class="col-sm-12">
   <div class="container-fluid">
     <div id="screenshots" class="carousel slide" data-interval="false">
       <!-- Indicators -->
@@ -159,47 +161,45 @@
         <span class="sr-only">Next</span>
       </a>
     </div>
+
+    <h3>Video Demonstration</h3>
+      
+
+    <!-- 16:9 aspect ratio -->
+    <div class="embed-responsive embed-responsive-16by9">
+      <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/2sAIag6sN7g" frameborder="0" allowfullscreen></iframe>
+    </div>
+
+
+    <h4>User Controls</h4>
+    <ul>
+      <li>"1" - Reset SPH particles.</li>
+      <li>"2" - Reset shallow water simulation.</li>
+      <li>"3" - Toggle which simulation to view.</li>
+      <li>"p" - Pause simulation.</li>
+      <li>"o" - Toggle slow motion mode of simulation.</li>
+      <li>"r" - Toggle render mode of shallow water simulation.</li>
+      <li>"g" - Toggle gravity on SPH simulation.</li>
+      <li>"h" - Toggle constraints on SPH simulation.</li>
+      <li>"space" - Add water (both systems).</li>
+    </ul>
+
+    <p></p>
+
+    </div>
   </div>
-</div>
+</div></div></div>
 
-</div>
+<script>
+  var headEl = $("#scroll-wrapper");
+  headEl.scroll(function() {
+    var offset = headEl.height() - $(window).height() + 65;
+      if(headEl.scrollTop() >= offset) {
+        headEl.scrollTop( offset );
+      }
+  });
+</script>
 
-
-<div class="row">
-
-  <h3>Video Demonstration</h3>
-    
-<div class="col-sm-6">
-
-<!-- 16:9 aspect ratio -->
-<div class="embed-responsive embed-responsive-16by9">
-  <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/2sAIag6sN7g" frameborder="0" allowfullscreen></iframe>
-</div>
-
-</div>
-
-
-<div class="col-sm-6">
-  <h4>User Controls</h4>
-  <ul>
-    <li>"1" - Reset SPH particles.</li>
-    <li>"2" - Reset shallow water simulation.</li>
-    <li>"3" - Toggle which simulation to view.</li>
-    <li>"p" - Pause simulation.</li>
-    <li>"o" - Toggle slow motion mode of simulation.</li>
-    <li>"r" - Toggle render mode of shallow water simulation.</li>
-    <li>"g" - Toggle gravity on SPH simulation.</li>
-    <li>"h" - Toggle constraints on SPH simulation.</li>
-    <li>"space" - Add water (both systems).</li>
-  </ul>
-</div>
-
-
-
-</div>
-
-
-</div>
 
 </body>
 </html>

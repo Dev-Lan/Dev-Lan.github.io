@@ -16,7 +16,7 @@
     }
   .carousel-inner > .item > img,
   .carousel-inner > .item > a > img {
-      width: 100%;
+      max-width: 100%;
       margin: auto;
   }
   </style>
@@ -25,7 +25,10 @@
 
 {% include navbar.html %}
 
-<div class="container-fluid">
+<div id="scroll-wrapper" class="scroll-wrapper"><div class="container-fluid"><div id="checker" class="parallax">
+
+  <div class="row row-centered">
+  <div class="col-lg-10 col-md-10 col-sm-12 col-xs-12 col-centered">
     <h1><a href="5611csci.html">Animation and Planning in Games</a></h1>
     <h2>Assignment Four : Crowd Simulation</h2>
     <p>For assignment four I wanted to implement <a href="http://www.red3d.com/cwr/boids/">Boids</a> Since I have already implemented <a href="http://www.researchgate.net/publication/1947096_Social_Force_Model_for_Pedestrian_Dynamics">Helbing's Social Force Model</a>, <a href="http://motion.cs.umn.edu/PowerLaw/">The Universal Power Law</a>, and have utilized the <a href="http://gamma.cs.unc.edu/ORCA/"> ORCA</a> library, <a href="http://gamma.cs.unc.edu/RVO2/"> RVO2</a>. Plus animating butteflies is easier than humans.
@@ -67,10 +70,6 @@
     <h3>Butterflies!!</h3>
     <p>Below are a few screenshots taken from my pretty Boiderflies.</p>
 
-
-<div class="row">
-
-<div class="col-sm-12">
   <div class="container-fluid">
     <div id="screenshots" class="carousel slide" data-interval="false">
       <!-- Indicators -->
@@ -115,45 +114,42 @@
         <span class="sr-only">Next</span>
       </a>
     </div>
-  </div>
-</div>
-
-</div>
 
 
-<div class="row">
 
   <h3>Video Demonstration</h3>
     
-<div class="col-sm-6">
 
-<!-- 16:9 aspect ratio -->
-<div class="embed-responsive embed-responsive-16by9">
-  <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/y0LxSK8Q6U4" frameborder="0" allowfullscreen></iframe>
-</div>
+  <!-- 16:9 aspect ratio -->
+  <div class="embed-responsive embed-responsive-16by9">
+    <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/y0LxSK8Q6U4" frameborder="0" allowfullscreen></iframe>
 
-</div>
+    <h4>User Controls</h4>
+    <ul>
+    <ul>
+      <li>"1" - Toggle roadmap visibility.</li>
+      <li>"o" - Add obstacles. (o as in obstacle)</li>
+      <li>"p" - Toggle butterfly motion.</li>
+      <li>"9" - Toggle Slow Motion mode.</li>
+      <li>"r" - Generate a new random goal.</li>
+      <li>"space" - Shoot some butteflies out of your face.</li>
+    </ul>
 
+    <p></p>
 
-<div class="col-sm-6">
-  <h4>User Controls</h4>
-  <ul>
-  <ul>
-    <li>"1" - Toggle roadmap visibility.</li>
-    <li>"o" - Add obstacles. (o as in obstacle)</li>
-    <li>"p" - Toggle butterfly motion.</li>
-    <li>"9" - Toggle Slow Motion mode.</li>
-    <li>"r" - Generate a new random goal.</li>
-    <li>"space" - Shoot some butteflies out of your face.</li>
-  </ul>
-</div>
+    </div>
+  </div>
+</div></div></div>
 
-
-
-</div>
-
-
-</div>
+<script>
+  var headEl = $("#scroll-wrapper");
+  headEl.scroll(function() {
+    var offset = headEl.height() - $(window).height() + 65;
+      if(headEl.scrollTop() >= offset) {
+        headEl.scrollTop( offset );
+      }
+  });
+</script>
 
 </body>
 </html>

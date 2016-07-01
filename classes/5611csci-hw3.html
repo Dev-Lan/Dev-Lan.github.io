@@ -16,7 +16,7 @@
     }
   .carousel-inner > .item > img,
   .carousel-inner > .item > a > img {
-      width: 100%;
+      max-width: 100%;
       margin: auto;
   }
   </style>
@@ -25,7 +25,11 @@
 
 {% include navbar.html %}
 
-<div class="container-fluid">
+<div id="scroll-wrapper" class="scroll-wrapper"><div class="container-fluid"><div id="checker" class="parallax">
+
+  <div class="row row-centered">
+  <div class="col-lg-10 col-md-10 col-sm-12 col-xs-12 col-centered">
+
     <h1><a href="5611csci.html">Animation and Planning in Games</a></h1>
     <h2>Assignment Three : Motion Planning</h2>
 
@@ -55,9 +59,7 @@
       </ul>
 
 
-<div class="row">
 
-<div class="col-sm-6">
   <div class="container-fluid">
     <div id="screenshots" class="carousel slide" data-interval="false">
       <!-- Indicators -->
@@ -99,10 +101,7 @@
         <span class="sr-only">Next</span>
       </a>
     </div>
-  </div>
-</div>
 
-<div class="col-sm-6">
   <h4>User Controls</h4>
   <ul>
     <li>"1" - Toggle roadmap visibility.</li>
@@ -112,14 +111,22 @@
     <li>"shift + click" - Set goal position.</li>
     <li>"space" - Add obstacles</li>
   </ul>
-</div>
 
+    <p></p>
 
+    </div>
+  </div>
+</div></div></div>
 
-</div>
-
-
-</div>
+<script>
+  var headEl = $("#scroll-wrapper");
+  headEl.scroll(function() {
+    var offset = headEl.height() - $(window).height() + 65;
+      if(headEl.scrollTop() >= offset) {
+        headEl.scrollTop( offset );
+      }
+  });
+</script>
 
 </body>
 </html>
