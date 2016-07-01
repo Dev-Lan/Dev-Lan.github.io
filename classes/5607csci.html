@@ -6,28 +6,47 @@
   <title>Dev-Lan</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
   <link rel="stylesheet" href="../style/darkly-bootstrap.min.css">
+  <link rel="stylesheet" href="../style/devlan-style.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
   <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
   <style type="text/css">
     body {
       padding-top: 65px;
     }
-/*    @media (max-width: 979px) {
-      body {
-        padding-top: 0px;
-      }
-    }*/
+  .carousel-inner > .item > img,
+  .carousel-inner > .item > a > img {
+      max-width: 100%;
+      margin: auto;
+  }
   </style>
 </head>
 <body>
 
 {% include navbar.html %}
 
-<div class="container-fluid">
+<div id="scroll-wrapper" class="scroll-wrapper"><div class="container-fluid"><div id="checker" class="parallax">
+
+  <div class="row row-centered">
+  <div class="col-lg-10 col-md-10 col-sm-12 col-xs-12 col-centered">
+
     <h1>Fundamentals of Computer Graphics 1</h1>
     <p>This class covered all of the fundamental aspects of computer science. We learned the basics of OpenGL. However the majority of the class was focused on developing a ray tracer. The project page can be found <a href="5607csci-rayTracer.html">here.</a></p>
-</div>
+
+  </div>
+  </div>
+</div></div></div>
+
+<script>
+  var headEl = $("#scroll-wrapper");
+  headEl.scroll(function() {
+    var offset = headEl.height() - $(window).height() + 65;
+      if(headEl.scrollTop() >= offset) {
+        headEl.scrollTop( offset );
+      }
+  });
+</script>
 
 </body>
 </html>
