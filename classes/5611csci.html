@@ -28,28 +28,38 @@
 
     <div class="row">
       <div class="col-sm-6">
-        <a class="btn-image btn-block" style="background: url('../img/classes/5611csci/hw1-button.png') center;" href="5611csci-hw1.html">Assignment One</a>
+        <a class="btn-image btn-block" style="background: url('../img/bigButtons/5611-1.png') center;" href="5611csci-hw1.html">Assignment One</a>
         <!-- <img src="../img/classes/5611csci/bubbles.png" class="img-rounded"> -->
       </div>
       <div class="col-sm-6">
-        <a class="btn-image btn-block" style="background: url('../img/classes/5611csci/hw2-button.png') center;" href="5611csci-hw2.html">Assignment Two</a>
+        <a class="btn-image btn-block" style="background: url('../img/bigButtons/5611-2.png') center;" href="5611csci-hw2.html">Assignment Two</a>
       </div>
     </div>
     <div class="row">
       <div class="col-sm-6">
-        <a class="btn-image btn-block" style="background: url('../img/classes/5611csci/hw3-button.png') center;" href="5611csci-hw3.html">Assignment Three</a>
+        <a class="btn-image btn-block" style="background: url('../img/bigButtons/5611-3.png') center;" href="5611csci-hw3.html">Assignment Three</a>
       </div>
       <div class="col-sm-6">
-        <a class="btn-image btn-block" style="background: url('../img/classes/5611csci/hw4-button.png') center;" href="5611csci-hw4.html">Assignment Four</a>
+        <a class="btn-image btn-block" style="background: url('../img/bigButtons/5611-4.png') center;" href="5611csci-hw4.html">Assignment Four</a>
       </div>
     </div>
     <div class="row">
       <div class="col-sm-12">
-        <a class="btn-image btn-block" style="background: url('../img/classes/5611csci/hw-final-button.png') center;" href="5611csci-finalProject.html">Final Project</a>
+        <a class="btn-image btn-block" style="background: url('../img/bigButtons/5611-final.png') center;" href="5611csci-finalProject.html">Final Project</a>
       </div>
     </div>
 
 </div>
+
+<script>
+  var headEl = $("#scroll-wrapper");
+  headEl.scroll(function() {
+    var offset = headEl.height() - $(window).height() + 65;
+      if(headEl.scrollTop() >= offset) {
+        headEl.scrollTop( offset );
+      }
+  });
+</script>
 
 </body>
 </html>
