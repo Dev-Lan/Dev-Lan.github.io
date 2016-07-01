@@ -1,6 +1,6 @@
 ---
 ---
-<!DOCTYPE html>
+<!-- <!DOCTYPE html> -->
 <html lang="en">
 <head>
   <title>Dev-Lan</title>
@@ -24,10 +24,11 @@
 </head>
 <body>
 
-{% include navbar.html %}
+<!-- {% include navbar.html %} -->
 
-<div id="checker" class="parallax">
+<div id="scroll-wrapper" class="scroll-wrapper">
 <div class="container-fluid">
+<div id="checker" class="parallax">
 
 <div class="row row-centered">
 <div class="col-lg-10 col-md-10 col-sm-12 col-xs-12 col-centered">
@@ -159,10 +160,23 @@
 <h2>Art Contest submission : "Smokey Bear's Nightmare Fuel"</h2>
 <img src="../img/classes/5611csci/art1.png"  class="img-rounded img-responsive">
 
+<p></p>
+
   </div>
   </div>
 </div>
 </div>
+</div>
+
+<script>
+  var headEl = $("#scroll-wrapper");
+  headEl.scroll(function() {
+    var offset = headEl.height() - $(window).height() + 65;
+      if(headEl.scrollTop() >= offset) {
+        headEl.scrollTop( offset );
+      }
+  });
+</script>
 
 </body>
 </html>
