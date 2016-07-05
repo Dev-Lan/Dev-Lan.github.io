@@ -31,7 +31,8 @@
 
  /*centered columns styles */
 .row-centered {
-    text-align:center;
+  text-align:center;
+  padding: 0px;
 }
 .col-centered {
   display:inline-block;
@@ -51,7 +52,7 @@
   -moz-box-shadow: 0px 0px 100px black;
   box-shadow: 0px 0px 100px black;
 
-  min-height:100vh;
+  min-height:90vh;
 
   background:#222222;
 }
@@ -77,19 +78,22 @@ body {
   overflow-x: hidden;
   background: url("../img/checker-512.png");
   background-color: #D2D2D2;
+  height: 100vh;
+}
+
+.no-pad {
+  padding: 0px;
 }
 
 .scroll-wrapper {
-  position: relative;
-  top: -100;
-  height: 100%;
-  overflow-y: auto;
+  position: absolute;
+  overflow-y: hidden;
   overflow-x: hidden;
 }
 
 .parallax {
-  position: relative;
-  padding: 1%; 
+  padding-top: 1%; 
+  padding-bottom: 1%; 
   width: 100vw;
 }
 
@@ -98,7 +102,7 @@ body {
   position: absolute;
   top: 0;
   bottom: 0;
-  left:-8px;
+  left: 0;
   right:0;
 }
 

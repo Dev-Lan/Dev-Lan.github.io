@@ -12,7 +12,7 @@
   <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
   <style type="text/css">
     body {
-      padding-top: 65px;
+      padding-top: 60px;
     }
 }
   </style>
@@ -21,7 +21,7 @@
 
 {% include navbar.html %}
 
-<div id="scroll-wrapper" class="scroll-wrapper"><div class="container-fluid"><div id="checker" class="parallax">
+<div id="scroll-wrapper" class="scroll-wrapper"><div class="container-fluid no-pad"><div id="checker" class="parallax">
     <h1>Animation and Planning in Games</h1>
 
      <!-- todo overall description -->
@@ -55,16 +55,6 @@
     <p></p>
 
 </div>
-
-<script>
-  var headEl = $("#scroll-wrapper");
-  headEl.scroll(function() {
-    var offset = headEl.height() - $(window).height() + 65;
-      if(headEl.scrollTop() >= offset) {
-        headEl.scrollTop( offset );
-      }
-  });
-</script>
 
 </body>
 </html>
