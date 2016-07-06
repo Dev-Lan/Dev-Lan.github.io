@@ -1,0 +1,142 @@
+---
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Dev-Lan</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+  <link rel="stylesheet" href="../style/darkly-bootstrap.min.css">
+  <link rel="stylesheet" href="../style/devlan-style.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+  <style type="text/css">
+    body {
+      padding-top: 60px;
+    }
+  .carousel-inner > .item > img,
+  .carousel-inner > .item > a > img {
+      max-width: 100%;
+      margin: auto;
+  }
+  </style>
+</head>
+<body>
+
+{% include navbar.html %}
+
+<div id="scroll-wrapper" class="scroll-wrapper"><div class="container-fluid no-pad"><div id="checker" class="parallax">
+
+  <div class="row row-centered">
+  <div class="col-lg-8 col-md-9 col-sm-10 col-xs-11 col-centered">
+
+    <h1>Conway's Game of Life</h1>
+    <p>
+      Like many before me I have been intrigued by <a href="https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life">Conway's Game of Life</a>. I have been meaning to do a shader implementation of the algorithm for a while now, I finally sat down and did it. Each cell of the game is a single pixel on the window. In a normal game a cell is considered either alive or dead. For my implementation a cell can be alive or dead in each of the color channels, red, green, and blue. That is, a single cell or pixel may be alive in all three channels resulting in a white pixel. Alternatively, it could be alive in the red channel, but dead in green and blue, resulting in a red cell. If you want you can think of them as three game of life parallel universes.
+    </p>
+
+    <p>
+      You should be able to load any image as a seed for the game of life. Keep in mind that the image will be stretched to fit the current game window, so small pixel details will be distorted if the dimensions don't fit. I am using an external library for the file dialog, so there is a possibility that this functionality won't work. If so let me know and I can try to fix the issue. The basic commands of running the game are listed in the main screen of the game. To bring back that screen simply press the "h" key.
+    </p>
+
+    <p><a href="../applications/GameOfLife.app.zip" download>DOWNLOAD MAC .APP FILE</a></p>
+
+    <p><a href="https://github.com/Dev-Lan/gameOfLife" >SOURCE CODE</a></p>
+
+    <img src="../img/projects/gol/mainScreen.gif"  class="img-rounded img-responsive">
+
+    <p></p>
+    <h3>I've included a handful of images I was able to create with this program.</h3>
+    <p></p>
+
+    <div class="container-fluid">
+      <div id="screenshots" class="carousel slide" data-interval="false">
+        <!-- Indicators -->
+        <ol class="carousel-indicators">
+          <li data-target="#screenshots" data-slide-to="0" class="active"></li>
+          <li data-target="#screenshots" data-slide-to="1"></li>
+          <li data-target="#screenshots" data-slide-to="2"></li>
+          <li data-target="#screenshots" data-slide-to="3"></li>
+          <li data-target="#screenshots" data-slide-to="4"></li>
+          <li data-target="#screenshots" data-slide-to="5"></li>
+          <li data-target="#screenshots" data-slide-to="6"></li>
+          <li data-target="#screenshots" data-slide-to="7"></li>
+        </ol>
+
+        <!-- Wrapper for slides -->
+        <div class="carousel-inner" role="listbox">
+
+          <div class="item active">
+            <img src="../img/projects/gol/ss1.png">
+             <div class="carousel-caption">
+            </div>
+          </div>
+
+          <div class="item">
+            <img src="../img/projects/gol/ss2.png">
+            <div class="carousel-caption">
+            </div>
+          </div>
+
+          <div class="item">
+            <img src="../img/projects/gol/ss3.png">
+            <div class="carousel-caption">
+            </div>
+          </div>
+
+          <div class="item">
+            <img src="../img/projects/gol/ss4.png">
+            <div class="carousel-caption">
+            </div>
+          </div>
+
+          <div class="item">
+            <img src="../img/projects/gol/ss5.png">
+            <div class="carousel-caption">
+            </div>
+          </div>
+
+          <div class="item">
+            <img src="../img/projects/gol/ss6.png">
+            <div class="carousel-caption">
+            </div>
+          </div>
+
+          <div class="item">
+            <img src="../img/projects/gol/ss7.png">
+            <div class="carousel-caption">
+            </div>
+          </div>
+
+          <div class="item">
+            <img src="../img/projects/gol/ss8.png">
+            <div class="carousel-caption">
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Left and right controls -->
+        <a class="left carousel-control" href="#screenshots" role="button" data-slide="prev">
+          <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+          <span class="sr-only">Previous</span>
+        </a>
+        <a class="right carousel-control" href="#screenshots" role="button" data-slide="next">
+          <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+          <span class="sr-only">Next</span>
+        </a>
+      </div>
+    </div>
+
+
+  <p></p>
+
+<!-- todo video -->
+
+  </div>
+  </div>
+</div></div></div>
+
+</body>
+</html>
