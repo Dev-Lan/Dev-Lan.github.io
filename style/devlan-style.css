@@ -11,7 +11,7 @@
 }
 
 .btn-image {
-  display:block;
+  display:inline-block;
   text-shadow: 9px 9px 10px #000000;
   color: #ffffff;
   width: 600px;
@@ -28,6 +28,159 @@
   -moz-box-shadow: 0px 0px 100px #256a4a;
   box-shadow: 0px 0px 100px #256a4a;
 }
+
+/*grid test*/
+
+.grid {
+  font-size: 0;
+  padding-right: 30px;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.btn-grid-4 {
+  font-size: 16px;
+  overflow: hidden;
+  display: inline-block;
+  margin-bottom: 16px;
+  width: calc(50% - 8px);
+  margin-right: 16px;
+  text-shadow: 9px 9px 10px #000000;
+  color: #ffffff;
+  font-size: 20px;
+  text-decoration: none;
+  border: solid #000000 2px;
+}
+
+.btn-grid-4:nth-of-type(2n) {
+  margin-right: 0;
+}
+
+@media screen and (min-width: 50em) {
+  .btn-grid-4 {
+    width: calc(25% - 12px);
+  }
+  
+  .btn-grid-4:nth-of-type(2n) {
+    margin-right: 16px;
+  }
+  
+  .btn-grid-4:nth-of-type(4n) {
+    margin-right: 0;
+  }
+}
+
+.btn-grid-4:hover img {
+  transform: scale(1.1);
+}
+
+.btn-grid-4:hover {
+  text-decoration: none;
+  background-color: rgba(37,106,74,0.5);
+  color:black;
+  -webkit-box-shadow: 0px 0px 100px #256a4a;
+  -moz-box-shadow: 0px 0px 100px #256a4a;
+  box-shadow: 0px 0px 100px #256a4a;
+}
+
+/*Todo can combine these for shorter file*/
+
+
+.btn-grid-2 {
+  font-size: 16px;
+  overflow: hidden;
+  display: inline-block;
+  margin-bottom: 16px;
+  width: calc(50% - 8px);
+  margin-right: 16px;
+  text-shadow: 9px 9px 10px #000000;
+  color: #ffffff;
+  font-size: 20px;
+  text-decoration: none;
+  border: solid #000000 2px;
+}
+
+.btn-grid-2:nth-of-type(2n) {
+  margin-right: 0;
+}
+
+.btn-grid-2:hover img {
+  transform: scale(1.1);
+}
+
+.btn-grid-2:hover {
+  text-decoration: none;
+  background-color: rgba(37,106,74,0.5);
+  color:black;
+  -webkit-box-shadow: 0px 0px 100px #256a4a;
+  -moz-box-shadow: 0px 0px 100px #256a4a;
+  box-shadow: 0px 0px 100px #256a4a;
+}
+
+/* todo transition to one column.*/
+
+.btn-fig {
+  margin: 0;
+  overflow: hidden;
+  display: block; 
+  position: relative; 
+}
+
+.rollover-caption { 
+  position: absolute; 
+  background: rgba(0,0,0,0.75); 
+  color: white; 
+  padding: 10px 20px; 
+
+  opacity: 0;
+  bottom: 0; 
+  left: -30%;
+  -webkit-transition: all 0.6s ease;
+  -moz-transition:    all 0.6s ease;
+  -o-transition:      all 0.6s ease;
+}
+
+figure:hover .rollover-caption {
+  opacity: 1;
+  left: 0;
+}
+
+
+.btn-fig:before { 
+  content: "?"; 
+  position: absolute; 
+  background: rgba(255,255,255,0.75); 
+  color: black;
+  width: 24px;
+  height: 24px;
+  -webkit-border-radius: 12px;
+  -moz-border-radius:    12px;
+  border-radius:         12px;
+  text-align: center;
+  font-size: 14px;
+  line-height: 24px;
+  /* Only Fx 4 supporting transitions on psuedo elements so far... */
+  -webkit-transition: all 0.6s ease;
+  -moz-transition: all 0.6s ease;
+  -o-transition: all 0.6s ease;
+  opacity: 0.60;  
+  bottom: 10px; left: 10px;
+}
+.btn-fig:hover:before {
+  opacity: 0;
+}
+
+
+.btn-img {
+  border: none;
+  max-width: 100%;
+  height: auto;
+  display: block;
+  background: #ccc;
+  transition: transform .2s ease-in-out;
+}
+/*end grid test*/
+
 
  /*centered columns styles */
 .row-centered {
@@ -52,7 +205,7 @@
   -moz-box-shadow: 0px 0px 100px black;
   box-shadow: 0px 0px 100px black;
 
-  min-height:90vh;
+  min-height:100vh;
 
   background:#222222;
 }
