@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Dev-Lan</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+	<link rel="stylesheet" href="../style/darkly-bootstrap.min.css">
+	<link rel="stylesheet" href="../style/devlan-style.css">
+	<style type="text/css">
+		html, body {margin:0;padding:10px;height:100%;width:100%;}
+
+		.vis {
+		  font: 10px sans-serif;
+		  background-color: rgba(255,255,255,.8);
+		  width: 100%;
+		  height: 100%;
+		}
+
+		.bar {
+		}
+
+		.bar.male {
+		  fill: steelblue;
+		}
+
+		.bar.female {
+		  fill: red;
+		}
+
+		.bar:hover {
+			fill-opacity: 0.5;
+			stroke: black;
+			stroke-width: 1px;
+		}
+
+		.axis text{
+		  font: 12px sans-serif;
+		  fill: #000;
+		}
+
+		.axis path,
+		.axis line {
+		  fill: none;
+		  stroke: #000;
+		  shape-rendering: crispEdges;
+		}
+
+
+		.x.axis path {
+		  display: none;
+		}
+
+	</style>
+	<script src="https://d3js.org/d3.v4.min.js" charset="utf-8"></script>
+	<!-- <script src="https://d3js.org/d3.v3.min.js" charset="utf-8"></script> -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+	<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="http://www.google.com/jsapi"></script>
+	<script type="text/javascript"> 
+			google.load('visualization', '1', {packages: ['corechart']});
+	</script>
+	</head>
+	<body>
+	<svg class="vis"></svg>
+	<script>
+// LOAD DATA FROM GOOGLE SHEETS
+	// references
+	// https://developers.google.com/chart/interactive/docs/reference
+	// https://gist.github.com/mhawksey/739602
+		var spreadsheetID = "1DJY9sjmJE-2fBwKvjXIEo48I04-z7CqpmM5s2ElqTAs"
+		var url = 'http://spreadsheets.google.com/tq?key=' + spreadsheetID + '&pub=1'
+		var query = new google.visualization.Query(url);
+		query.setQuery('SELECT B, C, D, E OFFSET 10');
+		query.send(handleSelectResponse);
+		var jsonObj;
+		var allData = [];
+		var maleBinned    = [0,0,0,0,0,0,0,0,0];
+		var femaleBinned  = [0,0,0,0,0,0,0,0,0];
+		var groupedNames  = [[],[],[],[],[],[],[],[],[]];
+		var maxInOneBin = 0;
+		var maxFrequency = 0.0;
+		var maleTotal = 0;
+		var femaleTotal = 0;
+
+		function handleSelectResponse(response) {
+			if (response.isError()) {
+				console.log('Error in query: ' + response.getMessage() + ' ' + response.getDetailedMessage());
+				return;
+			}
+			var jsonText = response.getDataTable().toJSON();
+			jsonObj = JSON.parse(jsonText);
+
+			for (var i = 0; i < jsonObj.rows.length; i++) {
+				surveyResult = {lastName:jsonObj.rows[i].c[0]['v'] , firstName:jsonObj.rows[i].c[1]['v'] , npScore:jsonObj.rows[i].c[2]['v'] , gender:jsonObj.rows[i].c[3]['v'] };
+				allData.push(surveyResult);
+				if (surveyResult.gender == "f") {
+					femaleBinned[ surveyResult.npScore + 1 ]++;
+					femaleTotal++;
+				} else {
+					maleBinned[ surveyResult.npScore + 1]++;
+					maleTotal++;
+				}
+				groupedNames[ surveyResult.npScore + 1].push(surveyResult.firstName+" "+surveyResult.lastName);
+			}
+			maxInOneBin = d3.max(maleBinned) > d3.max(femaleBinned) ? d3.max(maleBinned) : d3.max(femaleBinned);
+			maxFrequency = d3.max(maleBinned) / maleTotal > d3.max(femaleBinned) / femaleTotal ? d3.max(maleBinned) / maleTotal: d3.max(femaleBinned) / femaleTotal;
+			createVisual();
+		}
+
+var series;
+
+// var data = d3.range(1000).map(d3.randomBates(10));
+function createVisual() {
+
+
+	var topNode = d3.select(".vis");
+
+	var margin = {top: 20, right: 30, bottom: 30, left: 40};
+	var width = topNode.node().getBoundingClientRect().width - margin.left - margin.right;
+	var height = topNode.node().getBoundingClientRect().height - margin.top - margin.bottom;
+
+	topNode = topNode.append("g")
+		.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+	var yScaleMale = d3.scaleLinear()
+		.domain([0, d3.max(maleBinned) ])
+		.range([0, height]);
+
+	var yScaleFemale = d3.scaleLinear()
+		.domain([0, d3.max(femaleBinned) ])
+		.range([0, height]);
+
+	// var xScale = d3.scaleLinear
+
+	var topWidth = width;
+	var numBins = maleBinned.length;
+
+	var barWidth = topWidth / numBins;
+	var barHeight = height;
+
+// AXIS
+	var y = d3.scaleLinear()
+		.domain([0, maxFrequency ])
+		.range([barHeight, 0]);
+
+	var yAxis = d3.axisLeft(y)
+		.ticks(10, "%");
+
+	topNode.append("g")
+		.attr("class", "y axis")
+		.call(yAxis)
+	.append("text")
+		.attr("transform", "rotate(-90)")
+		.attr("y", 6)
+		.attr("dy", ".71em")
+		.style("text-anchor", "end")
+		.text("Frequency");
+
+	var x = d3.scaleBand()
+		.domain([-1,0,1,2,3,4,5,6,7])
+		.range([0,width]);
+
+	var xAxis = d3.axisBottom(x);
+
+	topNode.append("g")
+		.attr("class", "x axis")
+		.attr("transform", "translate(0,"+height+")")
+		.call(xAxis);
+
+// CONSTRUCT BARS
+
+	var maleBars = topNode.append("g");
+
+	var bar1 = maleBars.selectAll("rect")
+		.data(maleBinned)
+		.enter().append("rect")
+		.attr("class", "bar male")
+		.attr("x", function(d,i) { return i * barWidth + 4; } )
+		.attr("y", function(d,i) { return barHeight - yScaleMale(d)})
+		.attr("width", function(d) { return (barWidth / 2.0) - 5 })
+		.attr("height", function(d) { return yScaleMale(d); });
+
+	var femaleBars = topNode.append("g");
+
+	var bar2 = femaleBars.selectAll("rect")
+		.data(femaleBinned)
+		.enter().append("rect")
+		.attr("class", "bar female")
+		.attr("x", function(d,i) { return i * barWidth + barWidth/2.0; } )
+		.attr("y", function(d,i) { return barHeight - yScaleFemale(d)})
+		.attr("width", function(d) { return (barWidth / 2.0) - 5 })
+		.attr("height", function(d) { return yScaleFemale(d); });
+
+
+
+}
+
+	</script>
+
+</body>
+</html>
