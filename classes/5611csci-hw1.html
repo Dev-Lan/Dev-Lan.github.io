@@ -14,101 +14,99 @@
 
 {% include blogBodyStart.html %}
 
-<h1><a href="5611csci.html">Animation and Planning in Games</a></h1>
-    <h2>Assignment One : Particle Systems</h2>
-    <p>For this assignment I created an array of different particle systems. A screenshot of each system is below as well as a video presentation of all systems with descriptions of each. One of my overarching goals for this assignment was to render the particle systems in a painterly fashion. My main strategy to this end was to use textures I created using <a href="https://www.artrage.com/">ArtRage</a>, a painting application, and dynamically use subsections of the texture for each glyph.</p>
+  <h1><a href="5611csci.html">Animation and Planning in Games</a></h1>
+  <h2>Assignment One : Particle Systems</h2>
+  <p>For this assignment I created an array of different particle systems. A screenshot of each system is below as well as a video presentation of all systems with descriptions of each. One of my overarching goals for this assignment was to render the particle systems in a painterly fashion. My main strategy to this end was to use textures I created using <a href="https://www.artrage.com/">ArtRage</a>, a painting application, and dynamically use subsections of the texture for each glyph.</p>
 
-    <p><a href="../applications/particles.app.zip" download>DOWNLOAD MAC .APP FILE</a></p>
+  <p><a href="../applications/particles.app.zip" download>DOWNLOAD MAC .APP FILE</a></p>
 
-    <p><a href="../source/particles.zip" download>DOWNLOAD SOURCE</a></p>
+  <p><a href="../source/particles.zip" download>DOWNLOAD SOURCE</a></p>
 
+  <h3>Tools used</h3>
+  <ul>
+    <li>G3D (graphics engine) : <a href="http://g3d.sourceforge.net/">http://g3d.sourceforge.net/</a> </li>
+      <p>This basically serves as a wrapper around openGL calls, and provides utility classes such as Vectors and Cameras. I still wrote all the shaders for this project as well as all of the particle system code.</p>
+    <li>ArtRage (texture software) : <a href="https://www.artrage.com/">https://www.artrage.com/</a> </li>
+      <p>I used this software to create all of the textures in this program with the exception of the ground plane.</p>
+    <li>GroundTexture : <a href="http://opengameart.org/node/11950">http://opengameart.org/node/11950/</a> </li>
+      <p>I used this nice open souce tileable ground texture.</p>
+    <li>Normal Map Creation : <a href="http://www.crazybump.com/">http://www.crazybump.com/</a> </li>
+      <p>This is a neat little program that creates normal maps from images. I used it on the ground texture to create a nice effect with phong shading.</p>
+  </ul>
 
-
-    <h3>Tools used</h3>
+  <h3>Features</h3>
+  <h4>Listed in assignment description</h4>
     <ul>
-      <li>G3D (graphics engine) : <a href="http://g3d.sourceforge.net/">http://g3d.sourceforge.net/</a> </li>
-        <p>This basically serves as a wrapper around openGL calls, and provides utility classes such as Vectors and Cameras. I still wrote all the shaders for this project as well as all of the particle system code.</p>
-      <li>ArtRage (texture software) : <a href="https://www.artrage.com/">https://www.artrage.com/</a> </li>
-        <p>I used this software to create all of the textures in this program with the exception of the ground plane.</p>
-      <li>GroundTexture : <a href="http://opengameart.org/node/11950">http://opengameart.org/node/11950/</a> </li>
-        <p>I used this nice open souce tileable ground texture.</p>
-      <li>Normal Map Creation : <a href="http://www.crazybump.com/">http://www.crazybump.com/</a> </li>
-        <p>This is a neat little program that creates normal maps from images. I used it on the ground texture to create a nice effect with phong shading.</p>
+     <li>Ball bouncing on floor</li>
+     <li>Water Fountain</li>
+     <li>Fire Simulation</li>
+     <li>Fireworks Simulation</li>
+     <li>3D controlled camera (I did use a G3D camera manipulator)</li>
+     <li>3D implementation</li>
+     <li>Realtime rendering</li>
+     <li>Video documentation</li>
+     <li>Textured Sprites</li>
+     <li>Art Contest Submissions, see below</li>
+     <li>Real-time user interaction with system</li>
+     <li>Art Contest Submissions, see below</li>
     </ul>
 
-    <h3>Features</h3>
-    <h4>Listed in assignment description</h4>
-      <ul>
-       <li>Ball bouncing on floor</li>
-       <li>Water Fountain</li>
-       <li>Fire Simulation</li>
-       <li>Fireworks Simulation</li>
-       <li>3D controlled camera (I did use a G3D camera manipulator)</li>
-       <li>3D implementation</li>
-       <li>Realtime rendering</li>
-       <li>Video documentation</li>
-       <li>Textured Sprites</li>
-       <li>Art Contest Submissions, see below</li>
-       <li>Real-time user interaction with system</li>
-       <li>Art Contest Submissions, see below</li>
-      </ul>
+  <h4>Not listed in assignment description</h4>
+    <ul>
+     <li>Bubble simulation</li>
+     <li>Animated textures</li>
+    </ul>
 
-    <h4>Not listed in assignment description</h4>
-      <ul>
-       <li>Bubble simulation</li>
-       <li>Animated textures</li>
-      </ul>
+  <h3>Difficulties Encountered</h3>
+  <p>The most surprising issue that I ran into was a problem I had with the speed of my fragment shader. Going into this I thought I would be able to use large paint themed glyphs, not use as many particles, and have a fast compelling animation. On The contrary I found when using larger particle sizes, especially when the camera had many particles in its viewport the framerate bombed. All that my fragment shader does is a texture lookup, so this surprised me. Instead of fixing the problem I ended up just using smaller particle sizes. I am still curious if there is a good way to fix this, but if I had to guess myself the best way to speed this up would be to clip the particles that are occluded by more forefront particles.</p>
 
-    <h3>Difficulties Encountered</h3>
-    <p>The most surprising issue that I ran into was a problem I had with the speed of my fragment shader. Going into this I thought I would be able to use large paint themed glyphs, not use as many particles, and have a fast compelling animation. On The contrary I found when using larger particle sizes, especially when the camera had many particles in its viewport the framerate bombed. All that my fragment shader does is a texture lookup, so this surprised me. Instead of fixing the problem I ended up just using smaller particle sizes. I am still curious if there is a good way to fix this, but if I had to guess myself the best way to speed this up would be to clip the particles that are occluded by more forefront particles.</p>
+  <h3>Time Machine Features</h3>
+  <p>By time machine features I just mean things I would like to implement if I had infinite time.</p>
+    <ul>
+     <li>Tornado simulation.</li>
+     <li>Adding Perlin noise to bubble simulation.</li>
+     <li>A lightable/spreadable fire.</li>
+     <li>Using the normal map of the ground texture when computing the bounces.</li>
+    </ul>
 
-    <h3>Time Machine Features</h3>
-    <p>By time machine features I just mean things I would like to implement if I had infinite time.</p>
-      <ul>
-       <li>Tornado simulation.</li>
-       <li>Adding Perlin noise to bubble simulation.</li>
-       <li>A lightable/spreadable fire.</li>
-       <li>Using the normal map of the ground texture when computing the bounces.</li>
-      </ul>
+  <div class="container-fluid">
+    <div id="screenshots" class="carousel slide" data-interval="false">
+      <!-- Indicators -->
+      <ol class="carousel-indicators">
+        <li data-target="#screenshots" data-slide-to="0" class="active"></li>
+        <li data-target="#screenshots" data-slide-to="1"></li>
+        <li data-target="#screenshots" data-slide-to="2"></li>
+        <li data-target="#screenshots" data-slide-to="3"></li>
+        <li data-target="#screenshots" data-slide-to="4"></li>
+      </ol>
 
-    <div class="container-fluid">
-      <div id="screenshots" class="carousel slide" data-interval="false">
-        <!-- Indicators -->
-        <ol class="carousel-indicators">
-          <li data-target="#screenshots" data-slide-to="0" class="active"></li>
-          <li data-target="#screenshots" data-slide-to="1"></li>
-          <li data-target="#screenshots" data-slide-to="2"></li>
-          <li data-target="#screenshots" data-slide-to="3"></li>
-          <li data-target="#screenshots" data-slide-to="4"></li>
-        </ol>
+      <!-- Wrapper for slides -->
+      <div class="carousel-inner" role="listbox">
 
-        <!-- Wrapper for slides -->
-        <div class="carousel-inner" role="listbox">
+        {% include carousel-item.html active="active" filepath="../img/classes/5611csci/fire.png" caption="Fire" %}
+       
+        {% include carousel-item.html filepath="../img/classes/5611csci/balls.png" caption="Bouncing Balls" %}
 
-          {% include carousel-item.html active="active" filepath="../img/classes/5611csci/fire.png" caption="Fire" %}
-         
-          {% include carousel-item.html filepath="../img/classes/5611csci/balls.png" caption="Bouncing Balls" %}
+        {% include carousel-item.html filepath="../img/classes/5611csci/embers.png" caption="Embers" %}
 
-          {% include carousel-item.html filepath="../img/classes/5611csci/embers.png" caption="Embers" %}
-
-          {% include carousel-item.html filepath="../img/classes/5611csci/fireworks.png" caption="Fireworks" %}
-         
-          {% include carousel-item.html filepath="../img/classes/5611csci/bubbles.png" caption="BUBBLES!!" %}
-        
-        </div>
-
-        {% include carousel-Controls.html %}
-
+        {% include carousel-item.html filepath="../img/classes/5611csci/fireworks.png" caption="Fireworks" %}
+       
+        {% include carousel-item.html filepath="../img/classes/5611csci/bubbles.png" caption="BUBBLES!!" %}
+      
       </div>
+
+      {% include carousel-controls.html %}
+
     </div>
+  </div>
 
-    <p></p>
+  <p></p>
 
-    {% include youtube.html ID="xj9x5OjO2Z8" %}
+  {% include youtube.html ID="xj9x5OjO2Z8" %}
 
-    {% include bigImage.html title="Smokey Bear's Nightmare Fuel" filepath="../img/classes/5611csci/art1.png" %}
+  {% include bigImage.html title="Smokey Bear's Nightmare Fuel" filepath="../img/classes/5611csci/art1.png" %}
 
-    <p></p>
+  <p></p>
 
 {% include blogBodyEnd.html %}
 

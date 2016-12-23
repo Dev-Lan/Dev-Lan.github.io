@@ -3,123 +3,86 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Dev-Lan</title>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
-  <link rel="stylesheet" href="../style/darkly-bootstrap.min.css">
-  <link rel="stylesheet" href="../style/devlan-style.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-  <style type="text/css">
-    body {
-      padding-top: 60px;
-    }
-  .carousel-inner > .item > img,
-  .carousel-inner > .item > a > img {
-      max-width: 100%;
-      margin: auto;
-  }
-  </style>
+  {% include headBoilerplate.html title="Dev_Lan" %}
+  {% include navOffset.html %}
 </head>
 <body>
 
-{% include navbar.html %}
+{% include navbarSimple.html %}
 
-<div id="scroll-wrapper" class="scroll-wrapper"><div class="container-fluid no-pad"><div id="checker" class="parallax">
+{% include blogBodyStart.html %}
 
-  <div class="row row-centered">
-  <div class="col-lg-8 col-md-9 col-sm-10 col-xs-11 col-centered">
+  <h1><a href="5611csci.html">Animation and Planning in Games</a></h1>
+  <h2>Assignment Three : Motion Planning</h2>
 
-    <h1><a href="5611csci.html">Animation and Planning in Games</a></h1>
-    <h2>Assignment Three : Motion Planning</h2>
+  <p><a href="../applications/planning.app.zip" download>DOWNLOAD MAC .APP FILE</a></p>
 
-    <p><a href="../applications/planning.app.zip" download>DOWNLOAD MAC .APP FILE</a></p>
-
-    <p><a href="../source/planning.zip" download>DOWNLOAD SOURCE</a></p>
+  <p><a href="../source/planning.zip" download>DOWNLOAD SOURCE</a></p>
 
 
 
-    <h3>Tools used</h3>
+  <h3>Tools used</h3>
+  <ul>
+    <li>G3D (graphics engine) : <a href="http://g3d.sourceforge.net/">http://g3d.sourceforge.net/</a> </li>
+      <p>This basically serves as a wrapper around openGL calls, and provides utility classes such as Vectors and Cameras.</p>
+    <li>GroundTexture : <a href="http://opengameart.org/node/11950">http://opengameart.org/node/11950/</a> </li>
+      <p>I used this nice open souce tileable ground texture.</p>
+  </ul>
+
+  <h3>Features</h3>
+  <h4>Listed in assignment description</h4>
     <ul>
-      <li>G3D (graphics engine) : <a href="http://g3d.sourceforge.net/">http://g3d.sourceforge.net/</a> </li>
-        <p>This basically serves as a wrapper around openGL calls, and provides utility classes such as Vectors and Cameras.</p>
-      <li>GroundTexture : <a href="http://opengameart.org/node/11950">http://opengameart.org/node/11950/</a> </li>
-        <p>I used this nice open souce tileable ground texture.</p>
+     <li>Multiple obstacles</li>
+     <li>Circular agent</li>
+     <li>User obstacle creation</li>
+     <li>User specified start/goal</li>
+     <li>3D rendering</li>
+     <li>path smoothing</li>
     </ul>
 
-    <h3>Features</h3>
-    <h4>Listed in assignment description</h4>
-      <ul>
-       <li>Multiple obstacles</li>
-       <li>Circular agent</li>
-       <li>User obstacle creation</li>
-       <li>User specified start/goal</li>
-       <li>3D rendering</li>
-       <li>path smoothing</li>
-      </ul>
 
 
+<div class="container-fluid">
+  <div id="screenshots" class="carousel slide" data-interval="false">
+    <!-- Indicators -->
+    <ol class="carousel-indicators">
+      <li data-target="#screenshots" data-slide-to="0" class="active"></li>
+      <li data-target="#screenshots" data-slide-to="1"></li>
+      <li data-target="#screenshots" data-slide-to="2"></li>
+    </ol>
 
-  <div class="container-fluid">
-    <div id="screenshots" class="carousel slide" data-interval="false">
-      <!-- Indicators -->
-      <ol class="carousel-indicators">
-        <li data-target="#screenshots" data-slide-to="0" class="active"></li>
-        <li data-target="#screenshots" data-slide-to="1"></li>
-        <li data-target="#screenshots" data-slide-to="2"></li>
-      </ol>
+    <!-- Wrapper for slides -->
+    <div class="carousel-inner" role="listbox">
+      {% include carousel-item.html active="active" filepath="../img/classes/5611csci/path1.png" caption="" %}
 
-      <!-- Wrapper for slides -->
-      <div class="carousel-inner" role="listbox">
-        <div class="item active">
-          <img src="../img/classes/5611csci/path1.png">
-           <div class="carousel-caption">
-          </div>
-        </div>
+      {% include carousel-item.html filepath="../img/classes/5611csci/path2.png" caption="" %}
 
-        <div class="item">
-          <img src="../img/classes/5611csci/path2.png">
-          <div class="carousel-caption">
-          </div>
-        </div>
-      
-        <div class="item">
-          <img src="../img/classes/5611csci/path3.png">
-          <div class="carousel-caption">
-          </div>
-        </div>
+      {% include carousel-item.html filepath="../img/classes/5611csci/path3.png" caption="" %}
 
-      </div>
-
-      <p></p>
-
-      <!-- Left and right controls -->
-      <a class="left carousel-control" href="#screenshots" role="button" data-slide="prev">
-        <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
-        <span class="sr-only">Previous</span>
-      </a>
-      <a class="right carousel-control" href="#screenshots" role="button" data-slide="next">
-        <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
-        <span class="sr-only">Next</span>
-      </a>
     </div>
-
-  <h4>User Controls</h4>
-  <ul>
-    <li>"1" - Toggle roadmap visibility.</li>
-    <li>"2" - Toggle path visibility.</li>
-    <li>"r" - Reset agent back to start position.</li>
-    <li>"click" - Set start position.</li>
-    <li>"shift + click" - Set goal position.</li>
-    <li>"space" - Add obstacles</li>
-  </ul>
 
     <p></p>
 
-    </div>
+      {% include carousel-controls.html %}
+
   </div>
-</div></div></div>
+</div>
+
+<h4>User Controls</h4>
+<ul>
+  <li>"1" - Toggle roadmap visibility.</li>
+  <li>"2" - Toggle path visibility.</li>
+  <li>"r" - Reset agent back to start position.</li>
+  <li>"click" - Set start position.</li>
+  <li>"shift + click" - Set goal position.</li>
+  <li>"space" - Add obstacles</li>
+</ul>
+
+  <p></p>
+
+{% include blogBodyEnd.html %}
+
+{% include footer.html %}
 
 </body>
 </html>
