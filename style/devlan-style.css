@@ -186,6 +186,7 @@ figure:hover .rollover-caption {
 .row-centered {
   text-align:center;
   padding: 0px;
+  padding-top: 25px; 
 }
 .col-centered {
   display:inline-block;
@@ -198,16 +199,16 @@ figure:hover .rollover-caption {
   padding-top:0px;
   padding-bottom:0px;
 
-  border: 2px solid #B8B8B8;
-  border-radius: 5px;
+  /*border: 2px solid #B8B8B8;*/
+  /*border-radius: 5px;*/
 
-  -webkit-box-shadow: 0px 0px 100px black;
-  -moz-box-shadow: 0px 0px 100px black;
-  box-shadow: 0px 0px 100px black;
+  -webkit-box-shadow: 0px 0px 20px black;
+  -moz-box-shadow: 0px 0px 20px black;
+  box-shadow: 0px 0px 20px black;
 
   min-height:100vh;
 
-  background:#222222;
+  background: #FFF;
 }
 
 
@@ -218,20 +219,55 @@ figure:hover .rollover-caption {
 */
 
 
-html {
+/*html {
   overflow: hidden;
 }
+*/
+body,li,ol,ul { 
+  /*-ms-perspective: 1px;*/
+  /*-webkit-perspective: 1px;*/
+  /*perspective: 1px;*/
+  /*transform-style: preserve-3d;*/
+  /*overflow-y: scroll;*/
+  /*overflow-x: hidden;*/
+  /*background: url("../img/checker-512.png");*/
+  /*background-color: #D2D2D2;*/
+  /*height: 100vh;*/
+  /*font-family: 'Architects Daughter', cursive;*/
+  font-family: 'PT Sans', sans-serif;
+}
 
-body { 
-  -ms-perspective: 1px;
-  -webkit-perspective: 1px;
-  perspective: 1px;
-  transform-style: preserve-3d;
-  overflow-y: scroll;
-  overflow-x: hidden;
-  background: url("../img/checker-512.png");
-  background-color: #D2D2D2;
-  height: 100vh;
+h1,h2,h3,h4,h5,h6,nav {
+  font-family: 'Architects Daughter', cursive;
+}
+
+h1 {
+  text-align: center;
+}
+
+.hover-glow {
+  color: white;
+}
+
+.hover-glow:hover {
+  /*color: blue;*/
+  /*filter: blur(1px)*/
+  background-color: #FFF;
+
+}
+
+/*TODO: add garnish*/
+/*body {
+  background-image: url("../img/wheat-015.jpg");
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-position: bottom left;
+}*/
+
+.carousel-inner > .item > img,
+.carousel-inner > .item > a > img {
+  max-width: 100%;
+  margin: auto;
 }
 
 .no-pad {
