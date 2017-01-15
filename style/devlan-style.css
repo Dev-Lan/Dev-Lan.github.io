@@ -1,3 +1,73 @@
+.simpleBall {
+  position: absolute;
+  background-color: black;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+}
+
+.animateContainer {
+  position: absolute;
+  width: 100vw;
+  height: calc(100% - 60px);
+  border-style: dotted;
+  border-color: black;
+  border-width: 1px;
+}
+
+.blobFilter {
+  filter:url('#goo');  
+}
+
+.bigPageLink {
+  padding: 20px;
+  margin-bottom: 20px;
+  display: inline-block;
+  width: 100%;
+  border-style: solid;
+  border-color: #CCC;
+  border-width: 1px;
+}
+
+.bigPageLink:hover {
+  border-style: solid;
+  border-color: #888;
+  -webkit-box-shadow: 0px 0px 5px #444;
+  -moz-box-shadow: 0px 0px 5px #444;
+  box-shadow: 0px 0px 5px #444;
+}
+
+.bigPageLinkLeft {
+  float: left;
+  width: 30%;
+}
+
+.bigPageLinkRight {
+  margin-left: 30%;
+}
+
+.bigPageLinkRightContent {
+  display: inline-block;
+  width: 100%;
+  /*vertical-align: middle;*/
+  /*display: table-cell;*/
+  /*height: 225px;*/
+}
+
+.bigPageLinkLeft > img {
+  width:100%;
+  height: auto;/*
+  width: 300px;
+  height: 225px;*/
+  padding-right: 20px;
+  /*border: 1px;*/
+}
+
+.bigPageLinkRightContent > a {
+  font-size: 40px;
+  font-family: 'Architects Daughter', cursive;
+}
+
 .btn {
     border-radius: 0px;
 }
@@ -198,7 +268,7 @@ figure:hover .rollover-caption {
   -moz-box-shadow: 0px 0px 20px black;
   box-shadow: 0px 0px 20px black;
 
-  min-height:100vh;
+  min-height:25vh;
 
   background: #FFF;
 }
@@ -244,13 +314,12 @@ h1 {
 
 }
 
-/*TODO: add garnish*/
-/*body {
-  background-image: url("../img/wheat-015.jpg");
+body {
+  background-image: url("../img/wheat.png");
   background-repeat: no-repeat;
   background-attachment: fixed;
   background-position: bottom left;
-}*/
+}
 
 .carousel-inner > .item > img,
 .carousel-inner > .item > a > img {

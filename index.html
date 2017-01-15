@@ -3,48 +3,22 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Dev-Lan</title>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="style/darkly-bootstrap.min.css">
-   <!-- Stylesheet used found here. -->
-  <!-- https://bootswatch.com/ -->
-  <!-- https://bootswatch.com/darkly/ -->
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-  <style type="text/css">
-    body {
-      padding-top: 65px;
-    }
-/*    @media (max-width: 979px) {
-      body {
-        padding-top: 0px;
-      }
-    }*/
-  </style>
+  {% include headBoilerplate.html title="Dev_Lan" %}
+  <script src="scripts/circleAnimator.js"></script>
+  {% include navOffset.html %}
+
 </head>
-<body>
+<body onmousemove="updateMousePos(event)"
+	  onmousedown="handleMouseDown(event)"
+	  onmouseup="handleMouseUp(event)"">
 
-{% include navbar.html %}
+{% include navbarSimple.html %}
 
-<div class="container-fluid">
-    <h1>About this website</h1>
-
-
-    <div class="row">
-      <div class="col-sm-3">
-        <img class="img-responsive" src="img/me/bigRound.png">
-      </div>
-      <div class="col-sm-9">
-        <p>Email Address: <a href="mailto:lange604@umn.edu?Subject=Devin%20you%20are%20the%20coolest.%20Just%20thought%20you%20should%20know..." target="_top">lange604@umn.edu</a></p>
-        <p>This website exists as a platform for me to share my work and experience with others, and as a playground for me to experiment with web development.</p>
-        <p>Feel free to check out some of my programming projects from class and free time.</p>
-      </div>
-    </div>
-
-
+<div id="animateContainer" class="animateContainer blobFilter">
 
 </div>
+
+{% include blobFilter.html %}
 
 </body>
 </html>
