@@ -20,6 +20,7 @@
 
 .fancyText {
 	font-family: 'Indie Flower', cursive;
+	user-select: none;
 }
 
 .overlayDiv {
@@ -37,6 +38,7 @@
 
 img {
 	padding: 20px;
+	user-select: none;
 }
 
 html {

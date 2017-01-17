@@ -229,6 +229,7 @@ function updateState(dt) {
 
 	// reset by position with constraints
 	for (var i = 0; i < balls.length; i++) {
+		// the order matters in how you prioritize constraints
 		bounceBall(balls[i],container,.99);
 		addSpringConstraint(balls[i], 2);
 		mouseConstraint(balls[i], 2.5);
