@@ -1,0 +1,72 @@
+
+.code-container {
+	background-color: #EEE;
+	background: #EEE;
+}
+
+.code-line {
+	white-space: pre;
+}
+
+.current-line {
+	background-color: lightgreen;
+}
+
+.array-container {
+	position: absolute;
+	display: flex;
+	border-color: green;
+	border-style: solid;
+	border-width: 3px;
+}
+
+.array-item {
+	display: inline-block;
+	border-style: solid;
+	border-color: black;
+	border-width: 1px;
+	position: absolute;
+	margin-left: 0;
+	margin-right: 0;
+}
+
+.array-value {
+	display: inline;
+	text-align: center;
+	font-size: 1.75em;
+	position: absolute;
+}
+
+.array-index {
+	display: inline-block;
+	text-align: center;
+	border-style: solid;
+	border-color: black;
+	border-width: 1px;
+	border-radius: 50%;
+	position: absolute;
+}
+
+.left {
+
+}
+
+.right {
+
+}
+
+.mid {
+
+}
+
+.array {
+
+}
+
+.check-value {
+
+}
+
+.search-value {
+
+}

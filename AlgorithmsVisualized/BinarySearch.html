@@ -1,0 +1,88 @@
+---
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  {% include headBoilerplate.html title="Dev_Lan" %}
+  <script src="BinarySearch.js"></script>
+  <link rel="stylesheet" href="./BinarySearch.css">
+  {% include navOffset.html %}
+</head>
+<body>
+
+{% include navbarSimple.html %}
+
+<h1>Binary Search</h1>
+
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-sm-4">
+
+    	<div id="code-container" class="code-container">
+    		<ol>
+				<li id="line-1" class="code-line">BinarySearch(array, searchValue):</li>
+				<li id="line-2" class="code-line">	left = 1</li>
+				<li id="line-3" class="code-line">	right = N</li>
+				<li id="line-4" class="code-line">	while True:</li>
+				<li id="line-5" class="code-line">		if left > right:</li>
+				<li id="line-6" class="code-line">			return -1</li>
+				<li id="line-7" class="code-line">		mid = (left+right) / 2</li>
+				<li id="line-8" class="code-line">		mid = floor(mid)</li>
+				<li id="line-9" class="code-line">		checkValue = array[mid]</li>
+				<li id="line-10" class="code-line">		if (checkValue > searchValue):</li>
+				<li id="line-11" class="code-line">			right = mid - 1</li>
+				<li id="line-12" class="code-line">		else if (checkValue < searchValue):</li>
+				<li id="line-13" class="code-line">			left = mid + 1</li>
+				<li id="line-14" class="code-line">		else:</li>
+				<li id="line-15" class="code-line">			return mid</li>
+    		</ol>
+    	</div>
+
+    </div>
+    <div class="col-sm-8">
+    	<div id="vis-container">
+
+		  <svg id="svg-path-container">
+			  <path id="left-path" d="" stroke-dasharray="15, 5"  stroke="red" stroke-width="5" fill="none"/>
+			  <path id="right-path" d="" stroke-dasharray="15, 5"  stroke="green" stroke-width="5" fill="none"/>
+			  <path id="mid-path" d="" stroke-dasharray="15, 5"  stroke="blue" stroke-width="5" fill="none"/>
+			  <!-- TODO use CSS classes for styling -->
+		  </svg>
+
+    		<div id="array-container" class="array-container">
+    		{% include arrayItem.html value="3" index="1" %}
+    		{% include arrayItem.html value="7" index="2" %}
+    		{% include arrayItem.html value="9" index="3" %}
+    		{% include arrayItem.html value="14" index="4" %}
+    		{% include arrayItem.html value="16" index="5" %}
+    		{% include arrayItem.html value="17" index="6" %}
+    		{% include arrayItem.html value="20" index="7" %}
+    		{% include arrayItem.html value="25" index="8" %}
+    		{% include arrayItem.html value="29" index="9" %}
+    		{% include arrayItem.html value="33" index="10" %}
+    		{% include arrayItem.html value="36" index="11" %}
+    		{% include arrayItem.html value="45" index="12" %}
+    		{% include arrayItem.html value="55" index="13" %}
+    		{% include arrayItem.html value="68" index="14" %}
+    		{% include arrayItem.html value="77" index="15" %}
+    		{% include arrayItem.html value="84" index="16" %}
+    		</div>
+    	</div>
+    </div>
+  </div>
+  <div class="row">
+		<button id="stepButton">ADVANCE!</button>
+		<!-- <form> -->
+			<input id="searchValue" type="text" name="searchValue">
+		<!-- </form> -->
+  </div>
+</div>
+
+
+{% include blogBodyEnd.html %}
+
+{% include footer.html %}
+
+</body>
+</html>
