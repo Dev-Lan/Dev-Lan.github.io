@@ -1,12 +1,8 @@
 // CONSTANTS
 var ARRAY_CONTAINER_BORDER_WIDTH = 3;
 
-var playing=false;
-var intervalSeconds=1.0;
-
 // global dom stuff
 var arrayContainer="";
-var codeContainer="";
 var visContainer="";
 var svgPathContainer="";
 var leftPathElement="";
@@ -16,8 +12,6 @@ var midPathElement="";
 var svgHeight="";
 
 // algorithm logic
-var currentLine = 1;
-var done=100;
 var left="";
 var right="";
 var mid="";
@@ -31,14 +25,17 @@ var leftPath=[];
 var rightPath=[];
 var midPath=[];
 
-window.onload = function onload() {
-	addEventListeners();
-	initializeGraphics();
-}
+var binarySearchAlgo = {
+	init: function() {
+		initializeGraphics();
+	},
+	doStep: function(line) {
+		AdvanceState(line);
+	}
+};
 
-function addEventListeners() {
-	var stepButton = document.getElementById("stepButton");
-	stepButton.addEventListener("click", AdvanceState);
+window.onload = function onload() {
+	startAlgorithm(binarySearchAlgo);
 }
 
 function initializeGraphics() {
@@ -71,7 +68,6 @@ function initializeGraphics() {
 }
 
 function getDomElements() {
-	codeContainer = document.getElementById("code-container");
 	arrayContainer = document.getElementById("array-container");
 	visContainer = document.getElementById("vis-container");
 	svgPathContainer = document.getElementById("svg-path-container");
@@ -130,38 +126,9 @@ function getSearchValue() {
 	return parseInt(inputEl.value);
 }
 
-function advanceLine(advance) {
-	changeLine(currentLine + advance);
-}
-
-function goToLine(line) {
-	changeLine(line);
-}
-
-function changeLine(newLine) {
-	var lineElement = getLineElement(currentLine);
-	resetClass(lineElement,"code-line");
-
-	currentLine = newLine;
-	var lineElement = getLineElement(currentLine)
-	addClass(lineElement,"current-line");
-}
-
-function getLineElement(lineNum) {
-	return document.getElementById("line-" + lineNum);
-}
-
-function addClass(element,newClass) {
-	element.className = element.className + " " + newClass;
-}
-
-function resetClass(element,originalClass) {
-	element.className = originalClass;
-}
-
-function AdvanceState() {
+function AdvanceState(line) {
 	// alert("line: "+currentLine);
-	switch(currentLine) {
+	switch(line) {
 
 		case 1:
 			array = getArrayToSearch();
@@ -250,11 +217,6 @@ function AdvanceState() {
 // TODO - read past devin's thoughts. In short there is a big issue in cleanliness here in
 // 		  distinguishing the order of exection of a single line. it's pretty muddled.
 
-function stopExecution() {
-	alert("done");
-	// TODO
-}
-
 // TODO combine left/right into one function
 function initLeftPath() {
 	initPath(leftPath, 0);
@@ -315,43 +277,3 @@ function createPathString(arrayOfPoints) {
 	return pathString;
 }
 
-// Vector utility
-
-function Vector2(x,y) {
-	var Vector2 = new Object();
-	Vector2.x = x;
-	Vector2.y = y;
-	return Vector2;
-}
-
-function addVectors(vec1,vec2) {
-	return Vector2(vec1.x+vec2.x, vec1.y+vec2.y);
-}
-
-function subVectors(vec1, vec2) {
-	return Vector2(vec1.x-vec2.x, vec1.y-vec2.y);
-}
-
-function scaleVector(vec, scale) {
-	return Vector2(vec.x*scale, vec.y*scale);
-}
-
-function normalize(vec) {
-	var mag = magnitude(vec);
-	var unit = {}
-	unit.x = vec.x / mag;
-	unit.y = vec.y / mag;
-	return unit;
-}
-
-function magnitude(vec) {
-	return Math.sqrt(magnitudeSquared(vec));
-}
-
-function magnitudeSquared(vec) {
-	return dot(vec,vec);
-}
-
-function dot(vec1,vec2) {
-	return vec1.x*vec2.x + vec1.y*vec2.y;
-}
