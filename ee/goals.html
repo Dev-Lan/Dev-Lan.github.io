@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Dev-Lan</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+	<link rel="stylesheet" href="../style/devlan-style.css">
+	<script src="https://d3js.org/d3.v4.min.js" charset="utf-8"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+	<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="http://www.google.com/jsapi"></script>
+	<script type="text/javascript"> 
+		google.load('visualization', '1', {packages: ['corechart']});
+	</script>
+		<script>
+		// LOAD DATA FROM GOOGLE SHEETS
+		// references
+		// https://developers.google.com/chart/interactive/docs/reference
+		// https://gist.github.com/mhawksey/739602
+		var spreadsheetIdList =
+		[
+			"1AOKCjqSnDLr7HZBlGboBn2QsXT-tRFgtkHnZQd6o1KY", // eat in
+			"1KgZt1c_yupAJxPSF2cASL611C_eEZSL2bjcvQqFBs6o", // workout
+			"1yfep0hRbgepDhBtiCRhyhcvlnkSxByHIsy9BVt0zBhs", // volunteer 
+			"1NfiR0Asdv86vAjF-mVKCzU7bGnok9prGSemzDjU-bys", // read
+			"11vSYIQbFaJT2EAYlqA8_5jxfJoRfj64IWr5hJIaWiEA", // cook
+			"1UvJG3docsver0DSpalUrFcoIcSZ_qNLbX3p3I43F0ws"  // code
+		];
+
+		for (var i = spreadsheetIdList.length - 1; i >= 0; i--) {			
+			var spreadsheetID = spreadsheetIdList[i];
+			var url = 'http://spreadsheets.google.com/tq?key=' + spreadsheetID + '&pub=1';
+			// console.log(spreadsheetID);
+			var query = new google.visualization.Query(url);
+			query.setQuery('Select B, C, E limit 1 offset 3');
+			(function(tableID)
+			{
+				query.send((function (response) { handleSelectResponse(response, tableID); }));	
+			})(spreadsheetID);
+			
+		}
+
+		function handleSelectResponse(response, sheetID) {
+			if (response.isError()) {
+				console.log('Error in query: ' + response.getMessage() + ' ' + response.getDetailedMessage());
+				return;
+			}
+			var jsonText = response.getDataTable().toJSON();
+			jsonObj = JSON.parse(jsonText);
+
+			var bronzeOffset = jsonObj.rows[0].c[0]['f'];
+			var silverOffset = jsonObj.rows[0].c[1]['f'];
+			var goldOffset = jsonObj.rows[0].c[2]['f'];
+			var graphContainer = document.getElementById(sheetID);
+			// bronze
+			var bronzeDiv = graphContainer.getElementsByClassName("bronze")[0];
+			bronzeDiv.innerText = bronzeOffset;
+			if (bronzeOffset > 0) {
+				bronzeDiv.classList.add("bronzeMet");
+			}
+
+			// silver
+			var silverDiv = graphContainer.getElementsByClassName("silver")[0];
+			silverDiv.innerText = silverOffset;
+			if (silverOffset > 0) {
+				silverDiv.classList.add("silverMet");
+			}
+
+			// gold
+			var goldDiv = graphContainer.getElementsByClassName("gold")[0];
+			goldDiv.innerText = goldOffset;
+			if (goldOffset > 0) {
+				goldDiv.classList.add("goldMet");
+			}
+		}
+		</script>
+
+	<style type="text/css">
+		iframe {
+			border: solid black 0px;
+		}
+		body {
+			background: white;
+		}
+		.graphContainer {
+			display: inline-block;
+			border: solid black 1px;
+			margin: 2px;
+			padding: 1px;
+		}
+		.medalsContainer {
+			text-align: left;
+
+		}
+		.medal {
+			display: inline-block;
+			width: 110px;
+			padding: 5px;
+			text-align: center;
+			border-radius: 0px 20px 20px 0px;
+			position: relative;
+			box-shadow: 1px 0px 0px 1px rgba(255,255,255,1);
+			font-size: 20px;
+		}
+		.bronzeMet {
+			background-color: #cd7f32 !important;			
+		}
+		.bronze {
+			background-color: white;
+			z-index: 1000;
+			border: solid 4px #cd7f32;
+			width: 80px;
+		}
+		.silverMet {
+			background-color: #c0c0c0 !important;			
+		}
+		.silver {
+			background-color: white;
+			left: -20px;
+			z-index: 900;
+			border: solid 4px #c0c0c0;
+			width: 110px;
+		}
+
+		.goldMet {
+			background-color: #ffdf00 !important;			
+		}
+		.gold {
+			background-color: white;
+			left: -40px;
+			border: solid 4px #ffdf00;
+			width: 140px;
+		}
+	</style>
+</head>
+	<body>
+
+  <div class="container-fluid">
+      <div class="row row-centered">
+
+		<!-- eat in -->
+		<div id="1AOKCjqSnDLr7HZBlGboBn2QsXT-tRFgtkHnZQd6o1KY" class="graphContainer" >
+			<div class="medalsContainer">
+				<div class="bronze medal">...</div>
+				<div class="silver medal">...</div>
+				<div class="gold medal">...</div>
+			</div>
+			<iframe width=604 height=375 frame=n src="https://docs.google.com/spreadsheets/d/e/2PACX-1vTq2h3ViGt3Oss0U1-VOuS82KrHQoJCFXOyU6W8VDys5zSBGQVMoXxyItA7JMm37bu3EFJdsPEwdfC4/pubchart?oid=705547019&amp;format=interactive"></iframe>
+		</div>
+
+		<!-- workout  -->
+		<div id="1KgZt1c_yupAJxPSF2cASL611C_eEZSL2bjcvQqFBs6o" class="graphContainer" >
+			<div class="medalsContainer">
+				<div class="bronze medal">...</div>
+				<div class="silver medal">...</div>
+				<div class="gold medal">...</div>
+			</div>
+			<iframe width=604 height=375 src="https://docs.google.com/spreadsheets/d/e/2PACX-1vTUnjU6UKmxUHvqO_859VLnXzaJHuGyBl1BG5h78HrRsLknLU7hEu3CAL2JKQr4SUDPhxBMkprFNWCs/pubchart?oid=705547019&amp;format=interactive"></iframe>
+		</div>
+
+		<!-- volunteer -->
+		<div id="1yfep0hRbgepDhBtiCRhyhcvlnkSxByHIsy9BVt0zBhs" class="graphContainer" >
+			<div class="medalsContainer">
+				<div class="bronze medal">...</div>
+				<div class="silver medal">...</div>
+				<div class="gold medal">...</div>
+			</div>
+			<iframe width=604 height=375 src="https://docs.google.com/spreadsheets/d/e/2PACX-1vTWjJS_NPk0RrJi_HupeZ1K99JAO-HwfyMAPb02Nj1yCpAbsM7cWMY3bePbey1QenJUN3JeR4BheqW0/pubchart?oid=705547019&amp;format=interactive"></iframe>
+		</div>
+
+		<!-- read -->
+		<div id="1NfiR0Asdv86vAjF-mVKCzU7bGnok9prGSemzDjU-bys" class="graphContainer" >
+			<div class="medalsContainer">
+				<div class="bronze medal">...</div>
+				<div class="silver medal">...</div>
+				<div class="gold medal">...</div>
+			</div>
+			<iframe id="1NfiR0Asdv86vAjF-mVKCzU7bGnok9prGSemzDjU-bys" width=604 height=375 src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQPhIbBiFE8s6dtdcSO8bSNP3DTA58_nO4D_fZJ-MsXZCya5L9ybgIW1AIOjvUzdNPu3C1A6K2IwR5E/pubchart?oid=705547019&amp;format=interactive"></iframe>
+		</div>
+
+		<!-- cook -->
+		<div id="11vSYIQbFaJT2EAYlqA8_5jxfJoRfj64IWr5hJIaWiEA" class="graphContainer" >
+			<div class="medalsContainer">
+				<div class="bronze medal">...</div>
+				<div class="silver medal">...</div>
+				<div class="gold medal">...</div>
+			</div>
+			<iframe width=604 height=375 src="https://docs.google.com/spreadsheets/d/e/2PACX-1vTUZNuXkUI2srWIzCd5OASIJFuRdBxWy8Gawt5nqCv72ZG9ckZakW8OB4OVj1urboiq978c2SDo4mKg/pubchart?oid=705547019&amp;format=interactive"></iframe>
+		</div>
+
+		<!-- code -->
+		<div id="1UvJG3docsver0DSpalUrFcoIcSZ_qNLbX3p3I43F0ws" class="graphContainer" >
+			<div class="medalsContainer">
+				<div class="bronze medal">...</div>
+				<div class="silver medal">...</div>
+				<div class="gold medal">...</div>
+			</div>
+			<iframe width=604 height=375 src="https://docs.google.com/spreadsheets/d/e/2PACX-1vRwBK-EbYx0ZtA-osQh0aSRuV7tee5EOlcFxreAy4QMDzaOPgmWDiQqeWAlQ56wZfuXyYXVbrKpbYVt/pubchart?oid=705547019&amp;format=interactive"></iframe>
+		</div>
+
+      </div>
+  </div>
+
+	</body>
+</html>
