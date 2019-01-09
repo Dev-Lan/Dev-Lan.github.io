@@ -33,7 +33,7 @@
 			var url = 'http://spreadsheets.google.com/tq?key=' + spreadsheetID + '&pub=1';
 			// console.log(spreadsheetID);
 			var query = new google.visualization.Query(url);
-			query.setQuery('Select B, C, E limit 1 offset 3');
+			query.setQuery('Select B, C, E limit 5');
 			(function(tableID)
 			{
 				query.send((function (response) { handleSelectResponse(response, tableID); }));	
@@ -49,29 +49,95 @@
 			var jsonText = response.getDataTable().toJSON();
 			jsonObj = JSON.parse(jsonText);
 
-			var bronzeOffset = jsonObj.rows[0].c[0]['f'];
-			var silverOffset = jsonObj.rows[0].c[1]['f'];
-			var goldOffset = jsonObj.rows[0].c[2]['f'];
+			var currentCount = jsonObj.rows[4].c[0]['v'];
+
 			var graphContainer = document.getElementById(sheetID);
-			// bronze
+
+			// BRONZE
+			var bronzeCount = jsonObj.rows[1].c[0]['v'];
+			var bronzeGoal = jsonObj.rows[0].c[0]['f'];
+			var bronzeBluePercent = Math.min(currentCount, bronzeCount) / bronzeGoal * 100;
+			var bronzeOffsetPercent = Math.abs(currentCount - bronzeCount) / bronzeGoal * 100;
+			
 			var bronzeDiv = graphContainer.getElementsByClassName("bronze")[0];
-			bronzeDiv.innerText = bronzeOffset;
-			if (bronzeOffset > 0) {
+			bronzeDiv.getElementsByClassName("offset")[0].innerText = bronzeGoal;
+			var progress = bronzeDiv.getElementsByClassName("progress")[0];
+			var offsetCount = currentCount - bronzeCount;
+			progress.title = "Offset: " + offsetCount.toFixed(2);
+			var progressBlue = bronzeDiv.getElementsByClassName("progress-bar")[0];
+			var progressOffset = bronzeDiv.getElementsByClassName("progress-bar")[1];
+			progressBlue.style.width = bronzeBluePercent + "%";
+			progressOffset.style.width = bronzeOffsetPercent + "%";
+
+			if (offsetCount > 0) {
+				progressOffset.classList.add("aboveGoal");
+			}
+			else
+			{
+				progressOffset.classList.add("behindGoal");				
+			}
+
+			if (currentCount >= bronzeGoal) {
 				bronzeDiv.classList.add("bronzeMet");
+				progress.classList.add("invisible");
 			}
 
-			// silver
+			// SILVER
+			var silverCount = jsonObj.rows[1].c[1]['v'];
+			var silverGoal = jsonObj.rows[0].c[1]['f'];
+			var silverBluePercent = Math.min(currentCount, silverCount) / silverGoal * 100;
+			var silverOffsetPercent = Math.abs(currentCount - silverCount) / silverGoal * 100;
+
 			var silverDiv = graphContainer.getElementsByClassName("silver")[0];
-			silverDiv.innerText = silverOffset;
-			if (silverOffset > 0) {
-				silverDiv.classList.add("silverMet");
+			silverDiv.getElementsByClassName("offset")[0].innerText = silverGoal;
+			progress = silverDiv.getElementsByClassName("progress")[0];
+			var offsetCount = currentCount - silverCount;
+			progress.title = "Offset: " + offsetCount.toFixed(2);
+			progressBlue = silverDiv.getElementsByClassName("progress-bar")[0];
+			progressOffset = silverDiv.getElementsByClassName("progress-bar")[1];
+			progressBlue.style.width = silverBluePercent + "%";
+			progressOffset.style.width = silverOffsetPercent + "%";
+
+			if (offsetCount > 0) {
+				progressOffset.classList.add("aboveGoal");
+			}
+			else
+			{
+				progressOffset.classList.add("behindGoal");				
 			}
 
-			// gold
+			if (currentCount >= silverGoal) {
+				silverDiv.classList.add("silverMet");
+				progress.classList.add("invisible");
+			}
+
+			// GOLD
+			var goldCount = jsonObj.rows[1].c[2]['v'];
+			var goldGoal = jsonObj.rows[0].c[2]['f'];
+			var goldBluePercent = Math.min(currentCount, goldCount) / goldGoal * 100;
+			var goldOffsetPercent = Math.abs(currentCount - goldCount) / goldGoal * 100;
+
 			var goldDiv = graphContainer.getElementsByClassName("gold")[0];
-			goldDiv.innerText = goldOffset;
-			if (goldOffset > 0) {
+			goldDiv.getElementsByClassName("offset")[0].innerText = goldGoal;
+			progress = goldDiv.getElementsByClassName("progress")[0];
+			var offsetCount = currentCount - goldCount;
+			progress.title = "Offset: " + offsetCount.toFixed(2);
+			progressBlue = goldDiv.getElementsByClassName("progress-bar")[0];
+			progressOffset = goldDiv.getElementsByClassName("progress-bar")[1];
+			progressBlue.style.width = goldBluePercent + "%";
+			progressOffset.style.width = goldOffsetPercent + "%";
+
+			if (offsetCount > 0) {
+				progressOffset.classList.add("aboveGoal");
+			}
+			else
+			{
+				progressOffset.classList.add("behindGoal");				
+			}
+
+			if (currentCount >= goldGoal) {
 				goldDiv.classList.add("goldMet");
+				progress.classList.add("invisible");
 			}
 		}
 		</script>
@@ -95,7 +161,7 @@
 		}
 		.medal {
 			display: inline-block;
-			width: 110px;
+			/*width: 110px;*/
 			padding: 5px;
 			text-align: center;
 			border-radius: 0px 20px 20px 0px;
@@ -110,7 +176,7 @@
 			background-color: white;
 			z-index: 1000;
 			border: solid 4px #cd7f32;
-			width: 80px;
+			width: 170px;
 		}
 		.silverMet {
 			background-color: #c0c0c0 !important;			
@@ -120,7 +186,7 @@
 			left: -20px;
 			z-index: 900;
 			border: solid 4px #c0c0c0;
-			width: 110px;
+			width: 195px;
 		}
 
 		.goldMet {
@@ -130,7 +196,23 @@
 			background-color: white;
 			left: -40px;
 			border: solid 4px #ffdf00;
-			width: 140px;
+			width: 220px;
+		}
+		.silverGoldShift {
+			margin-left: 12px;
+		}
+		.progressOverride {
+			margin-bottom: 1px;
+			/*height: 6px;*/
+		}
+		.aboveGoal {
+			background-color: #26ca26 !important;
+		}
+		.behindGoal {
+			background-color: #ff0000 !important;
+		}
+		.invisible {
+			visibility: none;
 		}
 	</style>
 </head>
@@ -142,9 +224,27 @@
 		<!-- eat in -->
 		<div id="1AOKCjqSnDLr7HZBlGboBn2QsXT-tRFgtkHnZQd6o1KY" class="graphContainer" >
 			<div class="medalsContainer">
-				<div class="bronze medal">...</div>
-				<div class="silver medal">...</div>
-				<div class="gold medal">...</div>
+				<div class="bronze medal">
+					<div class="offset">...</div>
+					<div class="progress progressOverride">
+						 <div class="progress-bar"></div>
+						 <div class="progress-bar"></div>					
+					</div>
+				</div>
+				<div class="silver medal">
+					<div class="offset">...</div>
+					<div class="progress progressOverride silverGoldShift">
+						 <div class="progress-bar"></div>
+						 <div class="progress-bar"></div>
+					</div>
+				</div>
+				<div class="gold medal">
+					<div class="offset">...</div>
+					<div class="progress progressOverride silverGoldShift">
+						 <div class="progress-bar"></div>
+						 <div class="progress-bar"></div>
+					</div>
+				</div>
 			</div>
 			<iframe width=604 height=375 frame=n src="https://docs.google.com/spreadsheets/d/e/2PACX-1vTq2h3ViGt3Oss0U1-VOuS82KrHQoJCFXOyU6W8VDys5zSBGQVMoXxyItA7JMm37bu3EFJdsPEwdfC4/pubchart?oid=705547019&amp;format=interactive"></iframe>
 		</div>
@@ -152,9 +252,27 @@
 		<!-- workout  -->
 		<div id="1KgZt1c_yupAJxPSF2cASL611C_eEZSL2bjcvQqFBs6o" class="graphContainer" >
 			<div class="medalsContainer">
-				<div class="bronze medal">...</div>
-				<div class="silver medal">...</div>
-				<div class="gold medal">...</div>
+				<div class="bronze medal">
+					<div class="offset">...</div>
+					<div class="progress progressOverride">
+						 <div class="progress-bar"></div>
+						 <div class="progress-bar"></div>					
+					</div>
+				</div>
+				<div class="silver medal">
+					<div class="offset">...</div>
+					<div class="progress progressOverride silverGoldShift">
+						 <div class="progress-bar"></div>
+						 <div class="progress-bar"></div>
+					</div>
+				</div>
+				<div class="gold medal">
+					<div class="offset">...</div>
+					<div class="progress progressOverride silverGoldShift">
+						 <div class="progress-bar"></div>
+						 <div class="progress-bar"></div>
+					</div>
+				</div>
 			</div>
 			<iframe width=604 height=375 src="https://docs.google.com/spreadsheets/d/e/2PACX-1vTUnjU6UKmxUHvqO_859VLnXzaJHuGyBl1BG5h78HrRsLknLU7hEu3CAL2JKQr4SUDPhxBMkprFNWCs/pubchart?oid=705547019&amp;format=interactive"></iframe>
 		</div>
@@ -162,9 +280,27 @@
 		<!-- volunteer -->
 		<div id="1yfep0hRbgepDhBtiCRhyhcvlnkSxByHIsy9BVt0zBhs" class="graphContainer" >
 			<div class="medalsContainer">
-				<div class="bronze medal">...</div>
-				<div class="silver medal">...</div>
-				<div class="gold medal">...</div>
+				<div class="bronze medal">
+					<div class="offset">...</div>
+					<div class="progress progressOverride">
+						 <div class="progress-bar"></div>
+						 <div class="progress-bar"></div>					
+					</div>
+				</div>
+				<div class="silver medal">
+					<div class="offset">...</div>
+					<div class="progress progressOverride silverGoldShift">
+						 <div class="progress-bar"></div>
+						 <div class="progress-bar"></div>
+					</div>
+				</div>
+				<div class="gold medal">
+					<div class="offset">...</div>
+					<div class="progress progressOverride silverGoldShift">
+						 <div class="progress-bar"></div>
+						 <div class="progress-bar"></div>
+					</div>
+				</div>
 			</div>
 			<iframe width=604 height=375 src="https://docs.google.com/spreadsheets/d/e/2PACX-1vTWjJS_NPk0RrJi_HupeZ1K99JAO-HwfyMAPb02Nj1yCpAbsM7cWMY3bePbey1QenJUN3JeR4BheqW0/pubchart?oid=705547019&amp;format=interactive"></iframe>
 		</div>
@@ -172,9 +308,27 @@
 		<!-- read -->
 		<div id="1NfiR0Asdv86vAjF-mVKCzU7bGnok9prGSemzDjU-bys" class="graphContainer" >
 			<div class="medalsContainer">
-				<div class="bronze medal">...</div>
-				<div class="silver medal">...</div>
-				<div class="gold medal">...</div>
+				<div class="bronze medal">
+					<div class="offset">...</div>
+					<div class="progress progressOverride">
+						 <div class="progress-bar"></div>
+						 <div class="progress-bar"></div>					
+					</div>
+				</div>
+				<div class="silver medal">
+					<div class="offset">...</div>
+					<div class="progress progressOverride silverGoldShift">
+						 <div class="progress-bar"></div>
+						 <div class="progress-bar"></div>
+					</div>
+				</div>
+				<div class="gold medal">
+					<div class="offset">...</div>
+					<div class="progress progressOverride silverGoldShift">
+						 <div class="progress-bar"></div>
+						 <div class="progress-bar"></div>
+					</div>
+				</div>
 			</div>
 			<iframe id="1NfiR0Asdv86vAjF-mVKCzU7bGnok9prGSemzDjU-bys" width=604 height=375 src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQPhIbBiFE8s6dtdcSO8bSNP3DTA58_nO4D_fZJ-MsXZCya5L9ybgIW1AIOjvUzdNPu3C1A6K2IwR5E/pubchart?oid=705547019&amp;format=interactive"></iframe>
 		</div>
@@ -182,9 +336,27 @@
 		<!-- cook -->
 		<div id="11vSYIQbFaJT2EAYlqA8_5jxfJoRfj64IWr5hJIaWiEA" class="graphContainer" >
 			<div class="medalsContainer">
-				<div class="bronze medal">...</div>
-				<div class="silver medal">...</div>
-				<div class="gold medal">...</div>
+				<div class="bronze medal">
+					<div class="offset">...</div>
+					<div class="progress progressOverride">
+						 <div class="progress-bar"></div>
+						 <div class="progress-bar"></div>					
+					</div>
+				</div>
+				<div class="silver medal">
+					<div class="offset">...</div>
+					<div class="progress progressOverride silverGoldShift">
+						 <div class="progress-bar"></div>
+						 <div class="progress-bar"></div>
+					</div>
+				</div>
+				<div class="gold medal">
+					<div class="offset">...</div>
+					<div class="progress progressOverride silverGoldShift">
+						 <div class="progress-bar"></div>
+						 <div class="progress-bar"></div>
+					</div>
+				</div>
 			</div>
 			<iframe width=604 height=375 src="https://docs.google.com/spreadsheets/d/e/2PACX-1vTUZNuXkUI2srWIzCd5OASIJFuRdBxWy8Gawt5nqCv72ZG9ckZakW8OB4OVj1urboiq978c2SDo4mKg/pubchart?oid=705547019&amp;format=interactive"></iframe>
 		</div>
@@ -192,9 +364,27 @@
 		<!-- code -->
 		<div id="1UvJG3docsver0DSpalUrFcoIcSZ_qNLbX3p3I43F0ws" class="graphContainer" >
 			<div class="medalsContainer">
-				<div class="bronze medal">...</div>
-				<div class="silver medal">...</div>
-				<div class="gold medal">...</div>
+				<div class="bronze medal">
+					<div class="offset">...</div>
+					<div class="progress progressOverride">
+						 <div class="progress-bar"></div>
+						 <div class="progress-bar"></div>					
+					</div>
+				</div>
+				<div class="silver medal">
+					<div class="offset">...</div>
+					<div class="progress progressOverride silverGoldShift">
+						 <div class="progress-bar"></div>
+						 <div class="progress-bar"></div>
+					</div>
+				</div>
+				<div class="gold medal">
+					<div class="offset">...</div>
+					<div class="progress progressOverride silverGoldShift">
+						 <div class="progress-bar"></div>
+						 <div class="progress-bar"></div>
+					</div>
+				</div>
 			</div>
 			<iframe width=604 height=375 src="https://docs.google.com/spreadsheets/d/e/2PACX-1vRwBK-EbYx0ZtA-osQh0aSRuV7tee5EOlcFxreAy4QMDzaOPgmWDiQqeWAlQ56wZfuXyYXVbrKpbYVt/pubchart?oid=705547019&amp;format=interactive"></iframe>
 		</div>
