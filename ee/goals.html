@@ -52,6 +52,9 @@
 			var currentCount = jsonObj.rows[4].c[0]['v'];
 
 			var graphContainer = document.getElementById(sheetID);
+			var currentCountDiv = graphContainer.getElementsByClassName("currentCount")[0];
+
+			currentCountDiv.innerText = currentCount;
 
 			// BRONZE
 			var bronzeCount = jsonObj.rows[1].c[0]['v'];
@@ -139,6 +142,16 @@
 				goldDiv.classList.add("goldMet");
 				progress.classList.add("invisible");
 			}
+
+			if (currentCount >= goldCount) {
+				currentCountDiv.classList.add("goldMet");
+			}
+			else if (currentCount >= silverCount) {
+				currentCountDiv.classList.add("silverMet");
+			}
+			else if (currentCount >= bronzeCount) {
+				currentCountDiv.classList.add("bronzeMet");
+			}
 		}
 		</script>
 
@@ -161,7 +174,7 @@
 		}
 		.medal {
 			display: inline-block;
-			/*width: 110px;*/
+			width: 180px;
 			padding: 5px;
 			text-align: center;
 			border-radius: 0px 20px 20px 0px;
@@ -176,7 +189,7 @@
 			background-color: white;
 			z-index: 1000;
 			border: solid 4px #cd7f32;
-			width: 170px;
+			/*width: 170px;*/
 		}
 		.silverMet {
 			background-color: #c0c0c0 !important;			
@@ -186,7 +199,7 @@
 			left: -20px;
 			z-index: 900;
 			border: solid 4px #c0c0c0;
-			width: 195px;
+			/*width: 195px;*/
 		}
 
 		.goldMet {
@@ -196,7 +209,20 @@
 			background-color: white;
 			left: -40px;
 			border: solid 4px #ffdf00;
-			width: 220px;
+			/*width: 220px;*/
+		}
+		.currentCount {
+			float: right;
+			margin-right: 2px;
+			margin-top: 2px;
+			border: solid black 3px;
+			font-size: 25px;
+			border-radius: 30px;
+			width: 60px;
+			height: 60px;
+			text-align: center;
+			padding-top: 9px;
+			font-weight: 800;
 		}
 		.silverGoldShift {
 			margin-left: 12px;
@@ -245,6 +271,7 @@
 						 <div class="progress-bar"></div>
 					</div>
 				</div>
+				<div class="currentCount">...</div>
 			</div>
 			<iframe width=604 height=375 frame=n src="https://docs.google.com/spreadsheets/d/e/2PACX-1vTq2h3ViGt3Oss0U1-VOuS82KrHQoJCFXOyU6W8VDys5zSBGQVMoXxyItA7JMm37bu3EFJdsPEwdfC4/pubchart?oid=705547019&amp;format=interactive"></iframe>
 		</div>
@@ -273,6 +300,7 @@
 						 <div class="progress-bar"></div>
 					</div>
 				</div>
+				<div class="currentCount">...</div>
 			</div>
 			<iframe width=604 height=375 src="https://docs.google.com/spreadsheets/d/e/2PACX-1vTUnjU6UKmxUHvqO_859VLnXzaJHuGyBl1BG5h78HrRsLknLU7hEu3CAL2JKQr4SUDPhxBMkprFNWCs/pubchart?oid=705547019&amp;format=interactive"></iframe>
 		</div>
@@ -301,6 +329,7 @@
 						 <div class="progress-bar"></div>
 					</div>
 				</div>
+				<div class="currentCount">...</div>
 			</div>
 			<iframe width=604 height=375 src="https://docs.google.com/spreadsheets/d/e/2PACX-1vTWjJS_NPk0RrJi_HupeZ1K99JAO-HwfyMAPb02Nj1yCpAbsM7cWMY3bePbey1QenJUN3JeR4BheqW0/pubchart?oid=705547019&amp;format=interactive"></iframe>
 		</div>
@@ -329,6 +358,7 @@
 						 <div class="progress-bar"></div>
 					</div>
 				</div>
+				<div class="currentCount">...</div>
 			</div>
 			<iframe id="1NfiR0Asdv86vAjF-mVKCzU7bGnok9prGSemzDjU-bys" width=604 height=375 src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQPhIbBiFE8s6dtdcSO8bSNP3DTA58_nO4D_fZJ-MsXZCya5L9ybgIW1AIOjvUzdNPu3C1A6K2IwR5E/pubchart?oid=705547019&amp;format=interactive"></iframe>
 		</div>
@@ -357,6 +387,7 @@
 						 <div class="progress-bar"></div>
 					</div>
 				</div>
+				<div class="currentCount">...</div>
 			</div>
 			<iframe width=604 height=375 src="https://docs.google.com/spreadsheets/d/e/2PACX-1vTUZNuXkUI2srWIzCd5OASIJFuRdBxWy8Gawt5nqCv72ZG9ckZakW8OB4OVj1urboiq978c2SDo4mKg/pubchart?oid=705547019&amp;format=interactive"></iframe>
 		</div>
@@ -385,6 +416,7 @@
 						 <div class="progress-bar"></div>
 					</div>
 				</div>
+				<div class="currentCount">...</div>
 			</div>
 			<iframe width=604 height=375 src="https://docs.google.com/spreadsheets/d/e/2PACX-1vRwBK-EbYx0ZtA-osQh0aSRuV7tee5EOlcFxreAy4QMDzaOPgmWDiQqeWAlQ56wZfuXyYXVbrKpbYVt/pubchart?oid=705547019&amp;format=interactive"></iframe>
 		</div>
