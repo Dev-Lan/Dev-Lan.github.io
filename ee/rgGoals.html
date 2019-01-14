@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Dev-Lan</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+	<link rel="stylesheet" href="../style/devlan-style.css">
+	<script src="https://d3js.org/d3.v4.min.js" charset="utf-8"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+	<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="http://www.google.com/jsapi"></script>
+	<script type="text/javascript"> 
+		google.load('visualization', '1', {packages: ['corechart']});
+	</script>
+		<script>
+		// LOAD DATA FROM GOOGLE SHEETS
+		// references
+		// https://developers.google.com/chart/interactive/docs/reference
+		// https://gist.github.com/mhawksey/739602
+		var spreadsheetIdList =
+		[
+			"1P_mXds7qUJOhYYHZtTFfPIYwhf5ikIS270AnjjMDeeo", // book
+			"1OCuAeQY9HNmHda5HGIOIt8sBWODceAbAN4TudinyN4k", // miles
+			"1r0vEarIV3A1vK8CN6ff_kvgzkkVgVFUudRobFwlNnpQ", // cook 
+			"13OrGc9SprXJC6Oa-rEE2miRp0WpWr6q2TK76uPWoYOM" // workout
+			// "11vSYIQbFaJT2EAYlqA8_5jxfJoRfj64IWr5hJIaWiEA", // cook
+			// "1UvJG3docsver0DSpalUrFcoIcSZ_qNLbX3p3I43F0ws"  // code
+		];
+
+		for (var i = spreadsheetIdList.length - 1; i >= 0; i--) {			
+			var spreadsheetID = spreadsheetIdList[i];
+			var url = 'http://spreadsheets.google.com/tq?key=' + spreadsheetID + '&pub=1';
+			// console.log(spreadsheetID);
+			var query = new google.visualization.Query(url);
+			query.setQuery('Select B, C, E limit 5');
+			(function(tableID)
+			{
+				query.send((function (response) { handleSelectResponse(response, tableID); }));	
+			})(spreadsheetID);
+			
+		}
+
+		function handleSelectResponse(response, sheetID) {
+			if (response.isError()) {
+				console.log('Error in query: ' + response.getMessage() + ' ' + response.getDetailedMessage());
+				return;
+			}
+			var jsonText = response.getDataTable().toJSON();
+			jsonObj = JSON.parse(jsonText);
+			console.log(jsonObj);
+
+			var currentCount = jsonObj.rows[4].c[0]['v'];
+
+			var graphContainer = document.getElementById(sheetID);
+			var currentCountDiv = graphContainer.getElementsByClassName("currentCount")[0];
+
+			currentCountDiv.innerText = currentCount;
+
+			// BRONZE
+			var bronzeCount = jsonObj.rows[1].c[0]['v'];
+			var bronzeGoal = jsonObj.rows[0].c[0]['f'];
+			var bronzeBluePercent = Math.min(currentCount, bronzeCount) / bronzeGoal * 100;
+			var bronzeOffsetPercent = Math.abs(currentCount - bronzeCount) / bronzeGoal * 100;
+			
+			var bronzeDiv = graphContainer.getElementsByClassName("bronze")[0];
+			bronzeDiv.getElementsByClassName("offset")[0].innerText = bronzeGoal;
+			var progress = bronzeDiv.getElementsByClassName("progress")[0];
+			var offsetCount = currentCount - bronzeCount;
+			progress.title = "Offset: " + offsetCount.toFixed(2);
+			var progressBlue = bronzeDiv.getElementsByClassName("progress-bar")[0];
+			var progressOffset = bronzeDiv.getElementsByClassName("progress-bar")[1];
+			progressBlue.style.width = bronzeBluePercent + "%";
+			progressOffset.style.width = bronzeOffsetPercent + "%";
+
+			if (offsetCount > 0) {
+				progressOffset.classList.add("aboveGoal");
+			}
+			else
+			{
+				progressOffset.classList.add("behindGoal");				
+			}
+
+			if (currentCount >= bronzeGoal) {
+				bronzeDiv.classList.add("bronzeMet");
+				progress.classList.add("invisible");
+			}
+
+			// SILVER
+			var silverCount = jsonObj.rows[1].c[1]['v'];
+			var silverGoal = jsonObj.rows[0].c[1]['f'];
+			var silverBluePercent = Math.min(currentCount, silverCount) / silverGoal * 100;
+			var silverOffsetPercent = Math.abs(currentCount - silverCount) / silverGoal * 100;
+
+			var silverDiv = graphContainer.getElementsByClassName("silver")[0];
+			silverDiv.getElementsByClassName("offset")[0].innerText = silverGoal;
+			progress = silverDiv.getElementsByClassName("progress")[0];
+			var offsetCount = currentCount - silverCount;
+			progress.title = "Offset: " + offsetCount.toFixed(2);
+			progressBlue = silverDiv.getElementsByClassName("progress-bar")[0];
+			progressOffset = silverDiv.getElementsByClassName("progress-bar")[1];
+			progressBlue.style.width = silverBluePercent + "%";
+			progressOffset.style.width = silverOffsetPercent + "%";
+
+			if (offsetCount > 0) {
+				progressOffset.classList.add("aboveGoal");
+			}
+			else
+			{
+				progressOffset.classList.add("behindGoal");				
+			}
+
+			if (currentCount >= silverGoal) {
+				silverDiv.classList.add("silverMet");
+				progress.classList.add("invisible");
+			}
+
+			// GOLD
+			var goldCount = jsonObj.rows[1].c[2]['v'];
+			var goldGoal = jsonObj.rows[0].c[2]['f'];
+			var goldBluePercent = Math.min(currentCount, goldCount) / goldGoal * 100;
+			var goldOffsetPercent = Math.abs(currentCount - goldCount) / goldGoal * 100;
+
+			var goldDiv = graphContainer.getElementsByClassName("gold")[0];
+			goldDiv.getElementsByClassName("offset")[0].innerText = goldGoal;
+			progress = goldDiv.getElementsByClassName("progress")[0];
+			var offsetCount = currentCount - goldCount;
+			progress.title = "Offset: " + offsetCount.toFixed(2);
+			progressBlue = goldDiv.getElementsByClassName("progress-bar")[0];
+			progressOffset = goldDiv.getElementsByClassName("progress-bar")[1];
+			progressBlue.style.width = goldBluePercent + "%";
+			progressOffset.style.width = goldOffsetPercent + "%";
+
+			if (offsetCount > 0) {
+				progressOffset.classList.add("aboveGoal");
+			}
+			else
+			{
+				progressOffset.classList.add("behindGoal");				
+			}
+
+			if (currentCount >= goldGoal) {
+				goldDiv.classList.add("goldMet");
+				progress.classList.add("invisible");
+			}
+
+			if (currentCount >= goldCount) {
+				currentCountDiv.classList.add("goldMet");
+			}
+			else if (currentCount >= silverCount) {
+				currentCountDiv.classList.add("silverMet");
+			}
+			else if (currentCount >= bronzeCount) {
+				currentCountDiv.classList.add("bronzeMet");
+			}
+		}
+		</script>
+
+	<style type="text/css">
+		iframe {
+			border: solid black 0px;
+		}
+		body {
+			background: white;
+		}
+		.graphContainer {
+			display: inline-block;
+			border: solid black 1px;
+			margin: 2px;
+			padding: 1px;
+		}
+		.medalsContainer {
+			text-align: left;
+
+		}
+		.medal {
+			display: inline-block;
+			width: 180px;
+			padding: 5px;
+			text-align: center;
+			border-radius: 0px 20px 20px 0px;
+			position: relative;
+			box-shadow: 1px 0px 0px 1px rgba(255,255,255,1);
+			font-size: 20px;
+		}
+		.bronzeMet {
+			background-color: #cd7f32 !important;			
+		}
+		.bronze {
+			background-color: white;
+			z-index: 1000;
+			border: solid 4px #cd7f32;
+			/*width: 170px;*/
+		}
+		.silverMet {
+			background-color: #c0c0c0 !important;			
+		}
+		.silver {
+			background-color: white;
+			left: -20px;
+			z-index: 900;
+			border: solid 4px #c0c0c0;
+			/*width: 195px;*/
+		}
+
+		.goldMet {
+			background-color: #ffdf00 !important;			
+		}
+		.gold {
+			background-color: white;
+			left: -40px;
+			border: solid 4px #ffdf00;
+			/*width: 220px;*/
+		}
+		.currentCount {
+			float: right;
+			margin-right: 2px;
+			margin-top: 2px;
+			border: solid black 2px;
+			font-size: 25px;
+			border-radius: 30px;
+			width: 50px;
+			height: 50px;
+			text-align: center;
+			padding-top: 7px;
+			font-weight: 800;
+		}
+		.silverGoldShift {
+			margin-left: 12px;
+		}
+		.progressOverride {
+			margin-bottom: 1px;
+			/*height: 6px;*/
+		}
+		.aboveGoal {
+			background-color: #26ca26 !important;
+		}
+		.behindGoal {
+			background-color: #ff0000 !important;
+		}
+		.invisible {
+			visibility: none;
+		}
+	</style>
+</head>
+	<body>
+
+  <div class="container-fluid">
+      <div class="row row-centered">
+
+		<!-- book -->
+		<div id="1P_mXds7qUJOhYYHZtTFfPIYwhf5ikIS270AnjjMDeeo" class="graphContainer" >
+			<div class="medalsContainer">
+				<div class="bronze medal">
+					<div class="offset">...</div>
+					<div class="progress progressOverride">
+						 <div class="progress-bar"></div>
+						 <div class="progress-bar"></div>					
+					</div>
+				</div>
+				<div class="silver medal">
+					<div class="offset">...</div>
+					<div class="progress progressOverride silverGoldShift">
+						 <div class="progress-bar"></div>
+						 <div class="progress-bar"></div>
+					</div>
+				</div>
+				<div class="gold medal">
+					<div class="offset">...</div>
+					<div class="progress progressOverride silverGoldShift">
+						 <div class="progress-bar"></div>
+						 <div class="progress-bar"></div>
+					</div>
+				</div>
+				<div class="currentCount">...</div>
+			</div>
+			<iframe width=604 height=375 src="https://docs.google.com/spreadsheets/d/e/2PACX-1vTo-fgkKrda8o_EUIKvcC97XoOTacD9ijSlVWc3jdSwJqmj4a3VvoPFeTpce19tNEFzfXq5a4eAn977/pubchart?oid=705547019&amp;format=interactive"></iframe>
+		</div>
+
+		<!-- miles  -->
+		<div id="1OCuAeQY9HNmHda5HGIOIt8sBWODceAbAN4TudinyN4k" class="graphContainer" >
+			<div class="medalsContainer">
+				<div class="bronze medal">
+					<div class="offset">...</div>
+					<div class="progress progressOverride">
+						 <div class="progress-bar"></div>
+						 <div class="progress-bar"></div>					
+					</div>
+				</div>
+				<div class="silver medal">
+					<div class="offset">...</div>
+					<div class="progress progressOverride silverGoldShift">
+						 <div class="progress-bar"></div>
+						 <div class="progress-bar"></div>
+					</div>
+				</div>
+				<div class="gold medal">
+					<div class="offset">...</div>
+					<div class="progress progressOverride silverGoldShift">
+						 <div class="progress-bar"></div>
+						 <div class="progress-bar"></div>
+					</div>
+				</div>
+				<div class="currentCount">...</div>
+			</div>
+			<iframe width=604 height=375 src="https://docs.google.com/spreadsheets/d/e/2PACX-1vTfnt3sm8YcB41rR2--soE4HAPlNc4pvT-KWVOTETW7M5Q2Yv_ib42tYq5cPBU8UXGKlNIz5Z0xrRpQ/pubchart?oid=705547019&amp;format=interactive"></iframe>
+		</div>
+
+		<!-- cook -->
+		<div id="1r0vEarIV3A1vK8CN6ff_kvgzkkVgVFUudRobFwlNnpQ" class="graphContainer" >
+			<div class="medalsContainer">
+				<div class="bronze medal">
+					<div class="offset">...</div>
+					<div class="progress progressOverride">
+						 <div class="progress-bar"></div>
+						 <div class="progress-bar"></div>					
+					</div>
+				</div>
+				<div class="silver medal">
+					<div class="offset">...</div>
+					<div class="progress progressOverride silverGoldShift">
+						 <div class="progress-bar"></div>
+						 <div class="progress-bar"></div>
+					</div>
+				</div>
+				<div class="gold medal">
+					<div class="offset">...</div>
+					<div class="progress progressOverride silverGoldShift">
+						 <div class="progress-bar"></div>
+						 <div class="progress-bar"></div>
+					</div>
+				</div>
+				<div class="currentCount">...</div>
+			</div>
+			<iframe width=604 height=375 src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQ1p3wEOEJXrpjIMRrjpDxOXjUnG2F8JILdxcS-YRH19vJFK6QUYQZ8xwp73fRup9aZdZDf5_8N6O6T/pubchart?oid=705547019&amp;format=interactive"></iframe>
+		</div>
+
+		<!-- workout -->
+		<div id="13OrGc9SprXJC6Oa-rEE2miRp0WpWr6q2TK76uPWoYOM" class="graphContainer" >
+			<div class="medalsContainer">
+				<div class="bronze medal">
+					<div class="offset">...</div>
+					<div class="progress progressOverride">
+						 <div class="progress-bar"></div>
+						 <div class="progress-bar"></div>					
+					</div>
+				</div>
+				<div class="silver medal">
+					<div class="offset">...</div>
+					<div class="progress progressOverride silverGoldShift">
+						 <div class="progress-bar"></div>
+						 <div class="progress-bar"></div>
+					</div>
+				</div>
+				<div class="gold medal">
+					<div class="offset">...</div>
+					<div class="progress progressOverride silverGoldShift">
+						 <div class="progress-bar"></div>
+						 <div class="progress-bar"></div>
+					</div>
+				</div>
+				<div class="currentCount">...</div>
+			</div>
+			<iframe width=604 height=375 src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQ_8BjYmgAO5WhMrw1TmzVvegVR_TEX8krLwDtUJNLeid50uqGHiRKkJtPumGg49n-j5b4cQzXSfAv9/pubchart?oid=705547019&amp;format=interactive"></iframe>
+		</div>
+
+      </div>
+  </div>
+
+	</body>
+</html>
