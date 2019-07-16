@@ -31,6 +31,7 @@
   border-style: solid;
   border-color: #CCC;
   border-width: 1px;
+  cursor: pointer;
 }
 
 .bigPageLink:hover {
