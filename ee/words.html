@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Dev-Lan</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+	<link rel="stylesheet" href="../style/devlan-style.css">
+	<script src="https://d3js.org/d3.v4.min.js" charset="utf-8"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+	<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="http://www.google.com/jsapi"></script>
+	{% include headBoilerplate.html title="Dev_Lan" %}
+	{% include navOffset.html %}
+	<script type="text/javascript"> 
+		google.load('visualization', '1', {packages: ['corechart']});
+	</script>
+		<script>
+		// LOAD DATA FROM GOOGLE SHEETS
+		// references
+		// https://developers.google.com/chart/interactive/docs/reference
+		// https://gist.github.com/mhawksey/739602
+		var spreadsheetId = "1Ug8t5X-VWYRjRgmNeXunBzwXzeHER0Hi9pbu3vat_W8"; // words
+
+		var url = 'http://spreadsheets.google.com/tq?key=' + spreadsheetId + '&pub=1';
+		// console.log(spreadsheetID);
+		var query = new google.visualization.Query(url);
+		var definitionList = [];
+		var totalReviewCount = 0;
+		query.setQuery('Select A, B, C, D, E, F');
+		(function(tableID)
+		{
+			query.send((function (response) { handleSelectResponse(response, tableID); }));	
+		})(spreadsheetId);			
+
+		function handleSelectResponse(response, sheetID) {
+			if (response.isError()) {
+				console.log('Error in query: ' + response.getMessage() + ' ' + response.getDetailedMessage());
+				return;
+			}
+			var jsonText = response.getDataTable().toJSON();
+			jsonObj = JSON.parse(jsonText);
+			console.log(jsonObj);
+
+			var firstDefinitionIndex = 2;
+			var rows = jsonObj.rows;
+			for (var i = firstDefinitionIndex; i < rows.length; i++) {
+				var row = rows[i];
+				var newDef = {};
+				newDef.word = row.c[0].v;
+				newDef.dateAdded = row.c[1].v;
+				newDef.link = row.c[2].v;
+				newDef.definition = row.c[3].v;
+				newDef.example = row.c[4].v;
+				newDef.type = row.c[5].v;
+				newDef.reviewCount = 0;
+				definitionList.push(newDef);
+			}
+			handleNewWordSelect();
+		}
+
+		function handleNewWordSelect() {
+			var newIndex = Math.floor(Math.random() * definitionList.length - 1);
+			// todo don't repeat words
+			generateCardContent(newIndex);
+		}
+
+		function generateCardContent(index) {
+			var wordDefinition = definitionList[index];
+			wordDefinition.reviewCount += 1;
+			totalReviewCount += 1;
+			var container = document.getElementById("flashCardContainer");
+			container.classList.remove("revealed");
+			updateHref("wordLinkContainer", wordDefinition.link);
+			updateInnerText("wordLinkContainer", wordDefinition.word);
+			updateInnerText("typeContainer", wordDefinition.type);
+			updateInnerText("definitionContainer", wordDefinition.definition);
+			updateInnerText("exampleContainer", wordDefinition.example);
+		}
+
+		function updateInnerText(elementId, newText) {
+			var element = document.getElementById(elementId);
+			element.innerText = newText;
+		}
+
+		function updateHref(elementId, newHref) {
+			var element = document.getElementById(elementId);
+			element.href = newHref;
+		}
+
+		function revealAnswerSelect() {
+			var container = document.getElementById("flashCardContainer");
+			container.classList.add("revealed");
+		}
+
+		</script>
+
+	<style type="text/css">
+		body {
+			background: white;
+		}
+		.flashCardButton {
+			border: solid gray 1px;
+			width: 200px;
+			height: 50px;
+			border-radius: 10px;
+			font-size: 16pt;
+			outline: none;
+		}
+
+		.flashCardButton:hover {
+			background: #DBDEFF;
+		}
+
+		.flashCardButton:active {
+			background: #0A23FF;
+			color: white;
+			box-shadow: inset 1px 1px 4px 0px #002F54;
+		}
+
+		.flashCardContentContainer {
+			display: flex;
+			flex-direction: column;
+			text-align: left;
+			padding: 16px;
+		}
+		.wordTypeContainer {
+			display: flex;
+		}
+
+		.wordLinkContainer {
+			flex-grow: 1;
+			font-size: 30pt;
+		}
+
+		.typeContainer {
+			flex-shrink: 0;
+			font-size: 20pt;
+			color: gray;
+		}
+
+		.definitionContainer {
+			font-size: 16pt;
+		}
+
+		.exampleContainer {
+			font-size: 16pt;
+			font-style: italic;
+			color: gray;
+			margin-top: 5px;
+		}
+
+		.exampleContainer:before {
+			content:" - "open-quote;
+			font-size: 20pt;
+		}
+		.exampleContainer:after {
+			content:close-quote;
+			font-size: 20pt;
+		}
+
+		/* Functional classes */
+		.hiddenUntilReveal {
+			display: none;
+		}
+
+		.revealed .hiddenUntilReveal {
+			display: initial;
+		}
+
+		.revealed .hiddenAfterReveal {
+			display: none;
+		}
+
+	</style>
+</head>
+	<body>
+	
+	{% include navbarSimple.html %}
+
+	<div class="container-fluid">
+		<div class="row row-centered">
+			<h1 class="websiteHeader">Words To Review</h1>
+			<div id="flashCardContainer" class="flashCardContainer">
+					<button class="flashCardButton hiddenUntilReveal" onclick="handleNewWordSelect()">New Word</button>
+					<button class="flashCardButton hiddenAfterReveal" onclick="revealAnswerSelect()">Reveal Answer</button>
+				<div id="flashCardContentContainer" class="flashCardContentContainer" >
+				<div id="wordTypeContainer" class="wordTypeContainer">
+					<a id="wordLinkContainer" class="wordLinkContainer" href=""></a>
+					<div id="typeContainer" class="typeContainer hiddenUntilReveal"></div>
+				</div>
+				<div id="definitionContainer" class="definitionContainer hiddenUntilReveal"></div>
+				<div id="exampleContainer" class="exampleContainer hiddenUntilReveal"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	</body>
+</html>
+
+
+
