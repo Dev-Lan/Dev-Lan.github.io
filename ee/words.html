@@ -29,6 +29,7 @@
 		var query = new google.visualization.Query(url);
 		var definitionList = [];
 		var totalReviewCount = 0;
+		var lastWordIndex = 0;
 		query.setQuery('Select A, B, C, D, E, F');
 		(function(tableID)
 		{
@@ -62,15 +63,23 @@
 		}
 
 		function handleNewWordSelect() {
-			var newIndex = Math.floor(Math.random() * definitionList.length - 1);
+			var wordDefinition;
+			var averageReviewCount = totalReviewCount / definitionList.length;
+			do
+			{
+				var newIndex = Math.floor(Math.random() * definitionList.length);
+				wordDefinition = definitionList[newIndex];
+			} while (newIndex == lastWordIndex || wordDefinition.reviewCount > averageReviewCount)
 			// todo don't repeat words
-			generateCardContent(newIndex);
+
+			wordDefinition.reviewCount += 1;
+			lastWordIndex = newIndex;
+			totalReviewCount += 1;
+
+			generateCardContent(wordDefinition);
 		}
 
-		function generateCardContent(index) {
-			var wordDefinition = definitionList[index];
-			wordDefinition.reviewCount += 1;
-			totalReviewCount += 1;
+		function generateCardContent(wordDefinition) {
 			var container = document.getElementById("flashCardContainer");
 			container.classList.remove("revealed");
 			updateHref("wordLinkContainer", wordDefinition.link);
