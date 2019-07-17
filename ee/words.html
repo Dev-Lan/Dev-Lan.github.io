@@ -29,7 +29,7 @@
 		var query = new google.visualization.Query(url);
 		var definitionList = [];
 		var totalReviewCount = 0;
-		var lastWordIndex = 0;
+		var lastWord;
 		query.setQuery('Select A, B, C, D, E, F');
 		(function(tableID)
 		{
@@ -65,15 +65,20 @@
 		function handleNewWordSelect() {
 			var wordDefinition;
 			var averageReviewCount = totalReviewCount / definitionList.length;
-			do
-			{
-				var newIndex = Math.floor(Math.random() * definitionList.length);
-				wordDefinition = definitionList[newIndex];
-			} while (newIndex == lastWordIndex || wordDefinition.reviewCount > averageReviewCount)
-			// todo don't repeat words
+			var elegibleDefinitionList = [];
+			for (var i = 0; i < definitionList.length; i++) {
+				var thisDef = definitionList[i];
+				if (thisDef.reviewCount <= averageReviewCount && thisDef.word !== lastWord)
+				{
+					elegibleDefinitionList.push(thisDef);
+				}
+			}
+
+			var newIndex = Math.floor(Math.random() * elegibleDefinitionList.length);
+			wordDefinition = elegibleDefinitionList[newIndex];
 
 			wordDefinition.reviewCount += 1;
-			lastWordIndex = newIndex;
+			lastWord = wordDefinition.word;
 			totalReviewCount += 1;
 
 			generateCardContent(wordDefinition);
