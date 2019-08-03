@@ -57,7 +57,10 @@
 				newDef.example = row.c[4].v;
 				newDef.type = row.c[5].v;
 				newDef.reviewCount = 0;
-				definitionList.push(newDef);
+				if (newDef.definition != "todo")
+				{
+					definitionList.push(newDef);				
+				}
 			}
 			handleNewWordSelect();
 		}
