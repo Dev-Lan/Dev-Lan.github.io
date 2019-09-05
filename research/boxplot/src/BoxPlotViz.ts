@@ -1,4 +1,4 @@
-import { BoxPlotData, ScaleType } from "./BoxPlotData";
+import { BoxPlotData, ScaleType, OutlierMethod } from "./BoxPlotData";
 import { FunctionData } from "./FunctionData"
 import * as d3 from 'd3';
 
@@ -162,6 +162,11 @@ export class BoxPlotViz {
 		let yConstantSlider = document.getElementById("ySymLogConstant");
 		yConstantSlider.oninput = (ev: Event) => { this.OnYSymConstantChange(ev); }
 
+		this.addOutlierMethodOptions(this.data.outlierMethod);
+		selectElement = document.getElementById("outlierMethod") as HTMLSelectElement;
+		selectElement.addEventListener("change", (ev: Event) => { this.OnOutlierMethodChange(ev)})
+
+
 		this.revealSubToolsIfNeeded();
 
 		let hiddenButtons = document.getElementsByClassName("toolContainer");
@@ -212,6 +217,34 @@ export class BoxPlotViz {
 		this.data.scaleYType = value as ScaleType;
 		this.revealSubToolsIfNeeded();
 		this.BuildDomGraph();
+	}
+
+	private addOutlierMethodOptions(selectedOption: OutlierMethod): void
+	{
+		// todo combine with other enum generation method
+		let selectElement: HTMLSelectElement = document.getElementById("outlierMethod") as HTMLSelectElement;
+		selectElement.innerHTML = "";
+		let optionElement: HTMLOptionElement;
+		for (let type of Object.keys(OutlierMethod))
+		{
+			optionElement = document.createElement("option")
+			optionElement.value = type;
+			optionElement.innerText = type;
+			if (selectedOption == type)
+			{
+				optionElement.setAttribute("selected", "");
+			}
+			selectElement.appendChild(optionElement);
+		}
+	}
+
+	private OnOutlierMethodChange(ev: Event): void
+	{
+		let selectElement: HTMLSelectElement = ev.target as HTMLSelectElement;
+		let value: string = selectElement.value;
+		this.data.outlierMethod = value as OutlierMethod;
+		this.data.updateOutliers();
+		this.onBoxplotStatChange();
 	}
 
 	private revealSubToolsIfNeeded(): void

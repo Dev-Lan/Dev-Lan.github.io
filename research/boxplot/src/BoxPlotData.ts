@@ -9,6 +9,11 @@ export enum ScaleType {
 	SYMLOG = "SYMLOG"
 };
 
+export enum OutlierMethod {
+	INFLATE_ENVELOPE = "INFLATE_ENVELOPE",
+	DYNAMIC_DEPTH = "DYNAMIC_DEPTH"
+};
+
 export class BoxPlotData {
 	
 	constructor(onDataLoadedCallback: FuncOnBoxPlotData) {
@@ -20,6 +25,7 @@ export class BoxPlotData {
 		this._scaleYType = ScaleType.LINEAR;
 		this._xSymLogConstant = 1e-10;
 		this._ySymLogConstant = 1e-10;
+		this._outlierMethod = OutlierMethod.INFLATE_ENVELOPE;
 	}
 
 	private init(): void
@@ -119,6 +125,14 @@ export class BoxPlotData {
 	}
 	public set scaleYType(v: ScaleType) {
 		this._scaleYType = v;
+	}
+
+	private _outlierMethod : OutlierMethod;
+	public get outlierMethod() : OutlierMethod {
+		return this._outlierMethod;
+	}
+	public set outlierMethod(v: OutlierMethod) {
+		this._outlierMethod = v;
 	}
 
 	private _band : [number, number][];
@@ -263,13 +277,27 @@ export class BoxPlotData {
 	{
 		this.functionDataSet.checkIfSorted();
 		this.functionDataSet.resetOutliersToFalse();
+		
+		switch (this.outlierMethod) {
+			case OutlierMethod.INFLATE_ENVELOPE:
+				this.updateOutliersByExpandingEnvelope();
+				break;
+			case OutlierMethod.DYNAMIC_DEPTH:
+				this.updateOutliersByBandDepth();
+				break;
+			default:
+		}
+	}
+
+	public updateOutliersByBandDepth(): void
+	{
 		const maxDepth: number = this.functionDataSet.getFuncDepth(0);
 		const lastFunctionIndex: number = Math.ceil(this.bandWidth * (this.functionDataSet.length - 1));
 		const boundaryDepth: number = this.functionDataSet.getFuncDepth(lastFunctionIndex);
 		const envelopeWidth: number = maxDepth - boundaryDepth;
 		const outlierBoundary: number = envelopeWidth * this.outlierThreshold;
 
-		this.functionDataSet.setOutliers(maxDepth - outlierBoundary);
+		this.functionDataSet.setOutliersByDepthThreshold(maxDepth - outlierBoundary);
 
 		this._outlierBand = [[], []];
 		for (let i = 0 ; i < this.functionDataSet.xValues.length; i++)
@@ -289,6 +317,31 @@ export class BoxPlotData {
 			this.outlierBand[1].push(maxValue);
 			//todo there can be NaN infinity
 		}
+	}
+
+	public updateOutliersByExpandingEnvelope(): void
+	{
+		// const maxDepth: number = this.functionDataSet.getFuncDepth(0);
+		// const lastFunctionIndex: number = Math.ceil(this.bandWidth * (this.functionDataSet.length - 1));
+		// const boundaryDepth: number = this.functionDataSet.getFuncDepth(lastFunctionIndex);
+		// const envelopeWidth: number = maxDepth - boundaryDepth;
+		// const outlierBoundary: number = envelopeWidth * this.outlierThreshold;
+
+		// this.functionDataSet.setOutliersByDepthThreshold(maxDepth - outlierBoundary);
+
+		this._outlierBand = [[], []];
+		for (let i = 0 ; i < this.median.length; i++)
+		{
+			let median = this.median[i];
+			let bandMin = this.band[i][0];
+			let bandMax = this.band[i][1];
+			let outlierBandMin = median - (median - bandMin) * this.outlierThreshold;
+			let outlierBandMax = median + (bandMax - median) * this.outlierThreshold;
+			this.outlierBand[0].push(outlierBandMin);
+			this.outlierBand[1].push(outlierBandMax);
+		}
+
+		this.functionDataSet.setOutliersByOutlierBand(this.outlierBand);
 	}
 
 	private findMedian(): void

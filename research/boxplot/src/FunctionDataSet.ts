@@ -126,7 +126,7 @@ export class FunctionDataSet {
 		return averagedFunction;
 	}
 
-	public setOutliers(thresholdDepth: number): void
+	public setOutliersByDepthThreshold(thresholdDepth: number): void
 	{
 		for (let functionData of this.functionDataArray)
 		{
@@ -134,6 +134,25 @@ export class FunctionDataSet {
 			{
 				functionData.isOutlier = true;
 			}
+		}
+	}
+
+	public setOutliersByOutlierBand(outlierBand: [number[], number[]]): void
+	{
+		for (let functionData of this.functionDataArray)
+		{
+			for (let i = 0; i < functionData.yValues.length; i++)
+			{
+				let v = functionData.yValues[i];
+				let min = outlierBand[0][i];
+				let max = outlierBand[1][i];
+				if (v < min || v > max)
+				{
+					functionData.isOutlier = true;
+					break; // no need to continue checking this function. It is an outlier.
+				}
+			}
+
 		}
 	}
 
