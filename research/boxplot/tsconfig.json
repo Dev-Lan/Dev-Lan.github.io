@@ -1,0 +1,14 @@
+{
+    "files": [
+        "src/main.ts",
+        "src/FileLoadUtil.ts",
+        "src/BoxPlotData.ts",
+        "src/FunctionDataSet.ts",
+        "src/FunctionData.ts",        
+        "src/BoxPlotViz.ts"
+    ],
+    "compilerOptions": {
+        "noImplicitAny": true,
+        "target": "es2016"
+    }
+}
