@@ -616,6 +616,19 @@ export class BoxPlotViz {
 
 			tableRow.addEventListener("click", (ev: Event) => { this.onClickTableRow(ev); })
 		}
+		// if (true || includePinIcon)
+		// {
+	  		let newCellElement: HTMLElement = document.createElement("div");
+	  		// newCellElement.innerText = innerText;
+	  		// newCellElement.title = "Function currently highlighted - click to remove";
+	  		newCellElement.classList.add("tableCell", "iconContainer");
+	  		let icon: HTMLElement = document.createElement("i");
+	  		icon.classList.add("fas", "fa-thumbtack");
+	  		newCellElement.appendChild(icon);
+	  		// <i class="fas fa-thumbtack"></i>
+	  		tableRow.appendChild(newCellElement);
+		// }
+  		// this.buildDomTableCell(tableRow, "<i class='fas fa-thumbtack'></i>", "icon");
 		for (let cell of cells)
 		{
 	  		this.buildDomTableCell(tableRow, cell.cellText, cell.extraClass);

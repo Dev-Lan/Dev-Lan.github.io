@@ -198,7 +198,7 @@
 
 		.tableRowHeader {
 			display: flex;
-			font-size: 12pt;
+			font-size: 10.5pt;
 		}
 
 		.tableSelectedContainer {
@@ -208,12 +208,36 @@
 
 		}
 
+		.tableSelectedContainer .tableRowContainer {
+			border: solid;
+			border-width: 2px;
+		}
+
+		.iconContainer {
+			visibility: hidden;
+		}
+
+		.tableSelectedContainer .iconContainer {
+			visibility: visible;
+		}
+
+		.rowHovered .iconContainer {
+			visibility: visible;
+		}
+
+		.rowSelected .iconContainer {
+			visibility: visible;
+		}
+
+		.tableCell.iconContainer {
+		    padding-left: 10px;
+		}
 		.tableRowContainer {
 			display: flex;
 			flex-shrink: 0;
 			border-radius: 25px;
 			cursor: pointer;
-			border: solid gray 2px;
+			/*border: solid gray 2px;*/
 			margin-top: 1px;
 		}
 
@@ -247,11 +271,13 @@
 			overflow: hidden;
 			white-space: nowrap;
 			flex-grow: 1;
+		    flex-shrink: 1;
 		}
 
 		.nameHeaderCell {
-			flex-basis: 100px;
+			/*flex-basis: 100px;*/
 			text-align: right;
+			flex-grow: 1;
 		}
 
 		.depthCell {
@@ -260,7 +286,7 @@
 		}
 
 		.depthHeaderCell {
-			flex-basis: 40px;
+			/*flex-basis: 40px;*/
 		}
 
 	</style>
