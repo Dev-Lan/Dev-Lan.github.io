@@ -550,7 +550,6 @@ export class BoxPlotViz {
   	public BuildDomTable(): void
   	{
   		this.tableContainer.innerHTML = "";
-  		// todo - add title?
   		let cellProps: CellProperties[] = [
   		{
   			cellText: "Name", extraClass: "nameHeaderCell"
@@ -616,26 +615,19 @@ export class BoxPlotViz {
 
 			tableRow.addEventListener("click", (ev: Event) => { this.onClickTableRow(ev); })
 		}
-		// if (true || includePinIcon)
-		// {
-	  		let newCellElement: HTMLElement = document.createElement("div");
-	  		// newCellElement.innerText = innerText;
-	  		// newCellElement.title = "Function currently highlighted - click to remove";
-	  		newCellElement.classList.add("tableCell", "iconContainer");
-	  		let icon: HTMLElement = document.createElement("i");
-	  		icon.classList.add("fas", "fa-thumbtack");
-	  		newCellElement.appendChild(icon);
-	  		// <i class="fas fa-thumbtack"></i>
-	  		tableRow.appendChild(newCellElement);
-		// }
-  		// this.buildDomTableCell(tableRow, "<i class='fas fa-thumbtack'></i>", "icon");
+		let newCellElement: HTMLElement = document.createElement("div");
+		newCellElement.classList.add("tableCell", "iconContainer");
+		let icon: HTMLElement = document.createElement("i");
+		icon.classList.add("fas", "fa-thumbtack");
+		newCellElement.appendChild(icon);
+		tableRow.appendChild(newCellElement);
+
 		for (let cell of cells)
 		{
 	  		this.buildDomTableCell(tableRow, cell.cellText, cell.extraClass);
 		}
 		if (borderColor !== undefined && backColor !== undefined)
 		{
-
   			tableRow.setAttribute("style", "border-color:" + borderColor + "; background-color:" + backColor + ";");
 		}
   		container.appendChild(tableRow);
@@ -648,7 +640,6 @@ export class BoxPlotViz {
   		newCellElement.title = innerText;
   		newCellElement.classList.add("tableCell", extraClass);
   		container.appendChild(newCellElement);
-
   	}
 
   	private onMouseEnterTableRow(ev: Event): void
@@ -666,7 +657,6 @@ export class BoxPlotViz {
   		let target: HTMLElement = ev.target as HTMLElement;
   		target.classList.remove("rowHovered");
   		
-  		// let value: number = +target.getAttribute("data-index");
   		this.data.functionDataSet.hoveredFunctionIndex = -1;
   		this.buildDomSelectedFunctions(true);
   	}
@@ -674,7 +664,6 @@ export class BoxPlotViz {
   	private onClickTableRow(ev: Event): void
   	{
   		let rowDiv: HTMLElement = ev.currentTarget as HTMLElement;
-  		// target.classList.remove("rowHovered");
   		
   		let value: number = +rowDiv.getAttribute("data-index");
   		let indexAdded: boolean = this.data.functionDataSet.toggleSelectIndex(value);
@@ -686,7 +675,6 @@ export class BoxPlotViz {
   			this.data.functionDataSet.functionDataArray[value].selectedHexColor = color;
   			const backColor: string = BoxPlotViz.lightenColor(color);
   			rowDiv.setAttribute("style", "border-color:" + color + "; background-color:" + backColor + ";");
-
   		}
   		else
   		{

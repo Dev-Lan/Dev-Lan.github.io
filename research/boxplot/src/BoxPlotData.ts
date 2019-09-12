@@ -158,7 +158,6 @@ export class BoxPlotData {
 	public Initialize(rawValues: d3.DSVRowArray<string>, filename: string): void
 	{
 		this.init();
-		// this._rowArray = rawValues;
 		for (var i = rawValues.columns.length - 1; i >= 0; i--) {
 			const col: string = rawValues.columns[i]
 			if (this.timeStepKeyword.includes(col.toLowerCase()))
@@ -167,8 +166,6 @@ export class BoxPlotData {
 			}
 			this.dataColKeys.push(col);
 			this.functionDataSet.addFunction(col);
-			// const funcMetaData: FunctionMetaData = { columnIndex: i, depth: 0 };
-			// this.funcLookup.set(col, funcMetaData);
 		}
 		let rowIdx = 0;
 		for (const row of rawValues)
@@ -321,14 +318,6 @@ export class BoxPlotData {
 
 	public updateOutliersByExpandingEnvelope(): void
 	{
-		// const maxDepth: number = this.functionDataSet.getFuncDepth(0);
-		// const lastFunctionIndex: number = Math.ceil(this.bandWidth * (this.functionDataSet.length - 1));
-		// const boundaryDepth: number = this.functionDataSet.getFuncDepth(lastFunctionIndex);
-		// const envelopeWidth: number = maxDepth - boundaryDepth;
-		// const outlierBoundary: number = envelopeWidth * this.outlierThreshold;
-
-		// this.functionDataSet.setOutliersByDepthThreshold(maxDepth - outlierBoundary);
-
 		this._outlierBand = [[], []];
 		for (let i = 0 ; i < this.median.length; i++)
 		{

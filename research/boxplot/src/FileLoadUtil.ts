@@ -1,17 +1,19 @@
 import * as d3 from 'd3';
 
+type CallbackFunction = (data: d3.DSVRowArray<string>, filename: string) => void;
+
 export class FileLoadUtil {
 
-	constructor(fileLoadCallback: Function)
+	constructor(fileLoadCallback: CallbackFunction)
 	{
 		this.FileLoadCallback = fileLoadCallback;
 	}
 
-	private _FileLoadCallback : Function;
-	public get FileLoadCallback() : Function {
+	private _FileLoadCallback : CallbackFunction;
+	public get FileLoadCallback() : CallbackFunction {
 		return this._FileLoadCallback;
 	}
-	public set FileLoadCallback(v : Function) {
+	public set FileLoadCallback(v : CallbackFunction) {
 		this._FileLoadCallback = v;
 	}
 
@@ -35,7 +37,6 @@ export class FileLoadUtil {
 
 	private parseText(text: string, filename: string): void
 	{
-		// const numberGrid = this.ParseCSV(text);
 		let structuredData: d3.DSVRowArray<string> = d3.csvParse(text);
 		this.FileLoadCallback(structuredData, filename);
 		
