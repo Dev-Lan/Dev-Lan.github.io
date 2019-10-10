@@ -560,7 +560,7 @@ export class BoxPlotData {
 		const envelopeWidth: number = maxDepth - boundaryDepth;
 		const outlierBoundary: number = envelopeWidth * this.outlierThreshold;
 
-		this.functionDataSet.setOutliersByDepthThreshold(maxDepth - outlierBoundary);
+		this.functionDataSet.setOutliersByDepthThreshold(boundaryDepth - outlierBoundary);
 
 		this._outlierBand = [[], []];
 		for (let i = 0 ; i < this.functionDataSet.xValues.length; i++)
