@@ -1,5 +1,9 @@
 import * as TSUtil from '../lib/DevlibTSUtil';
 
+// new feature ideas
+// * label for loading
+// * optional cancel button / flag
+
 export class ProgressBar {
 	
 	private _container : HTMLElement;
@@ -27,7 +31,7 @@ export class ProgressBar {
 		return this._shown;
 	}
 
-	constructor(container: HTMLElement, timeIntervalUpdate: number = 200)
+	constructor(container: HTMLElement, timeIntervalUpdate: number = 250)
 	{
 		this._container = container;
 		this.hide();

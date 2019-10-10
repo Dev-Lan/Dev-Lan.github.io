@@ -9,6 +9,7 @@ var paths = {
 };
 
 var watchedBrowserify = watchify(browserify({
+    standalone: "boxPlot",
     basedir: '.',
     debug: true,
     entries: ['src/main.ts'],

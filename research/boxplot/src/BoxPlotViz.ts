@@ -48,6 +48,11 @@ export class BoxPlotViz {
 		return this._tableSelectedContainer;
 	}
 
+	// private _vizWrapper : HTMLElement;
+	// public get vizWrapper() : HTMLElement {
+	// 	return this._vizWrapper;
+	// }
+
 	private _tableValueContainer : HTMLElement;
 	public get tableValueContainer() : HTMLElement {
 		return this._tableValueContainer;
@@ -135,11 +140,22 @@ export class BoxPlotViz {
 		return this._fileName;
 	}
 
+	public OnPreDataLoad(): void
+	{
+		this._tableContainer = document.getElementById("tableContainer") as HTMLElement;
+		this._svgContainer = document.getElementById("svgContainer") as any as SVGElement;
+		this.tableContainer.classList.add("noDisp");
+		this.svgContainer.classList.add("noDisp");
+		let fileLoadTutorialDiv = document.getElementById("fileLoadTutorial");
+		fileLoadTutorialDiv.innerHTML = "";
+		fileLoadTutorialDiv.classList.add("noDisp");
+	}
+
 	public OnDataLoaded(data: BoxPlotData, filename: string = ""): void
 	{
 		this._data = data;
-		this._tableContainer = document.getElementById("tableContainer") as HTMLElement;
-		this._svgContainer = document.getElementById("svgContainer") as any as SVGElement;
+
+		// this._vizWrapper = document.getElementById("vizWrapper") as HTMLElement;
 		let bandRangeSlider = document.getElementById("bandRange");
 		bandRangeSlider.oninput = (ev: Event) => { this.OnBandRangeChange(ev) };
 
@@ -174,11 +190,12 @@ export class BoxPlotViz {
 		{
 			hiddenButtons[i].classList.remove("noDisp");
 		}
-		let fileLoadTutorialDiv = document.getElementById("fileLoadTutorial");
-		fileLoadTutorialDiv.innerHTML = "";
-		fileLoadTutorialDiv.classList.add("noDisp");
+		// let fileLoadTutorialDiv = document.getElementById("fileLoadTutorial");
+		// fileLoadTutorialDiv.innerHTML = "";
+		// fileLoadTutorialDiv.classList.add("noDisp");
 		this.tableContainer.classList.remove("noDisp");
 		this.svgContainer.classList.remove("noDisp");
+		// this.vizWrapper.classList.remove("noDisp");
 		this.BuildDomTable();
 		this.BuildDomGraph();
 	}

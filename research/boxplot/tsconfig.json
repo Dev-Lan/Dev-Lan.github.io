@@ -5,7 +5,10 @@
         "src/BoxPlotData.ts",
         "src/FunctionDataSet.ts",
         "src/FunctionData.ts",        
-        "src/BoxPlotViz.ts"
+        "src/BoxPlotViz.ts",
+        "../lib/DevlibMath.ts",
+        "../lib/DevlibTSUtil.ts",
+        "../widgets/ProgressBar.ts"
     ],
     "compilerOptions": {
         "noImplicitAny": true,

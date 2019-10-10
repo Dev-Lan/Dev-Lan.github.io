@@ -1,5 +1,8 @@
 import { FunctionDataSet } from './FunctionDataSet';
 import { FunctionData } from './FunctionData';
+import { DevlibMath } from '../../lib/DevlibMath';
+import { DevlibTSUtil } from '../../lib/DevlibTSUtil';
+import { ProgressBar } from '../../widgets/ProgressBar';
 
 type FuncOnBoxPlotData = (data: BoxPlotData, filename?: string) => void;
 
@@ -16,8 +19,8 @@ export enum OutlierMethod {
 
 export class BoxPlotData {
 	
-	constructor(onDataLoadedCallback: FuncOnBoxPlotData) {
-		// this._funcLookup = new Map<string, FunctionMetaData>();
+	constructor(onPreDataLoadCallback: Function, onDataLoadedCallback: FuncOnBoxPlotData) {
+		this._onPreDataLoad = onPreDataLoadCallback;
 		this._onDataLoadedCallback = onDataLoadedCallback;
 		this.bandWidth = 0.5;
 		this.outlierThreshold = 1.5;
@@ -26,6 +29,10 @@ export class BoxPlotData {
 		this._xSymLogConstant = 1e-10;
 		this._ySymLogConstant = 1e-10;
 		this._outlierMethod = OutlierMethod.INFLATE_ENVELOPE;
+
+		// todo - don't reference dom from data
+		const progressContainer: HTMLElement = document.getElementById("progressBarContainer");
+		this._progressBar = new ProgressBar(progressContainer);
 	}
 
 	private init(): void
@@ -44,6 +51,14 @@ export class BoxPlotData {
 	public get onDataLoadedCallback() : FuncOnBoxPlotData {
 		return this._onDataLoadedCallback;
 	}
+
+	private _onPreDataLoad : Function;
+	public get onPreDataLoad() : Function {
+		return this._onPreDataLoad;
+	}
+	// public set onPreDataLoad(v : Function) {
+	// 	this._onPreDataLoad = v;
+	// }
 
 	private _dataColKeys : string[];
 	public get dataColKeys() : string[] {
@@ -155,9 +170,26 @@ export class BoxPlotData {
 		return this._depthPreProcessed;
 	}
 
-	public Initialize(rawValues: d3.DSVRowArray<string>, filename: string): void
+	// todo - delete this if we don't need it.
+	private _rawValues : d3.DSVRowArray<string>;
+	public get rawValues() : d3.DSVRowArray<string> {
+		return this._rawValues;
+	}
+	// public set rawValues(v : d3.DSVRowArray<string>) {
+	// 	this._rawValues = v;
+	// }
+
+
+	private _progressBar : ProgressBar;
+	public get progressBar() : ProgressBar {
+		return this._progressBar;
+	}
+
+	public async Initialize(rawValues: d3.DSVRowArray<string>, filename: string): Promise<void>
 	{
+		this.onPreDataLoad();
 		this.init();
+		this._rawValues = rawValues;
 		for (var i = rawValues.columns.length - 1; i >= 0; i--) {
 			const col: string = rawValues.columns[i]
 			if (this.timeStepKeyword.includes(col.toLowerCase()))
@@ -167,13 +199,22 @@ export class BoxPlotData {
 			this.dataColKeys.push(col);
 			this.functionDataSet.addFunction(col);
 		}
+		if (false) // todo - this can estimate things faster, off for now.
+		{
+			await this.estimateBandDepths();
+			this._depthPreProcessed = true;
+		}
+		// else
+		// {		
 		let rowIdx = 0;
 		for (const row of rawValues)
 		{
 			rowIdx++;
-			console.log("row: " + rowIdx + " / " + rawValues.length);
+			await this.progressBar.updateProgress(rowIdx / rawValues.length);
+			// console.log("row: " + rowIdx + " / " + rawValues.length);
 			this.processRow(row);
 		}
+		// }
 		this.functionDataSet.checkDataLengths();
 		if (!this.depthPreProcessed)
 		{
@@ -184,6 +225,7 @@ export class BoxPlotData {
 		this.findMedian();
 		this.updateOutliers();
 		console.log(this.functionDataSet);
+		await this.progressBar.done(); // todo - maybe don't need this await
 		this.onDataLoadedCallback(this, filename);
 	}
 
@@ -204,38 +246,262 @@ export class BoxPlotData {
 		}
 		let timeStepValue: number = +timeStepValueString;
 		this.functionDataSet.addXValue(timeStepValue);
-
+		const rowValues: Map<string, number> = this.convertToNumberDict(row);
 		BoxPlotData.updateMinMax(timeStepValue, this.xMinMax)
+		this.calculateDepthsForRow(rowValues);
+	}
+
+	private convertToNumberDict(row: d3.DSVRowString<string>): Map<string, number>
+	{
+		const numDict: Map<string, number> = new Map<string, number>();
 		for (const colKey of this.dataColKeys)
 		{
-			let value: number = +row[colKey];
+			numDict.set(colKey, +row[colKey]);
+		}
+		return numDict
+	}
+
+	private calculateDepthsForRow(rowValues: Map<string, number>): void
+	{
+		for (const colKey of rowValues.keys())
+		{
+			let value: number = rowValues.get(colKey);
 			this.functionDataSet.addYValue(colKey, value);
 			BoxPlotData.updateMinMax(value, this.yMinMax);
 			if (!this.depthPreProcessed)
 			{
-				const depthFromThisRow: number = this.processValue(value, row);
+				const depthFromThisRow: number = this.processValue(value, rowValues);
 				let functionData: FunctionData = this.functionDataSet.funcLookup.get(colKey);
 				functionData.depth += depthFromThisRow;
 			}
 		}
 	}
 
-	private processValue(value: number, row: d3.DSVRowString<string>): number
+
+	private processValue(value: number, rowValues: Map<string, number>): number
 	{
 		let depthCount = 0;
 		for (let i = 0; i < this.dataColKeys.length - 1; i++)
 		{
-			let b1: number = +row[this.dataColKeys[i]];
+			let b1: number = rowValues.get(this.dataColKeys[i]);
 			for (let j = i + 1; j < this.dataColKeys.length; j++)
 			{
-				let b2: number = +row[this.dataColKeys[j]];
-				if (Math.min(b1, b2) <= value && value <= Math.max(b1, b2))
+				let b2: number = rowValues.get(this.dataColKeys[j]);
+				if (BoxPlotData.valueInBandPoints(value, b1, b2))
 				{
-					depthCount += 1;
+					depthCount++;
 				}
 			}
 		}
 		return depthCount;
+	}
+
+	private superBootstrapStats(): void
+	{
+		const numBandOptions: number[] = [25, 50, 100, 200, 400, 800];
+		const sampleSize = 100;
+		for (let numBands of numBandOptions)
+		{
+			console.log(numBands);
+			let depthStats = this.bootstrapStats(sampleSize, numBands);
+			console.log(depthStats[0]);
+		}
+	}
+
+	private bootstrapStats(numSamples: number, numBands: number): any
+	{
+		// const numSamples = 10;
+		// const numBands = 50;
+		let depths: Map<string, number[]> = new Map<string, number[]>();
+
+		type stats = {
+			avg: number,
+			variance: number,
+			mse: number,
+			bestDepth: number,
+			diff: number,
+			id: string
+		};
+		// let depthStats: Map<string, stats> = new Map<string, stats>();
+		// any {avg: number, variance: number}
+		for (let key of this.dataColKeys)
+		{
+			let zeroArr = Array(numSamples).fill(0);
+			depths.set(key, zeroArr);
+		}
+		for (let i = 0; i < numSamples; i++)
+		{
+			const printInterval = 100;
+			if ( i % printInterval === 0)
+			{
+				console.log("[ ", (i + printInterval), ", ", numSamples, "]");
+			}
+			const bands = this.getNBandIndices(numBands, this.dataColKeys.length - 1);
+			for (const row of this.rawValues)
+			{
+				let rowDict = this.convertToNumberDict(row);
+
+				for (const key of rowDict.keys())
+				{
+					const value: number = rowDict.get(key);
+					let d = this.processValueForBandsInRow(value, rowDict, bands);
+					depths.get(key)[i] += d;
+				}
+			}
+		}
+		const maxDepthCount = numBands * this.rawValues.length;
+		let depthStatsArray = [];
+		for (let [key, depthArr] of depths)
+		{
+			for (var i = 0; i < depthArr.length; i++)
+			{
+				depthArr[i] = depthArr[i] / maxDepthCount * 100; // normalize and express in percentages
+			}
+			let average: number = DevlibMath.average(depthArr);
+			let variance: number = DevlibMath.variance(depthArr);
+			let bestDepthGuess = 100 * this.functionDataSet.funcLookup.get(key).depth;
+			let mse: number = DevlibMath.meanSquaredError(depthArr, bestDepthGuess);
+			let s: stats = {
+				avg: average,
+				variance: variance,
+				mse: mse,
+				bestDepth: bestDepthGuess,
+				diff: average - bestDepthGuess,
+				id: key
+			};
+			// depthStats.set(key, s);
+			depthStatsArray.push(s);
+		}
+
+		console.table(depthStatsArray);
+		return depthStatsArray;
+	}
+
+	private async estimateBandDepths(numSamples: number = 5000): Promise<void>
+	{
+		let depths: Map<string, number> = new Map<string, number>();
+		for (const key of this.dataColKeys)
+		{
+			depths.set(key, 0);
+		}
+		// const timeIntervalUpdate = 200;
+		let lastUpdateTime: number = performance.now();
+
+		// const consoleUpdates = 20;
+		// const interval: number = Math.round(numSamples / consoleUpdates);
+		// const progElement = document.getElementById("progressBar");
+		for (let i = 1; i <= numSamples; i++)
+		{
+			await this.progressBar.updateProgress(i / numSamples);
+
+			const band = BoxPlotData.getRandomBand(this.dataColKeys.length - 1);
+			for (const row of this.rawValues)
+			{
+				let rowDict = this.convertToNumberDict(row);
+
+				for (const key of rowDict.keys())
+				{
+					const value: number = rowDict.get(key);
+					if (this.valueInBand(value, rowDict, band))
+					{
+						let oldDepth: number = depths.get(key);
+						depths.set(key, oldDepth + 1);
+					}
+				}
+			}
+		}
+		for (const func of this.functionDataSet.functionDataArray)
+		{
+			func.depth = depths.get(func.name) / (numSamples * this.rawValues.length);
+		}
+	}
+
+	private getNBandIndices(num: number, maxIndex: number): [number, number][]
+	{
+		let bandList: [number, number][] = [];
+		// let bandSet = new Set<string>();
+
+		while (bandList.length < num)
+		{
+			// let i1 = DevlibMath.randomInt(0, maxIndex);
+			// let i2 = i1;
+			// while (i2 === i1)
+			// {
+			// 	i2 = DevlibMath.randomInt(0, maxIndex);
+			// }
+			let band: [number, number] = BoxPlotData.getRandomBand(maxIndex);
+			// let hashList = this.hashBand(band)
+			// if (!bandSet.has(hashList[0]) && !bandSet.has(hashList[1]))
+			// {
+			// 	bandList.push(band);
+			// 	bandSet.add(hashList[0]);
+			// 	bandSet.add(hashList[1]);
+			// }
+			bandList.push(band);
+
+		}
+		return bandList;
+	}
+
+	private static getRandomBand(maxIndex: number): [number, number]
+	{
+		let i1 = DevlibMath.randomInt(0, maxIndex);
+		let i2 = i1;
+		while (i2 === i1)
+		{
+			i2 = DevlibMath.randomInt(0, maxIndex);
+		}
+		return [i1, i2];
+	}
+
+	private hashBand(band: [number, number])
+	{
+		let a: string = band[0] + "," + band[1];
+		let b: string = band[1] + "," + band[0];
+		return [a, b];
+	}
+
+	private processValueForBandsInRow(value: number, rowValues: Map<string, number>, bands: [number, number][]): number
+	{
+		let depthCount = 0;
+		for (const b of bands)
+		{
+			if (this.valueInBand(value, rowValues, b))
+			{
+				depthCount++;
+			}
+		}
+		return depthCount;
+	} 
+	
+	private processValueForRandomBandsInRow(value: number, rowValues: Map<string, number>, bands: [number, number][]): number
+	{
+		let depthCount = 0;
+		for (let i = 0; i < bands.length; ++i)
+		{
+			let randI = DevlibMath.randomInt(0, bands.length - 1);
+			let b: [number, number] = bands[randI];
+			if (this.valueInBand(value, rowValues, b))
+			{
+				depthCount++;
+			}
+		}
+		return depthCount;
+	} 
+
+	private valueInBand(value: number, rowValues: Map<string, number>, band: [number, number]): boolean
+	{
+		const b1Index: number = band[0];
+		const b2Index: number = band[1];
+		const b1: number = rowValues.get(this.dataColKeys[b1Index]);
+		const b2: number = rowValues.get(this.dataColKeys[b2Index]);
+		return BoxPlotData.valueInBandPoints(value, b1, b2)
+	} 
+
+
+	private static valueInBandPoints(value: number, b1: number, b2: number)
+	{
+		return Math.min(b1, b2) <= value && value <= Math.max(b1, b2);
 	}
 
 	private static updateMinMax(value: number, minMax: number[]): void
