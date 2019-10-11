@@ -5,6 +5,8 @@
         "src/FunctionDataSet.ts",
         "src/FunctionData.ts",        
         "src/BoxPlotViz.ts",
+        // "../DataModel/PointND.ts",
+        // "../DataModel/Metric.ts",
         "../lib/FileLoadUtil.ts",
         "../lib/DevlibMath.ts",
         "../lib/DevlibTSUtil.ts",

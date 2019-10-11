@@ -1,5 +1,5 @@
-import { BoxPlotData, ScaleType } from "./BoxPlotData";
-import { FunctionData } from "./FunctionData"
+import { BoxPlotData, ScaleType } from "BoxPlotData";
+import { FunctionData } from "FunctionData"
 import * as d3 from 'd3';
 
 interface Margin {

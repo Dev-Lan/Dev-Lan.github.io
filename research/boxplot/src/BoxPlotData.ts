@@ -1,5 +1,5 @@
-import { FunctionDataSet } from './FunctionDataSet';
-import { FunctionData } from './FunctionData';
+import { FunctionDataSet } from 'FunctionDataSet';
+import { FunctionData } from 'FunctionData';
 import { DevlibMath } from '../../lib/DevlibMath';
 import { DevlibTSUtil } from '../../lib/DevlibTSUtil';
 import { ProgressBar } from '../../widgets/ProgressBar';
