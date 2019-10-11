@@ -1,4 +1,4 @@
-import { FunctionData } from 'FunctionData';
+import { FunctionData } from './FunctionData';
 
 export class FunctionDataSet {
 	constructor()

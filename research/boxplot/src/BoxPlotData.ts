@@ -1,5 +1,5 @@
-import { FunctionDataSet } from 'FunctionDataSet';
-import { FunctionData } from 'FunctionData';
+import { FunctionDataSet } from './FunctionDataSet';
+import { FunctionData } from './FunctionData';
 import { DevlibMath } from '../../lib/DevlibMath';
 import { DevlibTSUtil } from '../../lib/DevlibTSUtil';
 import { ProgressBar } from '../../widgets/ProgressBar';
@@ -161,6 +161,7 @@ export class BoxPlotData {
 		this.onPreDataLoad();
 		this.init();
 		// const rawValueArray = 
+
 		let rawValueArray: d3.DSVRowArray<string> = d3.csvParse(rawValues);
 		this._rawValues = rawValueArray;
 		for (var i = rawValueArray.columns.length - 1; i >= 0; i--) {
