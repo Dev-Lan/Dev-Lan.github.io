@@ -1,11 +1,11 @@
 {
     "files": [
         "src/main.ts",
-        "src/FileLoadUtil.ts",
         "src/BoxPlotData.ts",
         "src/FunctionDataSet.ts",
         "src/FunctionData.ts",        
         "src/BoxPlotViz.ts",
+        "../lib/FileLoadUtil.ts",
         "../lib/DevlibMath.ts",
         "../lib/DevlibTSUtil.ts",
         "../widgets/ProgressBar.ts"
