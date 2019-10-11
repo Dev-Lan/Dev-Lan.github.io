@@ -1,4 +1,4 @@
-import { BoxPlotData, ScaleType, OutlierMethod } from "./BoxPlotData";
+import { BoxPlotData, ScaleType } from "./BoxPlotData";
 import { FunctionData } from "./FunctionData"
 import * as d3 from 'd3';
 

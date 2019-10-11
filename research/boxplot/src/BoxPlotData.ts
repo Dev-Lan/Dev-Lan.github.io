@@ -3,6 +3,7 @@ import { FunctionData } from './FunctionData';
 import { DevlibMath } from '../../lib/DevlibMath';
 import { DevlibTSUtil } from '../../lib/DevlibTSUtil';
 import { ProgressBar } from '../../widgets/ProgressBar';
+import * as d3 from 'd3';
 
 type FuncOnBoxPlotData = (data: BoxPlotData, filename?: string) => void;
 
@@ -51,9 +52,6 @@ export class BoxPlotData {
 	public get onPreDataLoad() : Function {
 		return this._onPreDataLoad;
 	}
-	// public set onPreDataLoad(v : Function) {
-	// 	this._onPreDataLoad = v;
-	// }
 
 	private _dataColKeys : string[];
 	public get dataColKeys() : string[] {
@@ -158,13 +156,15 @@ export class BoxPlotData {
 		return this._progressBar;
 	}
 
-	public async Initialize(rawValues: d3.DSVRowArray<string>, filename: string): Promise<void>
+	public async Initialize(rawValues: string, filename: string): Promise<void>
 	{
 		this.onPreDataLoad();
 		this.init();
-		this._rawValues = rawValues;
-		for (var i = rawValues.columns.length - 1; i >= 0; i--) {
-			const col: string = rawValues.columns[i]
+		// const rawValueArray = 
+		let rawValueArray: d3.DSVRowArray<string> = d3.csvParse(rawValues);
+		this._rawValues = rawValueArray;
+		for (var i = rawValueArray.columns.length - 1; i >= 0; i--) {
+			const col: string = rawValueArray.columns[i]
 			if (this.timeStepKeyword.includes(col.toLowerCase()))
 			{
 				continue;
@@ -180,10 +180,10 @@ export class BoxPlotData {
 		// else
 		// {		
 		let rowIdx = 0;
-		for (const row of rawValues)
+		for (const row of rawValueArray)
 		{
 			rowIdx++;
-			await this.progressBar.updateProgress(rowIdx / rawValues.length);
+			await this.progressBar.updateProgress(rowIdx / rawValueArray.length);
 			this.processRow(row);
 		}
 		// }

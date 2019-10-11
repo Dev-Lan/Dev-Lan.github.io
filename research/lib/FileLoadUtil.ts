@@ -1,6 +1,7 @@
-import * as d3 from 'd3';
+// import * as d3 from 'd3';
 
-type CallbackFunction = (data: d3.DSVRowArray<string>, filename: string) => void;
+// type CallbackFunction = (data: d3.DSVRowArray<string>, filename: string) => void;
+type CallbackFunction = (data: string, filename: string) => void;
 
 export class FileLoadUtil {
 
@@ -37,8 +38,8 @@ export class FileLoadUtil {
 
 	private parseText(text: string, filename: string): void
 	{
-		let structuredData: d3.DSVRowArray<string> = d3.csvParse(text);
-		this.FileLoadCallback(structuredData, filename);
+		// let structuredData: d3.DSVRowArray<string> = d3.csvParse(text);
+		this.FileLoadCallback(text, filename);
 		
 	}
 }
