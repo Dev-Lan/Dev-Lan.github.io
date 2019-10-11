@@ -12,10 +12,6 @@ export enum ScaleType {
 	SYMLOG = "SYMLOG"
 };
 
-export enum OutlierMethod {
-	INFLATE_ENVELOPE = "INFLATE_ENVELOPE",
-	DYNAMIC_DEPTH = "DYNAMIC_DEPTH"
-};
 
 export class BoxPlotData {
 	
@@ -28,7 +24,6 @@ export class BoxPlotData {
 		this._scaleYType = ScaleType.LINEAR;
 		this._xSymLogConstant = 1e-10;
 		this._ySymLogConstant = 1e-10;
-		this._outlierMethod = OutlierMethod.INFLATE_ENVELOPE;
 
 		// todo - don't reference dom from data
 		const progressContainer: HTMLElement = document.getElementById("progressBarContainer");
@@ -100,16 +95,6 @@ export class BoxPlotData {
 		this._functionDataSet = v;
 	}
 
-	// private _lowerBand : number[];
-	// public get lowerBand() : number[] {
-	// 	return this._lowerBand;
-	// }
-
-	// private _upperBand : number[];
-	// public get upperBand() : number[] {
-	// 	return this._upperBand;
-	// }
-
 	private _bandWidth : number;
 	public get bandWidth() : number {
 		return this._bandWidth;
@@ -142,14 +127,6 @@ export class BoxPlotData {
 		this._scaleYType = v;
 	}
 
-	private _outlierMethod : OutlierMethod;
-	public get outlierMethod() : OutlierMethod {
-		return this._outlierMethod;
-	}
-	public set outlierMethod(v: OutlierMethod) {
-		this._outlierMethod = v;
-	}
-
 	private _band : [number, number][];
 	public get band() : [number, number][] {
 		return this._band;
@@ -175,10 +152,6 @@ export class BoxPlotData {
 	public get rawValues() : d3.DSVRowArray<string> {
 		return this._rawValues;
 	}
-	// public set rawValues(v : d3.DSVRowArray<string>) {
-	// 	this._rawValues = v;
-	// }
-
 
 	private _progressBar : ProgressBar;
 	public get progressBar() : ProgressBar {
@@ -211,7 +184,6 @@ export class BoxPlotData {
 		{
 			rowIdx++;
 			await this.progressBar.updateProgress(rowIdx / rawValues.length);
-			// console.log("row: " + rowIdx + " / " + rawValues.length);
 			this.processRow(row);
 		}
 		// }
@@ -540,16 +512,7 @@ export class BoxPlotData {
 	{
 		this.functionDataSet.checkIfSorted();
 		this.functionDataSet.resetOutliersToFalse();
-		
-		switch (this.outlierMethod) {
-			case OutlierMethod.INFLATE_ENVELOPE:
-				this.updateOutliersByExpandingEnvelope();
-				break;
-			case OutlierMethod.DYNAMIC_DEPTH:
-				this.updateOutliersByBandDepth();
-				break;
-			default:
-		}
+		this.updateOutliersByBandDepth();
 	}
 
 	public updateOutliersByBandDepth(): void
@@ -580,23 +543,6 @@ export class BoxPlotData {
 			this.outlierBand[1].push(maxValue);
 			//todo there can be NaN infinity
 		}
-	}
-
-	public updateOutliersByExpandingEnvelope(): void
-	{
-		this._outlierBand = [[], []];
-		for (let i = 0 ; i < this.median.length; i++)
-		{
-			let median = this.median[i];
-			let bandMin = this.band[i][0];
-			let bandMax = this.band[i][1];
-			let outlierBandMin = median - (median - bandMin) * this.outlierThreshold;
-			let outlierBandMax = median + (bandMax - median) * this.outlierThreshold;
-			this.outlierBand[0].push(outlierBandMin);
-			this.outlierBand[1].push(outlierBandMax);
-		}
-
-		this.functionDataSet.setOutliersByOutlierBand(this.outlierBand);
 	}
 
 	private findMedian(): void
