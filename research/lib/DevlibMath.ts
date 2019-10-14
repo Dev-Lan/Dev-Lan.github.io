@@ -45,4 +45,28 @@ export class DevlibMath
 		return Math.floor(Math.random() * (max + 1));
 	}
 
+	public static isNumber(text: string): boolean
+	{
+		if (text === "")
+		{
+			return false;
+		}
+		return !isNaN(Number(text))
+	}
+
+	public static sortOnProperty<objType>(propertyAccessor: (objType: any) => number): (a: objType, b: objType) => number
+	{
+		return (a: objType, b: objType) =>
+		{
+			const aVal = propertyAccessor(a);
+			const bVal = propertyAccessor(b);
+			let diff = aVal - bVal;
+			if (Math.abs(diff) > 0)
+			{
+				diff /= Math.abs(diff);
+			}
+			return diff;
+		}
+	}
+
 }
