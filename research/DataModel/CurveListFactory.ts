@@ -1,5 +1,6 @@
 import * as d3 from 'd3';
 import { DevlibMath } from '../lib/DevlibMath';
+import { CurveList } from './CurveList';
 import { CurveND } from './CurveND';
 import { PointND } from './PointND';
 import { StringToStringObj, StringToNumberObj } from '../lib/DevLibTypes'
@@ -14,7 +15,7 @@ export class CurveListFactory {
 	// 	// code...
 	// }
 
-	public static CreateCurveListFromCSV(csvString: string, idkey: string = "id", tKey: string = "t"): CurveND[]
+	public static CreateCurveListFromCSV(csvString: string, idkey: string = "id", tKey: string = "t"): CurveList
 	{
 		const curveList: CurveND[] = [];
 
@@ -61,8 +62,8 @@ export class CurveListFactory {
 					}
 					points.push(point);
 				}
-				const sortFunction = DevlibMath.sortOnProperty<StringToNumberObj>(obj => obj[tKey]);
-				points.sort(sortFunction);
+				// const sortFunction = DevlibMath.sortOnProperty<StringToNumberObj>(obj => obj[tKey]);
+				// points.sort(sortFunction);
 
 				values.points = points;
 				return values;
@@ -77,7 +78,7 @@ export class CurveListFactory {
 				let value = plainCurve.value[key];
 				if (typeof value === "number")
 				{
-					curve.addValue(key, value);
+					curve.set(key, value);
 					continue;
 				}
 				for (let pojoPoint of value)
@@ -88,8 +89,10 @@ export class CurveListFactory {
 			}
 			curveList.push(curve);
 		}
-		console.log(curveList);
-		return curveList;
+		// console.log(curveList);
+		const curveListObj = new CurveList(curveList);
+		curveListObj.setInputKey(tKey);
+		return curveListObj;
 	}
 
 }

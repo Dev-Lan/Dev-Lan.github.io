@@ -24,6 +24,11 @@ export class PointND {
 		this.valueMap.set(key, m);
 	}
 
+	public get(key: string): number
+	{
+		return this.valueMap.get(key).value;
+	}
+
 	// public toString(): string
 	// {
 	// 	return "test";

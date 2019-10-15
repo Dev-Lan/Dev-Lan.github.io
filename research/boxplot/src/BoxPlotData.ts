@@ -3,6 +3,7 @@ import { FunctionData } from './FunctionData';
 import { DevlibMath } from '../../lib/DevlibMath';
 import { DevlibTSUtil } from '../../lib/DevlibTSUtil';
 import { ProgressBar } from '../../widgets/ProgressBar';
+import { CurveList } from '../../DataModel/CurveList';
 import { CurveListFactory } from '../../DataModel/CurveListFactory';
 import { CurveND } from '../../DataModel/CurveND';
 
@@ -88,6 +89,14 @@ export class BoxPlotData {
 	}
 
 
+	private _curveList : CurveList;
+	public get curveList() : CurveList {
+		return this._curveList;
+	}
+	// public set curveList(v : CurveND[]) {
+	// 	this._curveList = v;
+	// }
+
 	private _functionDataSet : FunctionDataSet;
 	public get functionDataSet() : FunctionDataSet {
 		return this._functionDataSet;
@@ -164,8 +173,17 @@ export class BoxPlotData {
 		this.onPreDataLoad();
 		this.init();
 		// const rawValueArray = 
-		// const curveList: CurveND[] = CurveListFactory.CreateCurveListFromCSV(rawValues);
-		
+		this._curveList = CurveListFactory.CreateCurveListFromCSV(rawValues);
+		const depthKey = "depth";
+		this.curveList.calculateDepth(depthKey, "y");
+		this.curveList.sort(depthKey, false);
+
+		console.log(this.curveList);
+		for (let curve of this.curveList.curveList)
+		{
+			console.log(curve.get("depth"));
+		}
+
 		let rawValueArray: d3.DSVRowArray<string> = d3.csvParse(rawValues);
 		this._rawValues = rawValueArray;
 		for (var i = rawValueArray.columns.length - 1; i >= 0; i--) {
@@ -431,12 +449,12 @@ export class BoxPlotData {
 		return [i1, i2];
 	}
 
-	private hashBand(band: [number, number])
-	{
-		let a: string = band[0] + "," + band[1];
-		let b: string = band[1] + "," + band[0];
-		return [a, b];
-	}
+	// private hashBand(band: [number, number])
+	// {
+	// 	let a: string = band[0] + "," + band[1];
+	// 	let b: string = band[1] + "," + band[0];
+	// 	return [a, b];
+	// }
 
 	private processValueForBandsInRow(value: number, rowValues: Map<string, number>, bands: [number, number][]): number
 	{
