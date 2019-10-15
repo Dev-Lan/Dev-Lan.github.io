@@ -9,6 +9,7 @@ export class CurveList
 	constructor(curveList: CurveND[])
 	{
 		this._curveList = curveList;
+		this._minMaxMap = new Map<string, [number, number]>();
 	}
 
 	private _curveList : CurveND[];
@@ -19,6 +20,34 @@ export class CurveList
 	private _inputKey : string;
 	public get inputKey() : string {
 		return this._inputKey;
+	}
+
+	private _minMaxMap : Map<string, [number, number]>;
+	public get minMaxMap() : Map<string, [number, number]> {
+		return this._minMaxMap;
+	}
+
+	private updateMinMaxMap()
+	{
+		for (let curve of this.curveList)
+		{
+			for (let point of curve.pointList)
+			{
+				for (let key in point.valueMap)
+				{
+					let currentVal = this.minMaxMap.get(key);
+					let pointVal = point.get(key);
+					if (typeof currentVal === "undefined")
+					{
+						this.minMaxMap.set(key, [pointVal, pointVal]);
+						continue;
+					}
+					let [c1, c2] = currentVal;
+					let newVal: [number, number] = [Math.min(c1, pointVal), Math.max(c2, pointVal)];
+					this.minMaxMap.set(key, newVal);
+				}
+			}
+		}
 	}
 
 	private initValue(key: string, value: number): void
@@ -79,7 +108,7 @@ export class CurveList
 				curve.set(depthKey, oldDepth + depthContribution);
 			}
 		}
-		
+
 		// todo - normalize
 
 	}
@@ -87,9 +116,9 @@ export class CurveList
 	private getDepthContribution(curve: CurveND, [b1, b2]: [CurveND, CurveND], valueKey: string): number
 	{
 		let depth = 0;
-		for (let i = 0; i < curve.pointArray.length; i++)
+		for (let i = 0; i < curve.pointList.length; i++)
 		{
-			let point: PointND = curve.pointArray[i];
+			let point: PointND = curve.pointList[i];
 			const t = point.get(this.inputKey);
 			let thisVal = point.get(valueKey);
 			let b1Val = b1.getPointValue(t, valueKey);

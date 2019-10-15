@@ -8,7 +8,7 @@ export class CurveND {
 	constructor(id: string) {
 		this._id = id;
 		this._valueMap = new Map<string, Metric>();
-		this._pointArray = [];
+		this._pointList = [];
 	}
 
 	private _id : string;
@@ -29,9 +29,9 @@ export class CurveND {
 	// 	this._valueMap = v;
 	// }
 
-	private _pointArray : PointND[];
-	public get pointArray() : PointND[] {
-		return this._pointArray;
+	private _pointList : PointND[];
+	public get pointList() : PointND[] {
+		return this._pointList;
 	}
 
 
@@ -60,11 +60,11 @@ export class CurveND {
 			return point.get(this.inputKey);
 		});
 		let pointIndex: number | [number, number];
-		pointIndex = DevlibAlgo.BinarySearchIndex(this.pointArray, sortFunction);
+		pointIndex = DevlibAlgo.BinarySearchIndex(this.pointList, sortFunction);
 
 		if (typeof pointIndex === "number")
 		{
-			return this.pointArray[pointIndex].get(outputKey);
+			return this.pointList[pointIndex].get(outputKey);
 		}
 		const [idx1, idx2] = pointIndex;
 		if (idx1 === undefined || idx2 === undefined)
@@ -72,8 +72,8 @@ export class CurveND {
 			// out of bounds
 			return undefined;
 		}
-		const point1 = this.pointArray[idx1];
-		const point2 = this.pointArray[idx2];
+		const point1 = this.pointList[idx1];
+		const point2 = this.pointList[idx2];
 
 		const val1 = point1.get(outputKey);
 		const val2 = point2.get(outputKey);
@@ -91,15 +91,15 @@ export class CurveND {
 	public getPointWeight(pointIndex: number): number
 	{
 		const idxLeft = Math.max(pointIndex - 1, 0);
-		const idxRight = Math.min(pointIndex + 1, this.pointArray.length - 1);
-		const tLeft = this.pointArray[idxLeft].get(this.inputKey);
-		const tRight = this.pointArray[idxRight].get(this.inputKey);
+		const idxRight = Math.min(pointIndex + 1, this.pointList.length - 1);
+		const tLeft = this.pointList[idxLeft].get(this.inputKey);
+		const tRight = this.pointList[idxRight].get(this.inputKey);
 		return (tRight - tLeft ) / 2;
 	}
 
 	public addPoint(point: PointND): void
 	{
-		this._pointArray.push(point);
+		this._pointList.push(point);
 	}
 
 	public sort(key: string): void
@@ -108,7 +108,7 @@ export class CurveND {
 		{
 			return point.get(key);
 		});
-		this.pointArray.sort(sortFunction);
+		this.pointList.sort(sortFunction);
 		this._inputKey = key;
 	}
 
@@ -117,7 +117,7 @@ export class CurveND {
 		let minN: number = Infinity;
 		let maxN: number = -Infinity;
 
-		for (let point of this.pointArray)
+		for (let point of this.pointList)
 		{
 			let val = point.valueMap.get(key).value;
 			if (val < minN)
