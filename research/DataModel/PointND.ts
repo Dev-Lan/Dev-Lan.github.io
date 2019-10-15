@@ -24,9 +24,14 @@ export class PointND {
 		this.valueMap.set(key, m);
 	}
 
-	public get(key: string): number
+	public get(key: string): number | undefined
 	{
-		return this.valueMap.get(key).value;
+		let metric = this.valueMap.get(key);
+		if (metric)
+		{
+			return metric.value;
+		}
+		return undefined;
 	}
 
 	// public toString(): string

@@ -179,10 +179,6 @@ export class BoxPlotData {
 		this.curveList.sort(depthKey, false);
 
 		console.log(this.curveList);
-		for (let curve of this.curveList.curveList)
-		{
-			console.log(curve.get("depth"));
-		}
 
 		let rawValueArray: d3.DSVRowArray<string> = d3.csvParse(rawValues);
 		this._rawValues = rawValueArray;
@@ -219,7 +215,7 @@ export class BoxPlotData {
 		this.updateFunctionBands();
 		this.findMedian();
 		this.updateOutliers();
-		console.log(this.functionDataSet);
+		// console.log(this.functionDataSet);
 		await this.progressBar.done(); // todo - maybe don't need this await
 		this.onDataLoadedCallback(this, filename);
 	}

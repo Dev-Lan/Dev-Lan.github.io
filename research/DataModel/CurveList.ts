@@ -29,6 +29,19 @@ export class CurveList
 		}
 	}
 
+	private isKeySet(key: string): boolean
+	{
+		for (let curve of this.curveList)
+		{
+			let value: number | undefined = curve.get(key);
+			if (typeof value === "undefined")
+			{
+				return false;
+			}
+		}
+		return true;
+	}
+
 	public setInputKey(key: string): void
 	{
 		this._inputKey = key;
@@ -49,6 +62,11 @@ export class CurveList
 
 	public calculateDepth(depthKey: string, valueKey: string): void
 	{
+		if (this.isKeySet(depthKey))
+		{
+			// depth is already set
+			return;
+		}
 		this.initValue(depthKey, 0);
 
 		const allBands = CurveList.getAllPossible2Bands(this.curveList) as [CurveND, CurveND][];
@@ -61,6 +79,7 @@ export class CurveList
 				curve.set(depthKey, oldDepth + depthContribution);
 			}
 		}
+		
 		// todo - normalize
 
 	}
@@ -68,7 +87,6 @@ export class CurveList
 	private getDepthContribution(curve: CurveND, [b1, b2]: [CurveND, CurveND], valueKey: string): number
 	{
 		let depth = 0;
-		// for (let point of curve.pointArray)
 		for (let i = 0; i < curve.pointArray.length; i++)
 		{
 			let point: PointND = curve.pointArray[i];

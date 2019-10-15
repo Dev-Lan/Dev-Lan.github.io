@@ -42,9 +42,14 @@ export class CurveND {
 		this._valueMap.set(key, m);
 	}
 
-	public get(key: string): number
+	public get(key: string): number | undefined
 	{
-		return this._valueMap.get(key).value;
+		let metric = this.valueMap.get(key);
+		if (metric)
+		{
+			return metric.value;
+		}
+		return undefined;
 	}
 
 	// finds the value of the property with given key. Will interpolate.
@@ -101,7 +106,7 @@ export class CurveND {
 	{
 		let sortFunction = DevlibAlgo.sortOnProperty<PointND>((point: PointND) => 
 		{
-			return point.valueMap.get(key).value;
+			return point.get(key);
 		});
 		this.pointArray.sort(sortFunction);
 		this._inputKey = key;
