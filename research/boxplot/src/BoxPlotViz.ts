@@ -1,20 +1,14 @@
 import { BoxPlotData, ScaleType } from "./BoxPlotData";
 import { FunctionData } from "./FunctionData"
+import { Margin, SvgSelection } from '../../lib/DevLibTypes';
 import * as d3 from 'd3';
-
-interface Margin {
-	top: number,
-	right: number,
-	bottom: number,
-	left: number
-}
 
 interface CellProperties {
 	cellText: string,
 	extraClass: string
 }
 
-type SvgSelection = d3.Selection<SVGElement, any, HTMLElement, any>;
+// type SvgSelection = d3.Selection<SVGElement, any, HTMLElement, any>;
 
 export class BoxPlotViz {
 	
