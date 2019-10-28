@@ -9,8 +9,13 @@
 
 </head>
 <body onmousemove="updateMousePos(event)"
+	  ontouchmove="handleTouchEvent(event)"
+
 	  onmousedown="handleMouseDown(event)"
-	  onmouseup="handleMouseUp(event)"">
+	  ontouchstart="handleTouchEvent(event)"
+
+	  onmouseup="handleMouseUp(event)"
+	  ontouchend="handleTouchEvent(event)">
 
 {% include navbarSimple.html %}
 

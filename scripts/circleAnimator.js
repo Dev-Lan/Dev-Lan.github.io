@@ -339,3 +339,18 @@ function handleMouseDown(event) {
 function handleMouseUp(event) {
 	mouseDown = false;
 }
+
+function handleTouchEvent(event) {
+	let touchList = event.targetTouches;
+	if (touchList.length === 0)
+	{
+		mouseDown = false;
+		mousePos.x = 0;
+		mousePos.y = 0;
+		return;
+	}
+	mouseDown = true;
+	firstTouch = event.targetTouches[0];
+	mousePos.x = firstTouch.clientX;
+	mousePos.y = firstTouch.clientY - NAVBAR_HEIGHT;
+}
