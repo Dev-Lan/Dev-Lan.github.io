@@ -1,0 +1,41 @@
+.outerFlex {
+	display: flex;
+	flex-direction: row;
+}
+
+.vizContainer {
+	/*background: red;*/
+	flex-shrink: 0;
+	/*width: 800px;*/
+	/*height: 800px;*/
+}
+
+.imageDetailContainer {
+	/*background: blue;*/
+	flex-grow: 1;
+	/*display: flex;*/
+	max-height: 800px;
+	overflow: scroll;
+}
+
+.mainGroup {
+	/*background: blue;*/
+}
+
+.imagePoint {
+    stroke: hsla(0, 0%, 0%, 0.5);
+    fill: hsla(0,0%,0%,0);
+    stroke-width: 1;
+}
+
+.dataInBrush {
+	fill: red;
+	/*r: 5;*/
+}
+
+.imageInGrid {
+	border: solid white 3px;
+	vertical-align: middle;
+}
+
+

@@ -1,0 +1,13 @@
+{
+    "files": [
+        "src/main.ts",
+        "src/ScatterPlotWithImage.ts",
+        "src/ImageDetails.ts",
+        "src/types.ts",
+        "../lib/DevLibTypes"
+    ],
+    "compilerOptions": {
+        "noImplicitAny": true,
+        "target": "es2016"
+    }
+}
