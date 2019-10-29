@@ -1,0 +1,3 @@
+[submodule "research/image-embedding-viz/data"]
+	path = research/image-embedding-viz/data
+	url = https://github.com/Dev-Lan/image-embedding-data.git
