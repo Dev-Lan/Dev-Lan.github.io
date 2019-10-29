@@ -5,11 +5,12 @@ import {pointWithImage, imageLookup, imageOffset} from './types';
 
 export class ImageDetails {
 	
-	constructor(htmlContainerId: string, imageLookup: imageLookup)
+	constructor(htmlContainerId: string, imageLookup: imageLookup, tiledImgUrl: string)
 	{
 		this._mainContainer = document.getElementById(htmlContainerId);
 		this._mainContainerSelection = d3.select("#" + htmlContainerId);
 		this._imageLookup = imageLookup;
+		this._tiledImgUrl = tiledImgUrl;
 	}
 
 	private _mainContainer : HTMLElement;
@@ -30,6 +31,10 @@ export class ImageDetails {
 		return this._imageLookup;
 	}
 
+	private _tiledImgUrl : string;
+	public get tiledImgUrl() : string {
+		return this._tiledImgUrl;
+	}
 
 	public onBrushSelectionChange(data: pointWithImage[]): void
 	{
@@ -44,6 +49,7 @@ export class ImageDetails {
 				`
 				background-position-x: ${-this.imageLookup[d.image].left}px;
 				background-position-y: ${-this.imageLookup[d.image].top}px;
+				background-image: url(${this.tiledImgUrl});
 				`)
 			.classed("imageInGrid", true);
 	}

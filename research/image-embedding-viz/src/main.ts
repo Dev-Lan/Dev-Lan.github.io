@@ -6,15 +6,19 @@ import { pointWithImage } from './types';
 let scatterPlot: ScatterPlotWithImage;
 let imageDetails: ImageDetails;
 
-d3.json('../data/pointList.json').then(data =>
+const baseFolder = "https://raw.githubusercontent.com/Dev-Lan/image-embedding-data/master/";
+const exampleFolder = baseFolder + "dots/";
+d3.json(exampleFolder + 'pointList.json').then(data =>
 {
+	console.log(data)
 	scatterPlot = new ScatterPlotWithImage("scatterPlot", data, onBrushSelectionChange);
 	scatterPlot.draw();
 });
 
-d3.json('../data/imageLookup.json').then(data =>
+d3.json(exampleFolder + 'imageLookup.json').then(data =>
 {
-	imageDetails = new ImageDetails("imageDetails", data);
+	console.log(data)
+	imageDetails = new ImageDetails("imageDetails", data, exampleFolder + 'tiledImg.png');
 });
 
 
