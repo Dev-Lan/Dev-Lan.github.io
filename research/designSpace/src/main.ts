@@ -9,8 +9,12 @@ let imageDetails: ImageDetails;
 d3.json('../data/pointList.json').then(data =>
 {
 	scatterPlot = new ScatterPlotWithImage("scatterPlot", data, onBrushSelectionChange);
-	imageDetails = new ImageDetails("imageDetails");
 	scatterPlot.draw();
+});
+
+d3.json('../data/imageLookup.json').then(data =>
+{
+	imageDetails = new ImageDetails("imageDetails", data);
 });
 
 

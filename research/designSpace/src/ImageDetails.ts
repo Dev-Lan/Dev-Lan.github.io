@@ -1,14 +1,15 @@
 import * as d3 from 'd3';
 import {HtmlSelection} from '../../lib/DevLibTypes';
-import {pointWithImage} from './types';
+import {pointWithImage, imageLookup, imageOffset} from './types';
 
 
 export class ImageDetails {
 	
-	constructor(htmlContainerId: string)
+	constructor(htmlContainerId: string, imageLookup: imageLookup)
 	{
 		this._mainContainer = document.getElementById(htmlContainerId);
 		this._mainContainerSelection = d3.select("#" + htmlContainerId);
+		this._imageLookup = imageLookup;
 	}
 
 	private _mainContainer : HTMLElement;
@@ -24,21 +25,27 @@ export class ImageDetails {
 		this._mainContainerSelection = v;
 	}
 
+	private _imageLookup : imageLookup;
+	public get imageLookup() : imageLookup {
+		return this._imageLookup;
+	}
+
 
 	public onBrushSelectionChange(data: pointWithImage[]): void
 	{
-		// this.mainContainer.innerHTML = null;
 		let folder = "../data/images/"
-		this.mainContainerSelection.selectAll("img")
+		d3.select("#numSelected")
+			.html(data.length.toString());
+
+		this.mainContainerSelection.selectAll("div")
 			.data(data)
-			.join("img")
-			.attr("src", d => folder + d.image)
+			.join("div")
+			.attr("style", d =>
+				`
+				background-position-x: ${-this.imageLookup[d.image].left}px;
+				background-position-y: ${-this.imageLookup[d.image].top}px;
+				`)
 			.classed("imageInGrid", true);
-		// for (let point of data)
-		// {
-		// 	let filepath = folder + point.image;
-		// 	this.drawImage(filepath);
-		// }
 	}
 
 	private drawImage(filepath: string): void
