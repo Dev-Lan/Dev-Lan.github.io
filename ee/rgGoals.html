@@ -4,7 +4,7 @@
 	<title>Dev-Lan</title>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
 	<link rel="stylesheet" href="../style/devlan-style.css">
 	<script src="https://d3js.org/d3.v4.min.js" charset="utf-8"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
@@ -30,7 +30,7 @@
 
 		for (var i = spreadsheetIdList.length - 1; i >= 0; i--) {			
 			var spreadsheetID = spreadsheetIdList[i];
-			var url = 'http://spreadsheets.google.com/tq?key=' + spreadsheetID + '&pub=1';
+			var url = 'https://spreadsheets.google.com/tq?key=' + spreadsheetID + '&pub=1';
 			// console.log(spreadsheetID);
 			var query = new google.visualization.Query(url);
 			query.setQuery('Select B, C, E limit 5');
