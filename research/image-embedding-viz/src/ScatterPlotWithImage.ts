@@ -9,7 +9,7 @@ export class ScatterPlotWithImage {
 		this._svgSelect = d3.select("#" + svgContainerId);
 		this._brushChangeCallback = brushChangeCallback;
 
-		const pad = 20;
+		const pad = 40;
 		this._margin = {
 			top: pad,
 			right: pad,
@@ -134,21 +134,24 @@ export class ScatterPlotWithImage {
 
 
 		const extentWithMargin: [[number, number],[number, number]] = [[-this.margin.left, -this.margin.top], [ this.width + this.margin.right, this.height + this.margin.bottom]];
-
+		console.log(extentWithMargin);
 		// init zoom behavior
 		this._zoomRectSelect = this.svgSelect
 		  .append("g")
 			.attr("id", "zoomGroup")
-			// .attr("transform", `translate(${this.margin.top}, ${this.margin.left})`)
+			.attr("transform", `translate(${this.margin.top}, ${this.margin.left})`)
 		  .append("rect");
 		this.zoomRectSelect
 			.attr("width", this.width)
 			.attr("height", this.height)
 			.attr("opacity", 0);
 
+		let zoomPadX = this.margin.right / 2;
+		let zoomPadY = this.margin.bottom / 2;
+
 		let zoomBehavior = d3.zoom()
 			.scaleExtent([1, 15])
-			// .translateExtent(extentWithMargin)
+			.translateExtent([[-zoomPadX, -zoomPadY], [this.width + this.margin.right + this.margin.left + zoomPadX, this.height + this.margin.top + this.margin.bottom + zoomPadY]])
 			.on("zoom", () => { this.zoomHandler(); });
 
 		this.zoomRectSelect.call(zoomBehavior);
@@ -191,7 +194,7 @@ export class ScatterPlotWithImage {
 	private zoomHandler(): void
 	{
 		const newZoom = d3.event.transform;
-		console.log(d3.event.transform.toString());
+		console.log(newZoom.toString());
 		this.brushGroupSelect.attr("transform", `translate(${this.margin.top}, ${this.margin.left}) ` + newZoom.toString());
 		this.mainGroupSelect.attr("transform", `translate(${this.margin.top}, ${this.margin.left}) ` + newZoom.toString());
 
@@ -212,6 +215,11 @@ export class ScatterPlotWithImage {
 		// 	.join("circle")
 		// 	.attr('cx', d => scaleX(d.x))
 		// 	.attr('cy', d => scaleY(d.y))
+	}
+
+	private resetZoom(): void
+	{
+		// todo
 	}
 
 	private clearHighlightedData(): void
