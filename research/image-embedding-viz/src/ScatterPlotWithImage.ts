@@ -30,14 +30,19 @@ export class ScatterPlotWithImage {
 		return this._svgSelect;
 	}
 
+	private _mainGroupSelect : SvgSelection;
+	public get mainGroupSelect() : SvgSelection {
+		return this._mainGroupSelect;
+	}
+
 	private _brushGroupSelect : SvgSelection;
 	public get brushGroupSelect() : SvgSelection {
 		return this._brushGroupSelect;
 	}
 
-	private _mainGroupSelect : SvgSelection;
-	public get mainGroupSelect() : SvgSelection {
-		return this._mainGroupSelect;
+	private _zoomRectSelect : SvgSelection;
+	public get zoomRectSelect() : SvgSelection {
+		return this._zoomRectSelect;
 	}
 
 	private _margin : Margin;
@@ -127,12 +132,35 @@ export class ScatterPlotWithImage {
 			.attr("height", this.height)
 			.classed("mainGroup", true);
 
+
+		const extentWithMargin: [[number, number],[number, number]] = [[-this.margin.left, -this.margin.top], [ this.width + this.margin.right, this.height + this.margin.bottom]];
+
+		// init zoom behavior
+		this._zoomRectSelect = this.svgSelect
+		  .append("g")
+			.attr("id", "zoomGroup")
+			// .attr("transform", `translate(${this.margin.top}, ${this.margin.left})`)
+		  .append("rect");
+		this.zoomRectSelect
+			.attr("width", this.width)
+			.attr("height", this.height)
+			.attr("opacity", 0);
+
+		let zoomBehavior = d3.zoom()
+			.scaleExtent([1, 15])
+			// .translateExtent(extentWithMargin)
+			.on("zoom", () => { this.zoomHandler(); });
+
+		this.zoomRectSelect.call(zoomBehavior);
+
+		// init brush behavior
 		this._brushGroupSelect = this.svgSelect.append("g");
 		this.brushGroupSelect
-			.attr("transform", `translate(${this.margin.top}, ${this.margin.left})`);
+			.attr("transform", `translate(${this.margin.top}, ${this.margin.left})`)
+			.classed("brushContainer", true)
 
 		this._brush = d3.brush()
-			.extent([[-this.margin.left, -this.margin.top], [ this.width + this.margin.right, this.height + this.margin.bottom]])
+			.extent(extentWithMargin)
 			.on("start brush end", () => { this.brushHandler(); });
 		this.brushGroupSelect.call(this.brush);
 	}
@@ -160,6 +188,32 @@ export class ScatterPlotWithImage {
 		this.brushChangeCallback(dataInBrush);
 	}
 
+	private zoomHandler(): void
+	{
+		const newZoom = d3.event.transform;
+		console.log(d3.event.transform.toString());
+		this.brushGroupSelect.attr("transform", `translate(${this.margin.top}, ${this.margin.left}) ` + newZoom.toString());
+		this.mainGroupSelect.attr("transform", `translate(${this.margin.top}, ${this.margin.left}) ` + newZoom.toString());
+
+
+		if (d3.event.sourceEvent.type === "mousemove")
+		{
+			return;
+			// no scale occured, so no need to update the circles.
+		}
+		this.mainGroupSelect.selectAll("circle")
+			.attr("r", 2 / newZoom.k)
+			.attr("style", `stroke-width: ${1 / newZoom.k};`);
+
+		// let scaleX = d3.event.transform.rescaleX(this.scaleX);
+		// let scaleY = d3.event.transform.rescaleY(this.scaleY);
+		// this.mainGroupSelect.selectAll("circle")
+		// 	.data(this.data, (d: pointWithImage) => d.image)
+		// 	.join("circle")
+		// 	.attr('cx', d => scaleX(d.x))
+		// 	.attr('cy', d => scaleY(d.y))
+	}
+
 	private clearHighlightedData(): void
 	{
 		this.mainGroupSelect.selectAll(".dataInBrush")
@@ -177,6 +231,16 @@ export class ScatterPlotWithImage {
 	{
 		this.initialize();
 		this.onDataChange(this.data);
+	}
+
+	public onShiftKeyDown(): void
+	{
+		d3.select("#zoomGroup").raise();
+	}
+
+	public onShiftKeyUp(): void
+	{
+		this.brushGroupSelect.raise();
 	}
 
 }

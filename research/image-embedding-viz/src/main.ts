@@ -52,3 +52,19 @@ window.onresize = () => {
 	scatterPlot.onWindowResize();
 	imageDetails.onBrushSelectionChange([]);
 }
+
+window.onkeydown = (ev: KeyboardEvent) =>
+{
+	if (ev.shiftKey)
+	{
+		scatterPlot.onShiftKeyDown();
+	}
+}
+
+window.onkeyup = (ev: KeyboardEvent) =>
+{
+	if (!ev.shiftKey)
+	{
+		scatterPlot.onShiftKeyUp();
+	}
+}
