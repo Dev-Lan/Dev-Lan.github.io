@@ -8,35 +8,16 @@ export class ScatterPlotWithImage {
 	{
 		this._svgSelect = d3.select("#" + svgContainerId);
 		this._brushChangeCallback = brushChangeCallback;
-		this._width = 800;
-		this._height = 800;
-		const pad = 40;
+
+		const pad = 20;
 		this._margin = {
 			top: pad,
 			right: pad,
 			bottom: pad,
 			left: pad
 		}
-		this.svgSelect
-			.attr("width", this.width + 2 * pad)
-			.attr("height", this.height + 2 * pad);
+		this.initialize()
 
-
-		this._mainGroupSelect = this.svgSelect.append("g");
-		this.mainGroupSelect
-			.attr("transform", `translate(${this.margin.top}, ${this.margin.left})`)
-			.attr("width", this.width)
-			.attr("height", this.height)
-			.classed("mainGroup", true);
-
-		this._brushGroupSelect = this.svgSelect.append("g");
-		this.brushGroupSelect
-			.attr("transform", `translate(${this.margin.top}, ${this.margin.left})`);
-			
-		this._brush = d3.brush()
-			.extent([[-this.margin.left, -this.margin.top], [ this.width + this.margin.right, this.height + this.margin.bottom]])
-			.on("start brush end", () => { this.brushHandler(); });
-		this.brushGroupSelect.call(this.brush);
 	}
 
 	private _data : pointWithImage[];
@@ -120,6 +101,42 @@ export class ScatterPlotWithImage {
 			.classed("imagePoint", true);
 	}
 
+	private initialize(): void
+	{
+		this.svgSelect.html(null)
+			.attr("style", "display: none");
+		let parentElement = this.svgSelect.node().parentNode as Element;
+		let rect: DOMRect | ClientRect = parentElement.getBoundingClientRect();
+		console.log(rect)
+		console.log(rect.width)
+		console.log(rect.height)
+
+		this._width = rect.width - this.margin.left - this.margin.right;
+		this._height = rect.height - this.margin.top - this.margin.bottom;
+
+		this.svgSelect
+			.attr("width", this.width + this.margin.left + this.margin.right)
+			.attr("height", this.height + this.margin.top + this.margin.bottom)
+			.attr("style", null);
+
+
+		this._mainGroupSelect = this.svgSelect.append("g");
+		this.mainGroupSelect
+			.attr("transform", `translate(${this.margin.top}, ${this.margin.left})`)
+			.attr("width", this.width)
+			.attr("height", this.height)
+			.classed("mainGroup", true);
+
+		this._brushGroupSelect = this.svgSelect.append("g");
+		this.brushGroupSelect
+			.attr("transform", `translate(${this.margin.top}, ${this.margin.left})`);
+
+		this._brush = d3.brush()
+			.extent([[-this.margin.left, -this.margin.top], [ this.width + this.margin.right, this.height + this.margin.bottom]])
+			.on("start brush end", () => { this.brushHandler(); });
+		this.brushGroupSelect.call(this.brush);
+	}
+
 	private brushHandler(): void
 	{
 		this.clearHighlightedData();
@@ -155,4 +172,11 @@ export class ScatterPlotWithImage {
 			.data(data, (d: pointWithImage) => d.image)
 			.classed("dataInBrush", true);
 	}
+
+	public onWindowResize(): void
+	{
+		this.initialize();
+		this.onDataChange(this.data);
+	}
+
 }

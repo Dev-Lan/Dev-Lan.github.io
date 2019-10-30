@@ -47,3 +47,8 @@ function onBrushSelectionChange(data: pointWithImage[]): void
 	scatterPlot.onBrushSelectionChange(data);
 	imageDetails.onBrushSelectionChange(data);
 }
+
+window.onresize = () => { 
+	scatterPlot.onWindowResize();
+	imageDetails.onBrushSelectionChange([]);
+}

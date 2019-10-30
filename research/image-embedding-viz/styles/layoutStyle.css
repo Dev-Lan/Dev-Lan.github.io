@@ -1,3 +1,9 @@
+.outerContainer {
+	height: 100%;
+    position: absolute;
+    width: 100%;
+}
+
 .horizontalFlex {
 	display: flex;
 	flex-direction: row;
@@ -6,4 +12,21 @@
 .verticalFlex {
 	display: flex;
 	flex-direction: column;
+}
+
+.staticSize {
+	flex-shrink: 0;
+}
+
+.growTo800 {
+	max-width: 850px;
+	width: 70%;
+}
+
+.fillRestOfSpace {
+	flex-grow: 1;
+}
+
+body {
+	margin: 0px;
 }
