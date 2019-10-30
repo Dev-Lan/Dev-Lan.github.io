@@ -37,7 +37,7 @@ function onDatasetChange(dataAttr: DatasetAttributes, projAttr?: ProjectionAttri
 
 	d3.json(dataFolder + 'imageLookup.json').then(data =>
 	{
-		imageDetails.onDataChange(data, dataFolder + "tiledImg.png");
+		imageDetails.onDataChange(data, dataFolder + "tiledImg.png", dataAttr.imageWidth, dataAttr.imageHeight);
 	});
 }
 

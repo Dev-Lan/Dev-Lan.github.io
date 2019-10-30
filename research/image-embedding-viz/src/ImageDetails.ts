@@ -34,10 +34,22 @@ export class ImageDetails {
 		return this._tiledImgUrl;
 	}
 
-	public onDataChange(imageLookup: imageLookup, tiledImgUrl: string)
+	private _imageWidth : number;
+	public get imageWidth() : number {
+		return this._imageWidth;
+	}
+
+	private _imageHeight : number;
+	public get imageHeight() : number {
+		return this._imageHeight;
+	}
+
+	public onDataChange(imageLookup: imageLookup, tiledImgUrl: string, imageWidth: number, imageHeight: number)
 	{
 		this._imageLookup = imageLookup;
 		this._tiledImgUrl = tiledImgUrl;
+		this._imageWidth = imageWidth;
+		this._imageHeight = imageHeight;
 		this.onBrushSelectionChange([]);
 	}
 
@@ -55,6 +67,8 @@ export class ImageDetails {
 				background-position-x: ${-this.imageLookup[d.image].left}px;
 				background-position-y: ${-this.imageLookup[d.image].top}px;
 				background-image: url(${this.tiledImgUrl});
+				width: ${this.imageWidth}px;
+				height: ${this.imageHeight}px;
 				`)
 			.classed("imageInGrid", true);
 	}
