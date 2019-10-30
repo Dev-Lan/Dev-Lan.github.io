@@ -1,0 +1,9 @@
+.horizontalFlex {
+	display: flex;
+	flex-direction: row;
+}
+
+.verticalFlex {
+	display: flex;
+	flex-direction: column;
+}

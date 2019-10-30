@@ -1,0 +1,30 @@
+.exampleSetContainer {
+	/*max-height: 40px;*/
+	/*height: 40px;*/
+}
+
+.dataSelectHeader {
+	display: inline;
+}
+
+.valueHeader {
+    display: inline;
+    margin-left: 10px;
+    color: #000c6f;
+}
+
+.optionButton {
+	border-radius: 3px;
+    margin-right: 5px;
+    border: solid black 1px;
+    font-size: 9pt;
+}
+
+.selected {
+	color: white;
+    background: #000c6f;
+}
+
+.buttonContainer {
+	margin-left: 8px;
+}

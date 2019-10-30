@@ -3,6 +3,7 @@
         "src/main.ts",
         "src/ScatterPlotWithImage.ts",
         "src/ImageDetails.ts",
+        "src/DatasetSelector.ts",
         "src/types.ts",
         "../lib/DevLibTypes"
     ],
