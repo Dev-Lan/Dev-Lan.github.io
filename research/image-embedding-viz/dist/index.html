@@ -2,24 +2,33 @@
 <html>
     <head>
         <meta charset="UTF-8" />
-        <title>Hello World!</title>
+        <title>Image Embedding Viz</title>
+        <link rel="stylesheet" type="text/css" href="../styles/layoutStyle.css">
         <link rel="stylesheet" type="text/css" href="../styles/scatterPlotStyle.css">
+        <link rel="stylesheet" type="text/css" href="../styles/imageDetailStyle.css">
+        <link rel="stylesheet" type="text/css" href="../styles/datasetSelectorStyle.css">
 
     </head>
     <body>
-    	<div class="outerFlex">
-			<div>
-			<svg id="scatterPlot" class="vizContainer">
-				
-			</svg>
-			</div>
-			<div>
-                <h3>Selected: <span id="numSelected" class="numSelectedNumber">0</span></h3>
-                <div id="imageDetails" class="imageDetailContainer">
-                    
-                </div>
-			</div>
-    	</div>
+        <div class="verticalFlex">
+            <div class="horizontalFlex exampleSetContainer">
+                <div><h3 class="exampleHeader">Example Datasets:</h3></div>
+                <div id="examplesContainer"></div>
+            </div>
+        	<div class="horizontalFlex">
+    			<div>
+    			<svg id="scatterPlot" class="vizContainer">
+    				
+    			</svg>
+    			</div>
+    			<div>
+                    <h3>Selected: <span id="numSelected" class="numSelectedNumber">0</span></h3>
+                    <div id="imageDetails" class="imageDetailContainer">
+                        
+                    </div>
+    			</div>
+        	</div>
+       </div>
         <script src="bundle.js"></script>
     </body>
 </html>

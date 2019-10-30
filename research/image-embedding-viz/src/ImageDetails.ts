@@ -5,12 +5,10 @@ import {pointWithImage, imageLookup, imageOffset} from './types';
 
 export class ImageDetails {
 	
-	constructor(htmlContainerId: string, imageLookup: imageLookup, tiledImgUrl: string)
+	constructor(htmlContainerId: string)
 	{
 		this._mainContainer = document.getElementById(htmlContainerId);
 		this._mainContainerSelection = d3.select("#" + htmlContainerId);
-		this._imageLookup = imageLookup;
-		this._tiledImgUrl = tiledImgUrl;
 	}
 
 	private _mainContainer : HTMLElement;
@@ -34,6 +32,13 @@ export class ImageDetails {
 	private _tiledImgUrl : string;
 	public get tiledImgUrl() : string {
 		return this._tiledImgUrl;
+	}
+
+	public onDataChange(imageLookup: imageLookup, tiledImgUrl: string)
+	{
+		this._imageLookup = imageLookup;
+		this._tiledImgUrl = tiledImgUrl;
+		this.onBrushSelectionChange([]);
 	}
 
 	public onBrushSelectionChange(data: pointWithImage[]): void

@@ -4,9 +4,8 @@ import {pointWithImage} from './types';
 
 export class ScatterPlotWithImage {
 	
-	constructor(svgContainerId: string, data: pointWithImage[], brushChangeCallback: (data: pointWithImage[]) => void)
+	constructor(svgContainerId: string, brushChangeCallback: (data: pointWithImage[]) => void)
 	{
-		this._data = data;
 		this._svgSelect = d3.select("#" + svgContainerId);
 		this._brushChangeCallback = brushChangeCallback;
 		this._width = 800;
@@ -22,12 +21,22 @@ export class ScatterPlotWithImage {
 			.attr("width", this.width + 2 * pad)
 			.attr("height", this.height + 2 * pad);
 
+
 		this._mainGroupSelect = this.svgSelect.append("g");
 		this.mainGroupSelect
 			.attr("transform", `translate(${this.margin.top}, ${this.margin.left})`)
 			.attr("width", this.width)
 			.attr("height", this.height)
 			.classed("mainGroup", true);
+
+		this._brushGroupSelect = this.svgSelect.append("g");
+		this.brushGroupSelect
+			.attr("transform", `translate(${this.margin.top}, ${this.margin.left})`);
+			
+		this._brush = d3.brush()
+			.extent([[-this.margin.left, -this.margin.top], [ this.width + this.margin.right, this.height + this.margin.bottom]])
+			.on("start brush end", () => { this.brushHandler(); });
+		this.brushGroupSelect.call(this.brush);
 	}
 
 	private _data : pointWithImage[];
@@ -38,6 +47,11 @@ export class ScatterPlotWithImage {
 	private _svgSelect : SvgSelection;
 	public get svgSelect() : SvgSelection {
 		return this._svgSelect;
+	}
+
+	private _brushGroupSelect : SvgSelection;
+	public get brushGroupSelect() : SvgSelection {
+		return this._brushGroupSelect;
 	}
 
 	private _mainGroupSelect : SvgSelection;
@@ -70,14 +84,21 @@ export class ScatterPlotWithImage {
 		return this._scaleY;
 	}
 
+	private _brush : d3.BrushBehavior<any>;
+	public get brush() : d3.BrushBehavior<any> {
+		return this._brush;
+	}
+
 	private _brushChangeCallback : (data: pointWithImage[]) => void;
 	public get brushChangeCallback() : (data: pointWithImage[]) => void {
 		return this._brushChangeCallback;
 	}
 
-
-	public draw(): void
+	public onDataChange(data: pointWithImage[],): void
 	{
+		this._data = data;
+		this.brushGroupSelect.call(this.brush.move, null);
+
 		let minX = d3.min(this.data, d => d.x);
 		let maxX = d3.max(this.data, d => d.x);
 		this._scaleX = d3.scaleLinear()
@@ -97,12 +118,6 @@ export class ScatterPlotWithImage {
 			.attr('cy', d => this.scaleY(d.y))
 			.attr("r", 2)
 			.classed("imagePoint", true);
-
-		
-		let brush = d3.brush()
-			.extent([[-this.margin.left, -this.margin.top], [ this.width + this.margin.right, this.height + this.margin.bottom]])
-			.on("start brush end", () => { this.brushHandler(); });
-		this.mainGroupSelect.call(brush);
 	}
 
 	private brushHandler(): void
@@ -139,6 +154,5 @@ export class ScatterPlotWithImage {
 		this.mainGroupSelect.selectAll("circle")
 			.data(data, (d: pointWithImage) => d.image)
 			.classed("dataInBrush", true);
-
 	}
 }

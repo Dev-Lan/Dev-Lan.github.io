@@ -1,22 +1,7 @@
-.outerFlex {
-	display: flex;
-	flex-direction: row;
-}
-
 .vizContainer {
-	/*background: red;*/
 	flex-shrink: 0;
-	/*width: 800px;*/
-	/*height: 800px;*/
 }
 
-.imageDetailContainer {
-	/*background: blue;*/
-	flex-grow: 1;
-	/*display: flex;*/
-	max-height: 800px;
-	overflow: scroll;
-}
 
 .mainGroup {
 	/*background: blue;*/
@@ -30,22 +15,7 @@
 
 .dataInBrush {
 	fill: red;
-	/*r: 5;*/
 }
 
-.imageInGrid {
-    border: solid gray 1px;
-    margin: 1px;
-    vertical-align: middle;
-    width: 80px;
-    height: 40px;
-    display: inline-block;
-    background-repeat: no-repeat;
-}
-
-.numSelectedNumber {
-	will-change: transform;
-	
-}
 
 
