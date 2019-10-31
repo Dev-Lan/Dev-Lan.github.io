@@ -35,7 +35,7 @@ function onDatasetChange(dataAttr: DatasetAttributes, projAttr?: ProjectionAttri
 	d3.json(dataFolder + projAttr.filename).then(data =>
 	{
 		console.log(data);
-		scatterPlot.onDataChange(data, projectionSwitchOnly);
+		scatterPlot.onDataChange(data, projectionSwitchOnly, true);
 	});
 
 	d3.json(dataFolder + 'imageLookup.json').then(data =>
@@ -52,8 +52,8 @@ function onBrushSelectionChange(data: pointWithImage[]): void
 }
 
 window.onresize = () => { 
-	scatterPlot.onWindowResize();
 	imageDetails.onBrushSelectionChange([]);
+	scatterPlot.onWindowResize();
 }
 
 window.onkeydown = (ev: KeyboardEvent) =>

@@ -45,8 +45,8 @@ export class ScatterPlotWithImage {
 		return this._zoomRectSelect;
 	}
 
-	private _zoom : d3.ZoomBehavior;
-	public get zoom() : d3.ZoomBehavior {
+	private _zoom : d3.ZoomBehavior<any, any>;
+	public get zoom() : d3.ZoomBehavior<any, any> {
 		return this._zoom;
 	}
 
@@ -66,12 +66,21 @@ export class ScatterPlotWithImage {
 	}
 
 	private _scaleX : d3.ScaleLinear<number, number>;
-	public get scaleX() : d3.ScaleLinear<number, number> {
+	public get scaleX() : d3.ScaleLinear<number, number> 
+	{
+		if (this.lastTransform !== null && typeof this.lastTransform !== "undefined")
+		{
+			return this.lastTransform.rescaleX(this._scaleX);
+		}
 		return this._scaleX;
 	}
 	
 	private _scaleY : d3.ScaleLinear<number, number>;
 	public get scaleY() : d3.ScaleLinear<number, number> {
+		if (this.lastTransform !== null && typeof this.lastTransform !== "undefined")
+		{
+			return this.lastTransform.rescaleY(this._scaleY);
+		}
 		return this._scaleY;
 	}
 
@@ -90,6 +99,11 @@ export class ScatterPlotWithImage {
 		return this._lastSelection;
 	}
 
+	private _lastSelectionInValueSpace : [[number, number], [number, number]] | null | undefined;
+	public get lastSelectionInValueSpace() : [[number, number], [number, number]] | null | undefined {
+		return this._lastSelectionInValueSpace;
+	}
+
 	private _brush : d3.BrushBehavior<any>;
 	public get brush() : d3.BrushBehavior<any> {
 		return this._brush;
@@ -100,13 +114,16 @@ export class ScatterPlotWithImage {
 		return this._brushChangeCallback;
 	}
 
-	public onDataChange(data: pointWithImage[], projectionSwitchOnly: boolean): void
+	public onDataChange(data: pointWithImage[], projectionSwitchOnly: boolean, resetView: boolean): void
 	{
 		this._data = data;
-		this.resetZoomAndBrush();
-		if (!projectionSwitchOnly)
+		if (resetView)
 		{
-			this.clearHighlightedData();
+			this.resetZoomAndBrush();
+			if (!projectionSwitchOnly)
+			{
+				this.clearHighlightedData();
+			}
 		}
 
 		let minX = d3.min(this.data, d => d.x);
@@ -171,7 +188,7 @@ export class ScatterPlotWithImage {
 		let zoomPadY = this.margin.bottom / 2;
 
 		this._zoom = d3.zoom()
-			.scaleExtent([1, 15])
+			.scaleExtent([1, 20])
 			.translateExtent([[-zoomPadX, -zoomPadY], [this.width + this.margin.right + this.margin.left + zoomPadX, this.height + this.margin.top + this.margin.bottom + zoomPadY]])
 			.on("zoom", () => { this.zoomHandler(); });
 		this.zoomRectSelect.call(this.zoom);
@@ -194,14 +211,14 @@ export class ScatterPlotWithImage {
 		console.log(d3.event);
 		if (d3.event.sourceEvent && d3.event.sourceEvent.type !== "zoom")
 		{
-			this._lastSelection = selection;
-			this._transformAtLastSelection = this.lastTransform;
-			this.updateBrush()
+			this.updateBrush(selection)
 		}
 	}
 
-	private updateBrush(): void
+	private updateBrush(selection: [[number, number], [number, number]]): void
 	{
+		this._lastSelection = selection;
+		this._transformAtLastSelection = this.lastTransform;
 		this.clearHighlightedData();
 		if (this.lastSelection === null || typeof this.lastSelection === "undefined")
 		{
@@ -209,24 +226,24 @@ export class ScatterPlotWithImage {
 		}
 		let [[left, top], [right, bottom]] = this.lastSelection;
 
-		let scaleX;
-		let scaleY;
-		if (this.lastTransform !== null && typeof this.lastTransform !== "undefined")
-		{
-			scaleX = this.lastTransform.rescaleX(this.scaleX);
-			scaleY = this.lastTransform.rescaleY(this.scaleY);
-		}
-		else
-		{
-			scaleX = this.scaleX;
-			scaleY = this.scaleY;
-		}
+		// let scaleX;
+		// let scaleY;
+		// if (this.lastTransform !== null && typeof this.lastTransform !== "undefined")
+		// {
+		// 	scaleX = this.lastTransform.rescaleX(this.scaleX);
+		// 	scaleY = this.lastTransform.rescaleY(this.scaleY);
+		// }
+		// else
+		// {
+		// 	scaleX = this.scaleX;
+		// 	scaleY = this.scaleY;
+		// }
 
-		left = scaleX.invert(left);
-		right = scaleX.invert(right);
-		top = scaleY.invert(top);
-		bottom = scaleY.invert(bottom);
-
+		left = this.scaleX.invert(left);
+		right = this.scaleX.invert(right);
+		top = this.scaleY.invert(top);
+		bottom = this.scaleY.invert(bottom);
+		this._lastSelectionInValueSpace = [[left, top], [right, bottom]];
 
 		let dataInBrush = this.data.filter((d: pointWithImage) =>
 		{
@@ -240,6 +257,11 @@ export class ScatterPlotWithImage {
 	private zoomHandler(): void
 	{
 		this._lastTransform = d3.event.transform;
+		this.updateZoom();
+	}
+
+	private updateZoom(): void
+	{
 		this.mainGroupSelect.attr("transform", `translate(${this.margin.top}, ${this.margin.left}) ` + this.lastTransform.toString());
 
 		if (this.lastSelection)
@@ -290,8 +312,22 @@ export class ScatterPlotWithImage {
 
 	public onWindowResize(): void
 	{
+		this.zoomRectSelect.call(this.zoom.transform, d3.zoomIdentity);
+
 		this.initialize();
-		this.onDataChange(this.data, false);
+		this.onDataChange(this.data, false, false);
+
+		this.zoomRectSelect.call(this.zoom.transform, this.lastTransform);
+
+		let [[left, top], [right, bottom]] = this.lastSelectionInValueSpace;
+		left = this.scaleX(left);
+		right = this.scaleX(right);
+		top = this.scaleY(top);
+		bottom = this.scaleY(bottom);
+
+		let selection: [[number, number], [number, number]] = [[left, top], [right, bottom]];
+ 		this.brushGroupSelect.call(this.brush.move, selection);
+ 		this.updateBrush(selection);
 	}
 
 	public onShiftKeyDown(): void
