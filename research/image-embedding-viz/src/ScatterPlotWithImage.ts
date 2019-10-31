@@ -45,6 +45,11 @@ export class ScatterPlotWithImage {
 		return this._zoomRectSelect;
 	}
 
+	private _zoom : d3.ZoomBehavior;
+	public get zoom() : d3.ZoomBehavior {
+		return this._zoom;
+	}
+
 	private _margin : Margin;
 	public get margin() : Margin {
 		return this._margin;
@@ -95,10 +100,14 @@ export class ScatterPlotWithImage {
 		return this._brushChangeCallback;
 	}
 
-	public onDataChange(data: pointWithImage[],): void
+	public onDataChange(data: pointWithImage[], projectionSwitchOnly: boolean): void
 	{
 		this._data = data;
-		this.brushGroupSelect.call(this.brush.move, null);
+		this.resetZoomAndBrush();
+		if (!projectionSwitchOnly)
+		{
+			this.clearHighlightedData();
+		}
 
 		let minX = d3.min(this.data, d => d.x);
 		let maxX = d3.max(this.data, d => d.x);
@@ -127,9 +136,6 @@ export class ScatterPlotWithImage {
 			.attr("style", "display: none");
 		let parentElement = this.svgSelect.node().parentNode as Element;
 		let rect: DOMRect | ClientRect = parentElement.getBoundingClientRect();
-		console.log(rect)
-		console.log(rect.width)
-		console.log(rect.height)
 
 		this._width = rect.width - this.margin.left - this.margin.right;
 		this._height = rect.height - this.margin.top - this.margin.bottom;
@@ -149,7 +155,7 @@ export class ScatterPlotWithImage {
 
 
 		const extentWithMargin: [[number, number],[number, number]] = [[-this.margin.left, -this.margin.top], [ this.width + this.margin.right, this.height + this.margin.bottom]];
-		console.log(extentWithMargin);
+
 		// init zoom behavior
 		this._zoomRectSelect = this.svgSelect
 		  .append("g")
@@ -164,12 +170,11 @@ export class ScatterPlotWithImage {
 		let zoomPadX = this.margin.right / 2;
 		let zoomPadY = this.margin.bottom / 2;
 
-		let zoomBehavior = d3.zoom()
+		this._zoom = d3.zoom()
 			.scaleExtent([1, 15])
 			.translateExtent([[-zoomPadX, -zoomPadY], [this.width + this.margin.right + this.margin.left + zoomPadX, this.height + this.margin.top + this.margin.bottom + zoomPadY]])
 			.on("zoom", () => { this.zoomHandler(); });
-
-		this.zoomRectSelect.call(zoomBehavior);
+		this.zoomRectSelect.call(this.zoom);
 
 		// init brush behavior
 		this._brushGroupSelect = this.svgSelect.append("g");
@@ -193,8 +198,6 @@ export class ScatterPlotWithImage {
 			this._transformAtLastSelection = this.lastTransform;
 			this.updateBrush()
 		}
-
-
 	}
 
 	private updateBrush(): void
@@ -239,18 +242,21 @@ export class ScatterPlotWithImage {
 		this._lastTransform = d3.event.transform;
 		this.mainGroupSelect.attr("transform", `translate(${this.margin.top}, ${this.margin.left}) ` + this.lastTransform.toString());
 
-		let [[left,top],[right,bottom]] = this.lastSelection;
-		if (this.transformAtLastSelection !== null && typeof this.transformAtLastSelection !== "undefined")
+		if (this.lastSelection)
 		{
-			[left, top] = this.transformAtLastSelection.invert([left,top]);
-			[right, bottom] = this.transformAtLastSelection.invert([right,bottom]);		
-		}
-		[left, top] = this.lastTransform.apply([left,top]);
-		[right, bottom] = this.lastTransform.apply([right,bottom]);
-		this.brushGroupSelect.call(this.brush.move, [[left, top], [right, bottom]])
-		// this.updateBrush();
 
-		if (d3.event.sourceEvent.type === "mousemove")
+			let [[left,top],[right,bottom]] = this.lastSelection;
+			if (this.transformAtLastSelection !== null && typeof this.transformAtLastSelection !== "undefined")
+			{
+				[left, top] = this.transformAtLastSelection.invert([left,top]);
+				[right, bottom] = this.transformAtLastSelection.invert([right,bottom]);		
+			}
+			[left, top] = this.lastTransform.apply([left,top]);
+			[right, bottom] = this.lastTransform.apply([right,bottom]);
+			this.brushGroupSelect.call(this.brush.move, [[left, top], [right, bottom]])
+		}
+
+		if (d3.event.sourceEvent && d3.event.sourceEvent.type === "mousemove")
 		{
 			return;
 			// no scale occured, so no need to update the circles.
@@ -260,9 +266,13 @@ export class ScatterPlotWithImage {
 			.attr("style", `stroke-width: ${1 / this.lastTransform.k};`);
 	}
 
-	private resetZoom(): void
+	private resetZoomAndBrush(): void
 	{
-		// todo
+		this._lastSelection = null;
+		this._lastTransform = null;
+		this._transformAtLastSelection = null;
+		this.zoomRectSelect.call(this.zoom.transform, d3.zoomIdentity);
+		this.brushGroupSelect.call(this.brush.move, null);
 	}
 
 	private clearHighlightedData(): void
@@ -281,7 +291,7 @@ export class ScatterPlotWithImage {
 	public onWindowResize(): void
 	{
 		this.initialize();
-		this.onDataChange(this.data);
+		this.onDataChange(this.data, false);
 	}
 
 	public onShiftKeyDown(): void

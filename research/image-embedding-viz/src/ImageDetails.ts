@@ -44,13 +44,16 @@ export class ImageDetails {
 		return this._imageHeight;
 	}
 
-	public onDataChange(imageLookup: imageLookup, tiledImgUrl: string, imageWidth: number, imageHeight: number)
+	public onDataChange(imageLookup: imageLookup, tiledImgUrl: string, imageWidth: number, imageHeight: number, keepImages: boolean)
 	{
 		this._imageLookup = imageLookup;
 		this._tiledImgUrl = tiledImgUrl;
 		this._imageWidth = imageWidth;
 		this._imageHeight = imageHeight;
-		this.onBrushSelectionChange([]);
+		if (!keepImages)
+		{
+			this.onBrushSelectionChange([]);
+		}
 	}
 
 	public onBrushSelectionChange(data: pointWithImage[]): void

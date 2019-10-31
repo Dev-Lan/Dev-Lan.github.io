@@ -26,18 +26,21 @@ function onDatasetChange(dataAttr: DatasetAttributes, projAttr?: ProjectionAttri
 		dataFolder += "/";
 	}
 	console.log(dataAttr);
+	let projectionSwitchOnly = true;
 	if (!projAttr)
 	{
-		projAttr = dataAttr.projectionList[0]
+		projAttr = dataAttr.projectionList[0];
+		projectionSwitchOnly = false;
 	}
 	d3.json(dataFolder + projAttr.filename).then(data =>
 	{
-		scatterPlot.onDataChange(data);
+		console.log(data);
+		scatterPlot.onDataChange(data, projectionSwitchOnly);
 	});
 
 	d3.json(dataFolder + 'imageLookup.json').then(data =>
 	{
-		imageDetails.onDataChange(data, dataFolder + "tiledImg.png", dataAttr.imageWidth, dataAttr.imageHeight);
+		imageDetails.onDataChange(data, dataFolder + "tiledImg.png", dataAttr.imageWidth, dataAttr.imageHeight, projectionSwitchOnly);
 	});
 }
 
