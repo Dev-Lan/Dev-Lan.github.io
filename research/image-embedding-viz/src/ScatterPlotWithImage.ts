@@ -70,6 +70,21 @@ export class ScatterPlotWithImage {
 		return this._scaleY;
 	}
 
+	private _lastTransform : d3.ZoomTransform | null | undefined;
+	public get lastTransform() : d3.ZoomTransform | null | undefined {
+		return this._lastTransform;
+	}
+
+	private _transformAtLastSelection : d3.ZoomTransform | null | undefined;
+	public get transformAtLastSelection() : d3.ZoomTransform | null | undefined {
+		return this._transformAtLastSelection;
+	}
+
+	private _lastSelection : [[number, number], [number, number]] | null | undefined;
+	public get lastSelection() : [[number, number], [number, number]] | null | undefined {
+		return this._lastSelection;
+	}
+
 	private _brush : d3.BrushBehavior<any>;
 	public get brush() : d3.BrushBehavior<any> {
 		return this._brush;
@@ -170,17 +185,45 @@ export class ScatterPlotWithImage {
 
 	private brushHandler(): void
 	{
-		this.clearHighlightedData();
 		const selection: [[number, number], [number, number]] | null  | undefined = d3.event.selection;
-		if (selection === null || typeof selection === "undefined")
+		console.log(d3.event);
+		if (d3.event.sourceEvent && d3.event.sourceEvent.type !== "zoom")
+		{
+			this._lastSelection = selection;
+			this._transformAtLastSelection = this.lastTransform;
+			this.updateBrush()
+		}
+
+
+	}
+
+	private updateBrush(): void
+	{
+		this.clearHighlightedData();
+		if (this.lastSelection === null || typeof this.lastSelection === "undefined")
 		{
 			return;
 		}
-		let [[left, top], [right, bottom]] = selection;
-		left = this.scaleX.invert(left);
-		right = this.scaleX.invert(right);
-		top = this.scaleY.invert(top);
-		bottom = this.scaleY.invert(bottom);
+		let [[left, top], [right, bottom]] = this.lastSelection;
+
+		let scaleX;
+		let scaleY;
+		if (this.lastTransform !== null && typeof this.lastTransform !== "undefined")
+		{
+			scaleX = this.lastTransform.rescaleX(this.scaleX);
+			scaleY = this.lastTransform.rescaleY(this.scaleY);
+		}
+		else
+		{
+			scaleX = this.scaleX;
+			scaleY = this.scaleY;
+		}
+
+		left = scaleX.invert(left);
+		right = scaleX.invert(right);
+		top = scaleY.invert(top);
+		bottom = scaleY.invert(bottom);
+
 
 		let dataInBrush = this.data.filter((d: pointWithImage) =>
 		{
@@ -193,11 +236,19 @@ export class ScatterPlotWithImage {
 
 	private zoomHandler(): void
 	{
-		const newZoom = d3.event.transform;
-		console.log(newZoom.toString());
-		this.brushGroupSelect.attr("transform", `translate(${this.margin.top}, ${this.margin.left}) ` + newZoom.toString());
-		this.mainGroupSelect.attr("transform", `translate(${this.margin.top}, ${this.margin.left}) ` + newZoom.toString());
+		this._lastTransform = d3.event.transform;
+		this.mainGroupSelect.attr("transform", `translate(${this.margin.top}, ${this.margin.left}) ` + this.lastTransform.toString());
 
+		let [[left,top],[right,bottom]] = this.lastSelection;
+		if (this.transformAtLastSelection !== null && typeof this.transformAtLastSelection !== "undefined")
+		{
+			[left, top] = this.transformAtLastSelection.invert([left,top]);
+			[right, bottom] = this.transformAtLastSelection.invert([right,bottom]);		
+		}
+		[left, top] = this.lastTransform.apply([left,top]);
+		[right, bottom] = this.lastTransform.apply([right,bottom]);
+		this.brushGroupSelect.call(this.brush.move, [[left, top], [right, bottom]])
+		// this.updateBrush();
 
 		if (d3.event.sourceEvent.type === "mousemove")
 		{
@@ -205,16 +256,8 @@ export class ScatterPlotWithImage {
 			// no scale occured, so no need to update the circles.
 		}
 		this.mainGroupSelect.selectAll("circle")
-			.attr("r", 2 / newZoom.k)
-			.attr("style", `stroke-width: ${1 / newZoom.k};`);
-
-		// let scaleX = d3.event.transform.rescaleX(this.scaleX);
-		// let scaleY = d3.event.transform.rescaleY(this.scaleY);
-		// this.mainGroupSelect.selectAll("circle")
-		// 	.data(this.data, (d: pointWithImage) => d.image)
-		// 	.join("circle")
-		// 	.attr('cx', d => scaleX(d.x))
-		// 	.attr('cy', d => scaleY(d.y))
+			.attr("r", 2 / this.lastTransform.k)
+			.attr("style", `stroke-width: ${1 / this.lastTransform.k};`);
 	}
 
 	private resetZoom(): void
