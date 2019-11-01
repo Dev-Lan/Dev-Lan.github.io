@@ -1,4 +1,5 @@
 import * as d3 from 'd3';
+import {DevlibAlgo} from '../../lib/DevlibAlgo';
 import {HtmlSelection} from '../../lib/DevLibTypes';
 import {pointWithImage, imageLookup, imageOffset} from './types';
 
@@ -22,6 +23,11 @@ export class ImageDetails {
 	}
 	public set mainContainerSelection(v : HtmlSelection) {
 		this._mainContainerSelection = v;
+	}
+
+	private _currentSelection : pointWithImage[];
+	public get currentSelection() : pointWithImage[] {
+		return this._currentSelection;
 	}
 
 	private _imageLookup : imageLookup;
@@ -58,6 +64,8 @@ export class ImageDetails {
 
 	public onBrushSelectionChange(data: pointWithImage[]): void
 	{
+		this._currentSelection = data;
+		this.sortImages();
 		let folder = "../data/images/"
 		d3.select("#numSelected")
 			.html(data.length.toString());
@@ -75,6 +83,14 @@ export class ImageDetails {
 				`)
 			.classed("imageInGrid", true);
 	}
+
+	public sortImages(): void
+	{
+		let sortCompareFunction = DevlibAlgo.sortOnProperty<pointWithImage>((d: pointWithImage) => d.x);
+		this.currentSelection.sort(sortCompareFunction);
+	}
+
+
 
 	private drawImage(filepath: string): void
 	{
