@@ -1,6 +1,6 @@
 .imageDetailContainer {
 	flex-grow: 1;
-	max-height: 800px;
+	/*max-height: 800px;*/
 	overflow: scroll;
 }
 
@@ -17,4 +17,10 @@
 .numSelectedNumber {
 	will-change: transform;
 	
+}
+
+.myHeader {
+    margin: 0;
+    padding-top: 16px;
+    padding-bottom: 16px;
 }

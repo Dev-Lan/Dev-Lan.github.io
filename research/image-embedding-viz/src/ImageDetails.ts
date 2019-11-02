@@ -8,8 +8,15 @@ export class ImageDetails {
 	
 	constructor(htmlContainerId: string)
 	{
+		this._mainContainerId = htmlContainerId;
 		this._mainContainer = document.getElementById(htmlContainerId);
 		this._mainContainerSelection = d3.select("#" + htmlContainerId);
+		this.onWindowResize();
+	}
+
+	private _mainContainerId : string;
+	public get mainContainerId() : string {
+		return this._mainContainerId;
 	}
 
 	private _mainContainer : HTMLElement;
@@ -82,6 +89,25 @@ export class ImageDetails {
 				height: ${this.imageHeight}px;
 				`)
 			.classed("imageInGrid", true);
+	}
+
+	public onWindowResize(): void
+	{
+		this.onBrushSelectionChange([]);
+		let parentElement = this.mainContainer.parentNode as Element;
+		let rect: DOMRect | ClientRect = parentElement.getBoundingClientRect();
+		// rect.height;
+		let remainingHeight = rect.height;
+		for (let child of parentElement.children)
+		{
+			if (child.id !== this.mainContainerId)
+			{
+				let rect: DOMRect | ClientRect = child.getBoundingClientRect();
+				remainingHeight -= rect.height;
+				console.log(rect.height);
+			}
+		}
+		this.mainContainerSelection.attr("style", `max-height:${remainingHeight}px;`);
 	}
 
 	public sortImages(): void
