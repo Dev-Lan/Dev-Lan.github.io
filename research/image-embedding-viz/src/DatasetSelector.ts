@@ -1,5 +1,6 @@
 import * as d3 from 'd3';
-import {HtmlSelection} from '../../lib/DevLibTypes'
+import {HtmlSelection, ButtonProps} from '../../lib/DevLibTypes';
+import {OptionSelect} from '../../widgets/OptionSelect';
 
 export interface DatasetAttributes
 {
@@ -20,26 +21,25 @@ export class DatasetSelector {
 	
 	constructor(dataContainerId: string, projectionSelectionContainerId: string, datasetList: DatasetAttributes[], selectionChangeCallback: (d1: DatasetAttributes, d2?: ProjectionAttributes) => void) 
 	{
-		this._datasetList = datasetList;
-		this._dataContainerSelect = d3.select("#" + dataContainerId);
-		this._projectionContainerSelect = d3.select("#" + projectionSelectionContainerId);
+		this._dataOptions = new OptionSelect(dataContainerId);
 		this._selectionChangeCallback = selectionChangeCallback;
-		this.draw();
-	}
 
-	private _datasetList : DatasetAttributes[];
-	public get datasetList() : DatasetAttributes[] {
-		return this._datasetList;
-	}
+		let buttonPropsList: ButtonProps[] = [];
+		for (let p of datasetList)
+		{
+			let buttonProps: ButtonProps = {
+				displayName: p.displayName,
+				callback: () => {
+					selectionChangeCallback(p);
+					this.updateProjectionList(p);
+				}
+			}
+			buttonPropsList.push(buttonProps);
+		}
+		this.dataOptions.onDataChange(buttonPropsList);
 
-	private _dataContainerSelect : HtmlSelection;
-	public get dataContainerSelect() : HtmlSelection {
-		return this._dataContainerSelect;
-	}
+		this._projectionOptions = new OptionSelect(projectionSelectionContainerId);
 
-	private _projectionContainerSelect : HtmlSelection;
-	public get projectionContainerSelect() : HtmlSelection {
-		return this._projectionContainerSelect;
 	}
 
 	private _selectionChangeCallback : (d1: DatasetAttributes, d2?: ProjectionAttributes) => void;
@@ -47,32 +47,14 @@ export class DatasetSelector {
 		return this._selectionChangeCallback;
 	}
 
-	private _currentDataset : DatasetAttributes;
-	public get currentDataset() : DatasetAttributes {
-		return this._currentDataset;
+	private _dataOptions : OptionSelect;
+	public get dataOptions() : OptionSelect {
+		return this._dataOptions;
 	}
 
-	private draw(): void
-	{
-
-		let thisDataSelector: DatasetSelector = this;
-		this.dataContainerSelect.selectAll("button")
-			.data(this.datasetList)
-			.join("button")
-			.text(d => d.displayName)
-			.classed("optionButton", true)
-			.on("click", function(data: DatasetAttributes)
-			{
-				if ((this as HTMLElement).classList.contains("selected"))
-				{
-					return;
-				}
-				thisDataSelector._currentDataset = data;
-				thisDataSelector.selectionChangeCallback(data);
-				thisDataSelector.clearSelectedButton(thisDataSelector.dataContainerSelect);
-				thisDataSelector.updateProjectionList(data.projectionList);
-				d3.select(this).classed("selected", true);
-			});
+	private _projectionOptions : OptionSelect;
+	public get projectionOptions() : OptionSelect {
+		return this._projectionOptions;
 	}
 
 	private clearSelectedButton(containerSelect: HtmlSelection): void
@@ -81,37 +63,21 @@ export class DatasetSelector {
 			.classed("selected", false);
 	}
 
-	private updateProjectionList(projectionList: ProjectionAttributes[]): void
+	private updateProjectionList(dataSelection: DatasetAttributes): void
 	{
-		this.projectionContainerSelect.html(null);
-
-		if (projectionList.length === 1)
+		let projectionList = dataSelection.projectionList
+		let projPropsList: ButtonProps[] = [];
+		for (let proj of projectionList)
 		{
-			this.projectionContainerSelect
-				.append("h5")
-				.classed("valueHeader", true)
-				.text(projectionList[0].displayName);
-			return;
-		}
-
-		let thisDataSelector: DatasetSelector = this;
-		this.projectionContainerSelect
-			.selectAll("button")
-			.data(projectionList)
-			.join("button")
-			.text(d => d.displayName)
-			.classed("optionButton", true)
-			.classed("selected", (d, i) => i === 0)
-			.on("click", function(projFile: ProjectionAttributes)
-			{
-				if ((this as HTMLElement).classList.contains("selected"))
+			let buttonProps: ButtonProps = {
+				displayName: proj.displayName,
+				callback: () =>
 				{
-					return;
+					this.selectionChangeCallback(dataSelection, proj);
 				}
-				thisDataSelector.selectionChangeCallback(thisDataSelector.currentDataset, projFile);
-				thisDataSelector.clearSelectedButton(thisDataSelector.projectionContainerSelect);
-				d3.select(this).classed("selected", true);
-			})
-
+			}
+			projPropsList.push(buttonProps);
+		}
+		this.projectionOptions.onDataChange(projPropsList, true);
 	}
 }
