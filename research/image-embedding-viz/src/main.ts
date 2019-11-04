@@ -5,7 +5,7 @@ import { DatasetSelector, DatasetAttributes, ProjectionAttributes} from './Datas
 import { pointWithImage } from './types';
 
 let scatterPlot: ScatterPlotWithImage = new ScatterPlotWithImage("scatterPlot", onBrushSelectionChange);
-let imageDetails: ImageDetails = new ImageDetails("imageDetails");
+let imageDetails: ImageDetails = new ImageDetails("outerImageDetailsContainer", "innerImageDetailsContainer");
 let dataSelector: DatasetSelector;
 
 const baseFolder = "https://raw.githubusercontent.com/Dev-Lan/image-embedding-data/master/";

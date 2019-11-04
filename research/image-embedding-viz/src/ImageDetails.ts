@@ -6,30 +6,30 @@ import {pointWithImage, imageLookup, imageOffset} from './types';
 
 export class ImageDetails {
 	
-	constructor(htmlContainerId: string)
+	constructor(outerHtmlContainerId: string, innerHtmlContainerId: string)
 	{
-		this._mainContainerId = htmlContainerId;
-		this._mainContainer = document.getElementById(htmlContainerId);
-		this._mainContainerSelection = d3.select("#" + htmlContainerId);
+		this._outerContainerId = outerHtmlContainerId;
+		this._outerContainer = document.getElementById(outerHtmlContainerId);
+		this._innerContainerSelection = d3.select("#" + innerHtmlContainerId);
 		this.onWindowResize();
 	}
 
-	private _mainContainerId : string;
-	public get mainContainerId() : string {
-		return this._mainContainerId;
+	private _outerContainerId : string;
+	public get outerContainerId() : string {
+		return this._outerContainerId;
 	}
 
-	private _mainContainer : HTMLElement;
-	public get mainContainer() : HTMLElement {
-		return this._mainContainer;
+	private _outerContainer : HTMLElement;
+	public get outerContainer() : HTMLElement {
+		return this._outerContainer;
 	}
 
-	private _mainContainerSelection : HtmlSelection;
-	public get mainContainerSelection() : HtmlSelection {
-		return this._mainContainerSelection;
+	private _innerContainerSelection : HtmlSelection;
+	public get innerContainerSelection() : HtmlSelection {
+		return this._innerContainerSelection;
 	}
-	public set mainContainerSelection(v : HtmlSelection) {
-		this._mainContainerSelection = v;
+	public set innerContainerSelection(v : HtmlSelection) {
+		this._innerContainerSelection = v;
 	}
 
 	private _currentSelection : pointWithImage[];
@@ -77,7 +77,20 @@ export class ImageDetails {
 		d3.select("#numSelected")
 			.html(data.length.toString());
 
-		this.mainContainerSelection.selectAll("div")
+		const noneSelectedClass = "noneSelectedMessage";
+		if (data.length === 0)
+		{
+			this.innerContainerSelection.html(null);
+			this.innerContainerSelection
+				.append("h4")
+				.classed(noneSelectedClass, true)
+				.text("No images selected")
+			return;
+		}
+
+		this.innerContainerSelection.selectAll("." + noneSelectedClass).remove()
+
+		this.innerContainerSelection.selectAll("div")
 			.data(data)
 			.join("div")
 			.attr("style", d =>
@@ -89,25 +102,28 @@ export class ImageDetails {
 				height: ${this.imageHeight}px;
 				`)
 			.classed("imageInGrid", true);
+
 	}
 
 	public onWindowResize(): void
 	{
 		this.onBrushSelectionChange([]);
-		let parentElement = this.mainContainer.parentNode as Element;
+		let parentElement = this.outerContainer.parentNode as Element;
 		let rect: DOMRect | ClientRect = parentElement.getBoundingClientRect();
 		// rect.height;
+		console.log("Parent Height");
+		console.log(rect.height);
 		let remainingHeight = rect.height;
 		for (let child of parentElement.children)
 		{
-			if (child.id !== this.mainContainerId)
+			if (child.id !== this.outerContainerId)
 			{
 				let rect: DOMRect | ClientRect = child.getBoundingClientRect();
 				remainingHeight -= rect.height;
 				console.log(rect.height);
 			}
 		}
-		this.mainContainerSelection.attr("style", `max-height:${remainingHeight}px;`);
+		d3.select("#" + this.outerContainerId).attr("style", `max-height:${remainingHeight}px;`);
 	}
 
 	public sortImages(): void
@@ -116,13 +132,4 @@ export class ImageDetails {
 		this.currentSelection.sort(sortCompareFunction);
 	}
 
-
-
-	private drawImage(filepath: string): void
-	{
-		let imageEl: HTMLImageElement = document.createElement("img");
-		imageEl.src = filepath;
-		imageEl.classList.add("imageInGrid")
-		this.mainContainer.appendChild(imageEl);
-	}
 }

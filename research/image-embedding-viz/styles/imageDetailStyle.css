@@ -3,6 +3,7 @@
     overflow: scroll;
     box-sizing: border-box;
     padding-bottom: 30px;
+    padding-right: 8px;
     border: solid white 0px;
     border-bottom-width: 15px;
 }
@@ -24,4 +25,31 @@
     margin: 0;
     padding-top: 16px;
     padding-bottom: 16px;
+}
+
+.horizontalLine
+{
+    width: 100%;
+    border-color: #a2a2a2;
+    border-style: dashed;
+    height: 3px;
+    background: #a2a2a2;
+    border-top-color: white;
+    border-bottom-color: white;
+    border-top-style: solid;
+    border-bottom-style: solid;
+    border-top-width: 6px;
+    border-bottom-width: 6px;
+}
+
+.marginBot {
+    margin-bottom: 10px
+}
+
+.marginTop {
+    margin-top: 10px
+}
+
+.noneSelectedMessage {
+    margin: 16px;
 }
