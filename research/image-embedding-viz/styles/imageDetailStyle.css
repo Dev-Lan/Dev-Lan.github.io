@@ -1,15 +1,16 @@
 .imageDetailContainer {
-	flex-grow: 1;
-	/*max-height: 800px;*/
-	overflow: scroll;
+    flex-grow: 1;
+    overflow: scroll;
+    box-sizing: border-box;
+    padding-bottom: 30px;
+    border: solid white 0px;
+    border-bottom-width: 15px;
 }
 
 .imageInGrid {
     border: solid gray 1px;
     margin: 1px;
     vertical-align: middle;
-    /*width: 80px;*/
-    /*height: 40px;*/
     display: inline-block;
     background-repeat: no-repeat;
 }
