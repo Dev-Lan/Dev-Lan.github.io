@@ -5,12 +5,11 @@ import { DatasetSelector, DatasetAttributes, ProjectionAttributes} from './Datas
 import { pointWithImage } from './types';
 
 let scatterPlot: ScatterPlotWithImage = new ScatterPlotWithImage("scatterPlot", onBrushSelectionChange);
-let imageDetails: ImageDetails = new ImageDetails("outerImageDetailsContainer", "innerImageDetailsContainer");
+let imageDetails: ImageDetails = new ImageDetails("outerImageDetailsContainer", "innerImageDetailsContainer", "sortByContainer");
 let dataSelector: DatasetSelector;
 
 const baseFolder = "https://raw.githubusercontent.com/Dev-Lan/image-embedding-data/master/";
 // const baseFolder = "../myData/image-embedding-data/";
-const exampleFolder = baseFolder + "truss/";
 
 d3.json(baseFolder + 'examples.json').then(data =>
 {
@@ -34,7 +33,6 @@ function onDatasetChange(dataAttr: DatasetAttributes, projAttr?: ProjectionAttri
 	}
 	d3.json(dataFolder + projAttr.filename).then(data =>
 	{
-		console.log(data);
 		scatterPlot.onDataChange(data, projectionSwitchOnly, true);
 	});
 

@@ -1,16 +1,35 @@
 import * as d3 from 'd3';
 import {DevlibAlgo} from '../../lib/DevlibAlgo';
-import {HtmlSelection} from '../../lib/DevLibTypes';
+import {HtmlSelection, ButtonProps} from '../../lib/DevLibTypes';
 import {pointWithImage, imageLookup, imageOffset} from './types';
-
+import {OptionSelect} from '../../widgets/OptionSelect';
 
 export class ImageDetails {
 	
-	constructor(outerHtmlContainerId: string, innerHtmlContainerId: string)
+	constructor(outerHtmlContainerId: string, innerHtmlContainerId: string, sortByContainer: string)
 	{
 		this._outerContainerId = outerHtmlContainerId;
 		this._outerContainer = document.getElementById(outerHtmlContainerId);
 		this._innerContainerSelection = d3.select("#" + innerHtmlContainerId);
+		this._sortOptions = new OptionSelect(sortByContainer);
+
+		this._currentSortSelector = (d: pointWithImage) => d.x;
+
+		let sortOptionList: ButtonProps[] = [
+			{ displayName: "X-Axis", callback: () =>
+				{
+					this._currentSortSelector = (d: pointWithImage) => d.x;
+					this.onBrushSelectionChange(this.currentSelection);
+				}
+			},
+			{ displayName: "Y-Axis", callback: () =>
+				{
+					this._currentSortSelector = (d: pointWithImage) => d.y;
+					this.onBrushSelectionChange(this.currentSelection);
+				}
+			}
+		];
+		this.sortOptions.onDataChange(sortOptionList, true);
 		this.onWindowResize();
 	}
 
@@ -55,6 +74,16 @@ export class ImageDetails {
 	private _imageHeight : number;
 	public get imageHeight() : number {
 		return this._imageHeight;
+	}
+
+	private _sortOptions : OptionSelect;
+	public get sortOptions() : OptionSelect {
+		return this._sortOptions;
+	}
+
+	private _currentSortSelector : (d: pointWithImage) => number;
+	public get currentSortSelector() : (d: pointWithImage) => number {
+		return this._currentSortSelector;
 	}
 
 	public onDataChange(imageLookup: imageLookup, tiledImgUrl: string, imageWidth: number, imageHeight: number, keepImages: boolean)
@@ -102,7 +131,6 @@ export class ImageDetails {
 				height: ${this.imageHeight}px;
 				`)
 			.classed("imageInGrid", true);
-
 	}
 
 	public onWindowResize(): void
@@ -128,7 +156,7 @@ export class ImageDetails {
 
 	public sortImages(): void
 	{
-		let sortCompareFunction = DevlibAlgo.sortOnProperty<pointWithImage>((d: pointWithImage) => d.x);
+		let sortCompareFunction = DevlibAlgo.sortOnProperty<pointWithImage>(this.currentSortSelector);
 		this.currentSelection.sort(sortCompareFunction);
 	}
 
