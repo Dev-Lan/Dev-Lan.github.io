@@ -3,6 +3,7 @@
         "src/main.ts",
         "src/App.ts",
         "src/BaseComponent.ts",
+        "src/UploadFileButton",
         "src/Toolbar.ts",
         "src/BaseWidget.ts",
         "src/LayoutFramework.ts",

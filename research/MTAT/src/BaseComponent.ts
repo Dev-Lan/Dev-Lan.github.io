@@ -1,4 +1,4 @@
-export class BaseComponent {
+export abstract class BaseComponent {
 	
 	constructor(container: Element)
 	{
@@ -15,6 +15,6 @@ export class BaseComponent {
 	{
 		let currentStyle = this.container.getAttribute("style")
 		this.container.setAttribute("style", currentStyle + " background: #d02f2f;");
-		this.container.textContent = "Derived Class Not Implemented";
+		this.container.textContent = "Derived Class 'init' function not implemented";
 	}
 }

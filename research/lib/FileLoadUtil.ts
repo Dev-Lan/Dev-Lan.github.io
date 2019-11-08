@@ -1,4 +1,4 @@
-type CallbackFunction = (data: string, filename: string) => void;
+export type CallbackFunction = (data: string, filename: string) => void;
 
 export class FileLoadUtil {
 

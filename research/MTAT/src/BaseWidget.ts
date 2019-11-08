@@ -1,12 +1,12 @@
 import {BaseComponent} from './BaseComponent';
 // import {Margin} from '../../lib/DevLibTypes';
 
-export class BaseWidget<DataType> extends BaseComponent {
+export abstract class BaseWidget<DataType> extends BaseComponent {
 	
-	constructor(container: Element)
-	{
-		super(container);
-	}
+	// constructor(container: Element)
+	// {
+	// 	super(container);
+	// }
 
 
 	private _width : number;
@@ -35,6 +35,7 @@ export class BaseWidget<DataType> extends BaseComponent {
 	public OnDataChange(data: DataType): void
 	{
 		this._data = data;
+
 	}
 
 	public OnResize(width: number, height: number): void

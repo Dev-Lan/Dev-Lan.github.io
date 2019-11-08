@@ -7,9 +7,10 @@ import {Frame, ComponentType} from './types';
 
 export class App<DataType> {
 	
-	constructor(container: Element) {
+	constructor(container: Element, fromCsv: (data: string) => DataType) {
 		this._componentList = [];
 		this._layoutFramework = new LayoutFramework(container);
+		this._dataFromCSV = fromCsv;
 	}
 
 	private _componentList : BaseComponent[];
@@ -25,6 +26,11 @@ export class App<DataType> {
 	private _componentContainers : Map<Element, ComponentType>;
 	public get componentContainers() : Map<Element, ComponentType> {
 		return this._componentContainers;
+	}
+
+	private _dataFromCSV : (data: string) => DataType;
+	public get dataFromCSV() : (data: string) => DataType{
+		return this._dataFromCSV;
 	}
 
 	public InitializeLayout(frame: Frame): void
@@ -43,7 +49,7 @@ export class App<DataType> {
 		let newComponent: BaseComponent;
 		switch (compontentType) {
 			case ComponentType.Toolbar:
-				newComponent = new Toolbar(container);
+				newComponent = new Toolbar(container, (data: string) => this.loadFromCsvString(data));
 				break;
 			case ComponentType.Plot2dPathsWidget:
 				newComponent = new Plot2dPathsWidget(container);
@@ -53,10 +59,16 @@ export class App<DataType> {
 			case ComponentType.LevelOfDetailWidget:
 			case ComponentType.MetricDistributionWidget:
 			default:
-				throw new Error(`Cannot Initialize Component of type: ${compontentType}`);
+				console.error(`Cannot Initialize Component of type: ${compontentType}`);
 				break;
 		}
 		this.componentList.push(newComponent);
+	}
+
+	private loadFromCsvString(data: string): void
+	{
+		let newData: DataType = this.dataFromCSV(data);
+		this.SetData(newData);
 	}
 
 	public SetData(newData: DataType): void
