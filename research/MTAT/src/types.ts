@@ -2,9 +2,9 @@ export interface Frame {
 	fraction?: number, // if no fraction is specified, it is assumed to be equal weight
 	minSize?: number,
 	maxSize?: number,
-	direction?: Direction,
+	direction: Direction,
 
-	inside: Frame[] | ComponentTypes
+	inside: Frame[] | ComponentType
 }
 
 export enum Direction {
@@ -12,7 +12,7 @@ export enum Direction {
 	column = "col"
 }
 
-export enum ComponentTypes {
+export enum ComponentType {
 	Toolbar = "Toolbar",
 	Console = "Console",
 	Plot2dPathsWidget = "Plot2dPathsWidget",

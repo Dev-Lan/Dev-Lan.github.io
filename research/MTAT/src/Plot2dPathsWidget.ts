@@ -4,7 +4,15 @@ import {CurveList} from '../../DataModel/CurveList';
 
 export class Plot2dPathsWidget extends BaseWidget<CurveList> {
 	
-	// constructor(argument) {
-	// 	// code...
+	constructor(container: Element)
+	{
+		super(container);
+	}
+
+	// private init(): void
+	// {
+		
 	// }
+
+
 }

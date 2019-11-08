@@ -3,9 +3,9 @@ import {BaseComponent} from './BaseComponent';
 
 export class BaseWidget<DataType> extends BaseComponent {
 	
-	constructor() {
-		// code...
-		super();
+	constructor(container: Element)
+	{
+		super(container);
 	}
 
 
@@ -17,11 +17,6 @@ export class BaseWidget<DataType> extends BaseComponent {
 	private _height : number;
 	public get height() : number {
 		return this._height;
-	}
-
-	private _container : Element;
-	public get container() : Element {
-		return this._container;
 	}
 
 	private _data : DataType;

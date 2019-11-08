@@ -3,10 +3,10 @@
         "src/main.ts",
         "src/App.ts",
         "src/BaseComponent.ts",
+        "src/Toolbar.ts",
         "src/BaseWidget.ts",
         "src/LayoutFramework.ts",
-        "src/Plot2dPathsWidget.ts",
-        "src/Toolbar.ts"
+        "src/Plot2dPathsWidget.ts"
     ],
     "compilerOptions": {
         "noImplicitAny": true,
