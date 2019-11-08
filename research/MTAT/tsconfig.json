@@ -1,0 +1,15 @@
+{
+    "files": [
+        "src/main.ts",
+        "src/App.ts",
+        "src/BaseComponent.ts",
+        "src/BaseWidget.ts",
+        "src/LayoutFramework.ts",
+        "src/Plot2dPathsWidget.ts",
+        "src/Toolbar.ts"
+    ],
+    "compilerOptions": {
+        "noImplicitAny": true,
+        "target": "es2016"
+    }
+}
