@@ -1,0 +1,22 @@
+.uploadFileButton {
+    background: hsl(232, 100%, 97%);
+    flex-basis: 146px;
+    border: solid black 1px;
+    /*line-height: 72px;*/
+    margin: 2px;
+    text-align: center;
+    cursor: pointer;
+    border-radius: 12px;
+    font-size: 16pt;
+    font-weight: 400;
+    user-select: none;
+}
+
+.uploadFileButton:hover {
+    background: hsl(232, 100%, 78%);
+}
+
+.uploadFileButton:active {
+    background: hsl(232, 100%, 39%);
+    color: white;
+}
