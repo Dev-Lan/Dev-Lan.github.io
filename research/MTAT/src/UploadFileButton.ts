@@ -21,6 +21,7 @@ export class UploadFileButton extends BaseComponent {
 	protected init(): void
 	{
 		this.renderDom();
+		this.container.classList.add("uploadFileButtonContainer");
 	}
 
 	private renderDom(): void
@@ -38,7 +39,7 @@ export class UploadFileButton extends BaseComponent {
 		labelEl.htmlFor = uniqueId;
 
 		let icon = document.createElement("i")
-		icon.classList.add("fas", "fa-upload"); // font-awesome
+		icon.classList.add("fas", "fa-upload", "uploadFileButtonIcon"); // font-awesome
 		labelEl.appendChild(icon);
 		// labelEl.appendChild(document.createElement("br"));
 		labelEl.append("Upload File");
