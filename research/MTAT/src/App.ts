@@ -1,3 +1,4 @@
+import * as d3 from 'd3';
 import {BaseWidget} from './BaseWidget';
 import {BaseComponent} from './BaseComponent';
 import {Toolbar} from './Toolbar';
@@ -8,13 +9,15 @@ import {LevelOfDetailWidget} from './LevelOfDetailWidget';
 import {MetricDistributionWidget} from './MetricDistributionWidget';
 import {LayoutFramework} from './LayoutFramework';
 import {Frame, ComponentType} from './types';
+import {ButtonProps} from '../../lib/DevLibTypes';
 
 export class App<DataType> {
 	
-	constructor(container: Element, fromCsv: (data: string) => DataType) {
+	constructor(container: Element, fromCsv: (data: string) => DataType, fromCsvObject: (data: d3.DSVRowArray<string>) => DataType) {
 		this._componentList = [];
 		this._layoutFramework = new LayoutFramework(container);
 		this._dataFromCSV = fromCsv;
+		this._dataFromCSVObject = fromCsvObject;
 	}
 
 	private _componentList : BaseComponent[];
@@ -37,6 +40,11 @@ export class App<DataType> {
 		return this._dataFromCSV;
 	}
 
+	private _dataFromCSVObject : (data: d3.DSVRowArray<string>) => DataType;
+	public get dataFromCSVObject() : (data: d3.DSVRowArray<string>) => DataType{
+		return this._dataFromCSVObject;
+	}
+
 	public InitializeLayout(frame: Frame): void
 	{
 		// console.log(frame);
@@ -53,7 +61,12 @@ export class App<DataType> {
 		let newComponent: BaseComponent;
 		switch (compontentType) {
 			case ComponentType.Toolbar:
-				newComponent = new Toolbar(container, (data: string) => this.loadFromCsvString(data));
+				let buttonList: ButtonProps[] = [
+					{displayName: "Firework Simulation", callback: () => this.fetchCsv('firework.csv')},
+					{displayName: "Klein Bottle", callback: () => this.fetchCsv('klein.csv')}
+				];
+
+				newComponent = new Toolbar(container, (data: string) => this.loadFromCsvString(data), buttonList);
 				break;
 			case ComponentType.Plot2dPathsWidget:
 				newComponent = new Plot2dPathsWidget(container);
@@ -81,6 +94,18 @@ export class App<DataType> {
 	{
 		let newData: DataType = this.dataFromCSV(data);
 		this.SetData(newData);
+	}
+
+	private fetchCsv(filename: string): void
+	{
+		console.log("start fetch");
+		d3.csv("../exampleData/" + filename).then(data =>
+		{
+			console.log(data);
+			let newData: DataType = this.dataFromCSVObject(data);
+			console.log(newData);
+			this.SetData(newData)
+		});
 	}
 
 	public SetData(newData: DataType): void

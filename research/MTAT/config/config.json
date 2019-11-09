@@ -14,12 +14,12 @@
 			"inside": [
 				{
 					"direction": "col",
-					"fraction": 0.3,
+					"fraction": 0.3333,
 					"inside": "Plot2dPathsWidget"
 				},
 				{
 					"direction": "col",
-					"fraction": 0.7,
+					"fraction": 0.6666,
 					"inside": "MetricDistributionWidget"
 				}
 			]

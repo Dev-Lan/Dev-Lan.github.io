@@ -46,7 +46,6 @@ export abstract class BaseComponent {
 
 	protected OnResize(): void
 	{
-		console.log(this.constructor.name);
 		this.container.innerHTML = null;
 		let notImplementDiv = document.createElement("div");
 		notImplementDiv.textContent = `Resized to: (${this.width}, ${this.height})

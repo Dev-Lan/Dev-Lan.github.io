@@ -17,16 +17,18 @@ export class CurveListFactory {
 
 	public static CreateCurveListFromCSV(csvString: string, idkey: string = "id", tKeyOptions: string[] = ["time", "t"]): CurveList
 	{
-		const curveList: CurveND[] = [];
-
 		let rawValueArray: d3.DSVRowArray<string> = d3.csvParse(csvString);
+		return CurveListFactory.CreateCurveListFromCSVObject(rawValueArray, idkey, tKeyOptions);
+	}
 
-		console.log(rawValueArray);
-
+	public static CreateCurveListFromCSVObject(csvObject: d3.DSVRowArray<string>, idkey: string = "id", tKeyOptions: string[] = ["time", "t"]): CurveList
+	{
+		console.log(csvObject);
+		const curveList: CurveND[] = [];
 		let tKey: string = null;
 		for (let keyOption of tKeyOptions)
 		{
-			if (rawValueArray.columns.includes(keyOption))
+			if (csvObject.columns.includes(keyOption))
 			{
 				tKey = keyOption;
 				break;
@@ -83,7 +85,7 @@ export class CurveListFactory {
 				values.points = points;
 				return values;
 			})
-			.entries(rawValueArray);
+			.entries(csvObject);
 
 		for (let plainCurve of pojoList)
 		{
