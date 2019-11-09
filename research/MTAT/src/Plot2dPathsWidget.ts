@@ -77,8 +77,6 @@ export class Plot2dPathsWidget extends BaseWidget<CurveList> {
 			.x((d, i) => { return this.scaleX(d.get("x")) })
 			.y((d) => { return this.scaleY(d.get("y")) });
 
-		// this.mainGroupSelect.html(null); //todo - shouldn't need this
-
 		this.mainGroupSelect.selectAll("path")
 			.data(this.data.curveList)
 			.join("path")
@@ -88,13 +86,41 @@ export class Plot2dPathsWidget extends BaseWidget<CurveList> {
 
 	private updateScales(): void
 	{
-		this._scaleX = d3.scaleLinear()
-			.domain(this.data.minMaxMap.get("x"))
-			.range([0, this.vizWidth]);
+		// this code keeps the data aspect ratio square and keeps it centered and as large
+		// as possible in it's container
+		let containerRatio = this.vizHeight / this.vizWidth;
+		let [minX, maxX] = this.data.minMaxMap.get("x");
+		let [minY, maxY] = this.data.minMaxMap.get("y");
+		let dataRatio = (maxY - minY) / (maxX - minX);
+		if (containerRatio > dataRatio)
+		{
+			this._scaleX = d3.scaleLinear()
+				.domain([minX, maxX])
+				.range([0, this.vizWidth]);
 
-		this._scaleY = d3.scaleLinear()
-			.domain(this.data.minMaxMap.get("y"))
-			.range([this.vizHeight, 0]);
+			let [scaledMinY, scaledMaxY] = [this.scaleX(minY), this.scaleX(maxY)]; 
+			let dataLength = scaledMaxY - scaledMinY;
+			let offset = (this.vizHeight - dataLength) / 2.0 - scaledMinY;
+
+			this._scaleY = d3.scaleLinear()
+				.domain([minY, maxY])
+				.range([scaledMaxY + offset, scaledMinY + offset]);
+		}
+		else
+		{
+			this._scaleY = d3.scaleLinear()
+				.domain([minY, maxY])
+				.range([this.vizHeight, 0]);
+
+
+			let [scaledMinX, scaledMaxX] = [this.scaleY(minX), this.scaleY(maxX)]; 
+			let dataLength = scaledMaxX - scaledMinX;
+			let offset = (this.vizWidth - dataLength) / 2.0 - scaledMinX;
+
+			this._scaleX = d3.scaleLinear()
+				.domain([minX, maxX])
+				.range([scaledMaxX + offset, scaledMinX + offset]);
+		}
 	}
 
 	protected OnResize(): void
