@@ -5,7 +5,7 @@ import { CurveListFactory } from '../../DataModel/CurveListFactory';
 
 let container: Element = document.getElementById("appContainer")
 let app: App<CurveList> = new App<CurveList>(container, CurveListFactory.CreateCurveListFromCSV);
-
+window.onresize = () => app.OnWindowResize();
 
 d3.json('../config/config.json').then(data =>
 {

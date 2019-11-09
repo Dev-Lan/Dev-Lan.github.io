@@ -9,22 +9,17 @@ export abstract class BaseWidget<DataType> extends BaseComponent {
 	// }
 
 
-	private _width : number;
-	public get width() : number {
-		return this._width;
-	}
-
-	private _height : number;
-	public get height() : number {
-		return this._height;
-	}
-
 	private _data : DataType;
 	public get data() : DataType {
 		return this._data;
 	}
-	// public set data(v : DataType) {
-	// 	this._data = v;
+
+	// private _vizWidth : string;
+	// public get vizWidth() : string {
+	// 	return this._vizWidth;
+	// }
+	// public set vizWidth(v : string) {
+	// 	this._vizWidth = v;
 	// }
 
 	// private _margin : Margin;
@@ -32,16 +27,11 @@ export abstract class BaseWidget<DataType> extends BaseComponent {
 	// 	return this._margin;
 	// }
 
-	public OnDataChange(data: DataType): void
+	public SetData(data: DataType): void
 	{
 		this._data = data;
-
+		this.OnDataChange();
 	}
 
-	public OnResize(width: number, height: number): void
-	{
-		this._width = width;
-		this._height = height;
-	}
-
+	protected abstract OnDataChange(): void
 }

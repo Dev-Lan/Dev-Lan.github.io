@@ -77,20 +77,17 @@ export class App<DataType> {
 		{
 			if (component instanceof BaseWidget)
 			{
-				component.OnDataChange(newData);
+				component.SetData(newData);
 			}
 		}
 	}
 
-
-
-	// public OnWindowResize(): void
-	// {
-	// 	for (let widget of this.widgetList)
-	// 	{
-	// 		// todo get real window
-	// 		widget.OnResize(10, 10);
-	// 	}
-	// } 
+	public OnWindowResize(): void
+	{
+		for (let component of this.componentList)
+		{
+			component.Resize();
+		}
+	} 
 
 }

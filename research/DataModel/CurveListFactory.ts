@@ -15,12 +15,27 @@ export class CurveListFactory {
 	// 	// code...
 	// }
 
-	public static CreateCurveListFromCSV(csvString: string, idkey: string = "id", tKey: string = "t"): CurveList
+	public static CreateCurveListFromCSV(csvString: string, idkey: string = "id", tKeyOptions: string[] = ["time", "t"]): CurveList
 	{
 		const curveList: CurveND[] = [];
 
 		let rawValueArray: d3.DSVRowArray<string> = d3.csvParse(csvString);
+
 		console.log(rawValueArray);
+
+		let tKey: string = null;
+		for (let keyOption of tKeyOptions)
+		{
+			if (rawValueArray.columns.includes(keyOption))
+			{
+				tKey = keyOption;
+				break;
+			}
+		}
+		if (tKey == null)
+		{
+			throw new Error("Dataset does not contain any tKey column. Allowed Keys: " + tKeyOptions.toString())
+		}
 
 		let pojoList = d3.nest<StringToStringObj, StringToNumberOrList>()
 			.key(d => d[idkey])

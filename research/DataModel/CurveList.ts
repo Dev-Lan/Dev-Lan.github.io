@@ -24,6 +24,10 @@ export class CurveList
 
 	private _minMaxMap : Map<string, [number, number]>;
 	public get minMaxMap() : Map<string, [number, number]> {
+		if (this._minMaxMap.size === 0)
+		{
+			this.updateMinMaxMap()
+		}
 		return this._minMaxMap;
 	}
 
@@ -33,18 +37,18 @@ export class CurveList
 		{
 			for (let point of curve.pointList)
 			{
-				for (let key in point.valueMap)
+				for (let [key, value] of point.valueMap)
 				{
-					let currentVal = this.minMaxMap.get(key);
+					let currentVal = this._minMaxMap.get(key);
 					let pointVal = point.get(key);
 					if (typeof currentVal === "undefined")
 					{
-						this.minMaxMap.set(key, [pointVal, pointVal]);
+						this._minMaxMap.set(key, [pointVal, pointVal]);
 						continue;
 					}
 					let [c1, c2] = currentVal;
 					let newVal: [number, number] = [Math.min(c1, pointVal), Math.max(c2, pointVal)];
-					this.minMaxMap.set(key, newVal);
+					this._minMaxMap.set(key, newVal);
 				}
 			}
 		}

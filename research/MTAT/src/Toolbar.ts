@@ -31,6 +31,11 @@ export class Toolbar extends BaseComponent{
 		this._uploadFileButton = new UploadFileButton(this.uploadFileButtonWrapper, (data: string, filename: string) => {this.fileLoadCallback(data, filename)})
 	}
 
+	protected OnResize(): void
+	{
+		// do nothing
+	}
+
 	private fileLoadCallback(data: string, filename: string): void
 	{
 		this._callback(data);
