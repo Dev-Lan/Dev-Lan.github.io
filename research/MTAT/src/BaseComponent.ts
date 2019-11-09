@@ -24,9 +24,11 @@ export abstract class BaseComponent {
 
 	protected init(): void
 	{
-		let currentStyle = this.container.getAttribute("style")
-		this.container.setAttribute("style", currentStyle + " background: #d02f2f;");
-		this.container.textContent = "Derived Class 'init' function not implemented";
+		let notImplementDiv = document.createElement("div");
+		notImplementDiv.textContent = `Class ${this.constructor.name} has not implement 'init' function`;
+		notImplementDiv.classList.add("notImplementedWarning");
+		this.container.innerHTML = null;
+		this.container.appendChild(notImplementDiv);
 	}
 
 	public Resize(): void
@@ -44,9 +46,12 @@ export abstract class BaseComponent {
 
 	protected OnResize(): void
 	{
+		console.log(this.constructor.name);
 		this.container.innerHTML = null;
-		this.container.textContent = `Resized to: (${this.width}, ${this.height})
-override BaseComponent.OnResizeDraw() to ensure content is resized correctly`;
-	
+		let notImplementDiv = document.createElement("div");
+		notImplementDiv.textContent = `Resized to: (${this.width}, ${this.height})
+override ${this.constructor.name}.OnResizeDraw() to ensure content is resized correctly`;
+		notImplementDiv.classList.add("notImplementedWarning");
+		this.container.appendChild(notImplementDiv);
 	}
 }

@@ -60,7 +60,7 @@ export class Plot2dPathsWidget extends BaseWidget<CurveList> {
 			.attr("transform", `translate(${this.margin.left}, ${this.margin.top})`);
 		this.setVizWidthHeight();
 
-		this.svgSelect.attr("style", 'background: lightblue; width: 100%; height: 100%;');
+		this.svgSelect.attr("style", 'width: 100%; height: 100%;');
 	}
 
 	private setVizWidthHeight(): void
@@ -126,7 +126,10 @@ export class Plot2dPathsWidget extends BaseWidget<CurveList> {
 	protected OnResize(): void
 	{
 		this.setVizWidthHeight();
-		this.OnDataChange();
+		if (this.data)
+		{
+			this.OnDataChange();
+		}
 	}
 
 

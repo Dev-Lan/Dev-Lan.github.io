@@ -2,6 +2,10 @@ import {BaseWidget} from './BaseWidget';
 import {BaseComponent} from './BaseComponent';
 import {Toolbar} from './Toolbar';
 import {Plot2dPathsWidget} from './Plot2dPathsWidget';
+import {Console} from './Console';
+import {TableWidget} from './TableWidget';
+import {LevelOfDetailWidget} from './LevelOfDetailWidget';
+import {MetricDistributionWidget} from './MetricDistributionWidget';
 import {LayoutFramework} from './LayoutFramework';
 import {Frame, ComponentType} from './types';
 
@@ -55,9 +59,17 @@ export class App<DataType> {
 				newComponent = new Plot2dPathsWidget(container);
 				break;
 			case ComponentType.Console:
+				newComponent = new Console(container);
+				break;
 			case ComponentType.TableWidget:
+				newComponent = new TableWidget(container);
+				break;
 			case ComponentType.LevelOfDetailWidget:
+				newComponent = new LevelOfDetailWidget(container);
+				break;
 			case ComponentType.MetricDistributionWidget:
+				newComponent = new MetricDistributionWidget(container);
+				break;
 			default:
 				console.error(`Cannot Initialize Component of type: ${compontentType}`);
 				break;

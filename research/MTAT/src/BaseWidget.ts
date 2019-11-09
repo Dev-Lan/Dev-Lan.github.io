@@ -9,8 +9,8 @@ export abstract class BaseWidget<DataType> extends BaseComponent {
 	// }
 
 
-	private _data : DataType;
-	public get data() : DataType {
+	private _data : DataType | null;
+	public get data() : DataType | null {
 		return this._data;
 	}
 

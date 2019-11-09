@@ -16,7 +16,7 @@ export enum ComponentType {
 	Toolbar = "Toolbar",
 	Console = "Console",
 	Plot2dPathsWidget = "Plot2dPathsWidget",
-	TableWidget = "Table",
+	TableWidget = "TableWidget",
 	LevelOfDetailWidget = "LevelOfDetailWidget",
 	MetricDistributionWidget = "MetricDistributionWidget"
 }

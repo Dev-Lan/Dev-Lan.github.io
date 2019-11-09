@@ -10,3 +10,12 @@ html, body {
 	height: 100%;
 }
 
+.notImplementedWarning {
+    text-align: center;
+    vertical-align: middle;
+    border: solid #d81515 4px;
+    flex-grow: 1;
+    margin: 4px;
+    padding: 30px;
+    word-break: break-all;
+}
