@@ -1,10 +1,10 @@
 .exampleSetContainer {
-	margin-left: 10px;
     margin-top: 8px;
 }
 
 .dataSelectHeader {
 	display: inline;
+    padding-left: 12px;
 }
 
 .valueHeader {

@@ -1,8 +1,9 @@
 import * as d3 from 'd3';
 import {DevlibAlgo} from '../../lib/DevlibAlgo';
 import {HtmlSelection, ButtonProps} from '../../lib/DevLibTypes';
-import {pointWithImage, imageLookup, imageOffset} from './types';
 import {OptionSelect} from '../../widgets/OptionSelect';
+import {pointWithImage, imageLookup, imageOffset} from './types';
+import { AttributeData } from './AttributeData';
 
 export class ImageDetails {
 	
@@ -86,7 +87,7 @@ export class ImageDetails {
 		return this._currentSortSelector;
 	}
 
-	public onDataChange(imageLookup: imageLookup, tiledImgUrl: string, imageWidth: number, imageHeight: number, keepImages: boolean)
+	public onDataChange(attributeData: AttributeData, imageLookup: imageLookup, tiledImgUrl: string, imageWidth: number, imageHeight: number, keepImages: boolean)
 	{
 		this._imageLookup = imageLookup;
 		this._tiledImgUrl = tiledImgUrl;
@@ -139,8 +140,8 @@ export class ImageDetails {
 		let parentElement = this.outerContainer.parentNode as Element;
 		let rect: DOMRect | ClientRect = parentElement.getBoundingClientRect();
 		// rect.height;
-		console.log("Parent Height");
-		console.log(rect.height);
+		// console.log("Parent Height");
+		// console.log(rect.height);
 		let remainingHeight = rect.height;
 		for (let child of parentElement.children)
 		{
@@ -148,7 +149,7 @@ export class ImageDetails {
 			{
 				let rect: DOMRect | ClientRect = child.getBoundingClientRect();
 				remainingHeight -= rect.height;
-				console.log(rect.height);
+				// console.log(rect.height);
 			}
 		}
 		d3.select("#" + this.outerContainerId).attr("style", `max-height:${remainingHeight}px;`);

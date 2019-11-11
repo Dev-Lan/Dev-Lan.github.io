@@ -1,15 +1,17 @@
 import * as d3 from 'd3';
-import { ScatterPlotWithImage } from './ScatterPlotWithImage'
-import { ImageDetails } from './ImageDetails'
+import { ScatterPlotWithImage } from './ScatterPlotWithImage';
+import { ImageDetails } from './ImageDetails';
+import { AttributeData } from './AttributeData';
 import { DatasetSelector, DatasetAttributes, ProjectionAttributes} from './DatasetSelector';
-import { pointWithImage } from './types';
+import { pointWithImage, imageLookup } from './types';
 
 let scatterPlot: ScatterPlotWithImage = new ScatterPlotWithImage("scatterPlot", onBrushSelectionChange);
 let imageDetails: ImageDetails = new ImageDetails("outerImageDetailsContainer", "innerImageDetailsContainer", "sortByContainer");
+let attributeData: AttributeData = new AttributeData();
 let dataSelector: DatasetSelector;
 
-const baseFolder = "https://raw.githubusercontent.com/Dev-Lan/image-embedding-data/master/";
-// const baseFolder = "../myData/image-embedding-data/";
+// const baseFolder = "https://raw.githubusercontent.com/Dev-Lan/image-embedding-data/master/";
+const baseFolder = "../myData/image-embedding-data/";
 
 d3.json(baseFolder + 'examples.json').then(data =>
 {
@@ -24,22 +26,25 @@ function onDatasetChange(dataAttr: DatasetAttributes, projAttr?: ProjectionAttri
 	{
 		dataFolder += "/";
 	}
-	console.log(dataAttr);
+	// console.log(dataAttr);
 	let projectionSwitchOnly = true;
 	if (!projAttr)
 	{
 		projAttr = dataAttr.projectionList[0];
 		projectionSwitchOnly = false;
 	}
-	d3.json(dataFolder + projAttr.filename).then(data =>
+	d3.json(dataFolder + projAttr.filename).then((data: pointWithImage[]) =>
 	{
-		scatterPlot.onDataChange(data, projectionSwitchOnly, true);
+		attributeData.onDataChange(data);
+		scatterPlot.onDataChange(data, attributeData, projectionSwitchOnly, true);
+
+		d3.json(dataFolder + 'imageLookup.json').then((imageLookup: imageLookup)  =>
+		{
+			imageDetails.onDataChange(attributeData, imageLookup, dataFolder + "tiledImg.png", dataAttr.imageWidth, dataAttr.imageHeight, projectionSwitchOnly);
+		});
+
 	});
 
-	d3.json(dataFolder + 'imageLookup.json').then(data =>
-	{
-		imageDetails.onDataChange(data, dataFolder + "tiledImg.png", dataAttr.imageWidth, dataAttr.imageHeight, projectionSwitchOnly);
-	});
 }
 
 

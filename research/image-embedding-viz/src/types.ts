@@ -2,10 +2,14 @@ export interface pointWithImage {
 	x: number,
 	y: number,
 	image: string,
-	sortKeys?: sortBy[]
+	attributes?: attributeLookup
 }
 
-export interface sortBy {
+export interface attributeLookup {
+	[index: string]: attribute
+}
+
+export interface attribute {
 	displayName: string,
 	value: number
 }
@@ -20,3 +24,5 @@ export interface imageOffset {
 export interface imageLookup {
 	[index: string]: imageOffset
 }
+
+export type attributeSelector = (point: pointWithImage) => Number
