@@ -198,7 +198,7 @@ export class ScatterPlotWithImage {
 		}
 
 		let domain = this.attributeData.getMinMax(key);
-		let colorScale = d3.scaleSequential(d3.interpolateBlues)
+		let colorScale = d3.scaleSequential(d3.interpolateInferno)
 			.domain(domain);
 
 
