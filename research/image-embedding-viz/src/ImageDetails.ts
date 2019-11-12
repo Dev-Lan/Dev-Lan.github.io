@@ -2,7 +2,7 @@ import * as d3 from 'd3';
 import {DevlibAlgo} from '../../lib/DevlibAlgo';
 import {HtmlSelection, ButtonProps} from '../../lib/DevLibTypes';
 import {OptionSelect} from '../../widgets/OptionSelect';
-import {pointWithImage, imageLookup, imageOffset} from './types';
+import {pointWithImage, imageLookup, imageOffset, attributeSelector} from './types';
 import { AttributeData } from './AttributeData';
 
 export class ImageDetails {
@@ -14,23 +14,6 @@ export class ImageDetails {
 		this._innerContainerSelection = d3.select("#" + innerHtmlContainerId);
 		this._sortOptions = new OptionSelect(sortByContainer);
 
-		this._currentSortSelector = (d: pointWithImage) => d.x;
-
-		let sortOptionList: ButtonProps[] = [
-			{ displayName: "X-Axis", callback: () =>
-				{
-					this._currentSortSelector = (d: pointWithImage) => d.x;
-					this.onBrushSelectionChange(this.currentSelection);
-				}
-			},
-			{ displayName: "Y-Axis", callback: () =>
-				{
-					this._currentSortSelector = (d: pointWithImage) => d.y;
-					this.onBrushSelectionChange(this.currentSelection);
-				}
-			}
-		];
-		this.sortOptions.onDataChange(sortOptionList, true);
 		this.onWindowResize();
 	}
 
@@ -82,9 +65,14 @@ export class ImageDetails {
 		return this._sortOptions;
 	}
 
-	private _currentSortSelector : (d: pointWithImage) => number;
-	public get currentSortSelector() : (d: pointWithImage) => number {
+	private _currentSortSelector : attributeSelector;
+	public get currentSortSelector() : attributeSelector {
 		return this._currentSortSelector;
+	}
+
+	private _attributeData : AttributeData;
+	public get attributeData() : AttributeData {
+		return this._attributeData;
 	}
 
 	public onDataChange(attributeData: AttributeData, imageLookup: imageLookup, tiledImgUrl: string, imageWidth: number, imageHeight: number, keepImages: boolean)
@@ -93,10 +81,12 @@ export class ImageDetails {
 		this._tiledImgUrl = tiledImgUrl;
 		this._imageWidth = imageWidth;
 		this._imageHeight = imageHeight;
+		this._attributeData = attributeData;
 		if (!keepImages)
 		{
 			this.onBrushSelectionChange([]);
 		}
+		this.updateSortOptions();
 	}
 
 	public onBrushSelectionChange(data: pointWithImage[]): void
@@ -134,14 +124,21 @@ export class ImageDetails {
 			.classed("imageInGrid", true);
 	}
 
+	private updateSortOptions(): void
+	{
+		let buttonPropList: ButtonProps[] = this.attributeData.getButtonProps((key, selector) => {
+			this._currentSortSelector = selector;
+			this.onBrushSelectionChange(this.currentSelection)
+		}, true);
+		this._currentSortSelector = buttonPropList[0].callback as attributeSelector;
+		this.sortOptions.onDataChange(buttonPropList, true);
+	}
+
 	public onWindowResize(): void
 	{
 		this.onBrushSelectionChange([]);
 		let parentElement = this.outerContainer.parentNode as Element;
 		let rect: DOMRect | ClientRect = parentElement.getBoundingClientRect();
-		// rect.height;
-		// console.log("Parent Height");
-		// console.log(rect.height);
 		let remainingHeight = rect.height;
 		for (let child of parentElement.children)
 		{
@@ -149,7 +146,6 @@ export class ImageDetails {
 			{
 				let rect: DOMRect | ClientRect = child.getBoundingClientRect();
 				remainingHeight -= rect.height;
-				// console.log(rect.height);
 			}
 		}
 		d3.select("#" + this.outerContainerId).attr("style", `max-height:${remainingHeight}px;`);
@@ -157,6 +153,10 @@ export class ImageDetails {
 
 	public sortImages(): void
 	{
+		if (typeof this.currentSortSelector === "undefined" || this.currentSortSelector === null)
+		{
+			return;
+		}
 		let sortCompareFunction = DevlibAlgo.sortOnProperty<pointWithImage>(this.currentSortSelector);
 		this.currentSelection.sort(sortCompareFunction);
 	}

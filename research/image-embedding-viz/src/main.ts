@@ -26,7 +26,6 @@ function onDatasetChange(dataAttr: DatasetAttributes, projAttr?: ProjectionAttri
 	{
 		dataFolder += "/";
 	}
-	// console.log(dataAttr);
 	let projectionSwitchOnly = true;
 	if (!projAttr)
 	{

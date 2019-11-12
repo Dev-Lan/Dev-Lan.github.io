@@ -6,7 +6,6 @@ export class AttributeData {
 	
 	constructor()
 	{
-		// code...
 		this._minMaxLookup = new Map();
 		this._attributeKeys = [];
 	}
@@ -53,20 +52,39 @@ export class AttributeData {
 		return this.minMaxLookup.get(key);
 	}
 
-	public getButtonProps(callbackFunction: (key: string, selector: attributeSelector) => any): ButtonProps[]
+	public getButtonProps(callbackFunction: (key: string, selector: attributeSelector) => any, skipNone = false): ButtonProps[]
 	{
 		let buttonPropList: ButtonProps[] = [];
 
-		let noneSelect: ButtonProps = {
-			displayName: "None",
-			callback: () => {
-					let selector: attributeSelector;
-					selector = p => p.attributes["None"].value;
-					callbackFunction("None", selector);
-				}
+		if (!skipNone)
+		{
+			let noneSelect: ButtonProps = {
+				displayName: "None",
+				callback: () => {
+						let selector: attributeSelector;
+						selector = p => p.attributes["None"].value;
+						callbackFunction("None", selector);
+					}
+			};
+			buttonPropList.push(noneSelect);
 		}
-		buttonPropList.push(noneSelect);
 
+		// this._currentSortSelector = (d: pointWithImage) => d.x;
+
+		let axisOptions: ButtonProps[] = [
+			{ displayName: "X-Axis", callback: () =>
+				{
+					let selector: attributeSelector = (d: pointWithImage) => d.x;
+					callbackFunction("X-Axis", selector);
+				}
+			},
+			{ displayName: "Y-Axis", callback: () =>
+				{
+					let selector: attributeSelector = (d: pointWithImage) => d.y;
+					callbackFunction("Y-Axis", selector);				}
+			}
+		];
+		buttonPropList.push(...axisOptions);
 		for (let key of this.attributeKeys)
 		{
 			let buttonProps: ButtonProps = {
@@ -88,7 +106,19 @@ export class AttributeData {
 		let maxSoFar: number = -Infinity;
 		for (let point of this.data)
 		{
-			let val: number = point.attributes[key].value;
+			let val: number;
+			if (key === "X-Axis")
+			{
+				val = point.x;
+			}
+			else if (key === "Y-Axis")
+			{
+				val = point.y;
+			}
+			else
+			{
+				val = point.attributes[key].value;
+			}
 			if (val > maxSoFar)
 			{
 				maxSoFar = val;

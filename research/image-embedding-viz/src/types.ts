@@ -25,4 +25,4 @@ export interface imageLookup {
 	[index: string]: imageOffset
 }
 
-export type attributeSelector = (point: pointWithImage) => Number
+export type attributeSelector = (point: pointWithImage) => number
