@@ -2,10 +2,13 @@ import { Metric } from './Metric';
 import { PointND } from './PointND';
 import { DevlibMath } from '../lib/DevlibMath';
 import { DevlibAlgo } from '../lib/DevlibAlgo';
+import { PointCollection } from './PointCollection';
+import { CurveIterator } from './CurveIterator';
 
-export class CurveND {
+export class CurveND extends PointCollection {
 	
 	constructor(id: string) {
+		super();
 		this._id = id;
 		this._valueMap = new Map<string, Metric>();
 		this._pointList = [];
@@ -25,16 +28,11 @@ export class CurveND {
 	public get valueMap() : Map<string, Metric> {
 		return this._valueMap;
 	}
-	// public set valueMap(v : Map<string, Metric>) {
-	// 	this._valueMap = v;
-	// }
 
 	private _pointList : PointND[];
 	public get pointList() : PointND[] {
 		return this._pointList;
 	}
-
-
 
 	public set(key: string, value: number): void
 	{
@@ -112,25 +110,9 @@ export class CurveND {
 		this._inputKey = key;
 	}
 
-	public getMinMax(key: string): [number, number]
+	[Symbol.iterator](): Iterator<PointND>
 	{
-		let minN: number = Infinity;
-		let maxN: number = -Infinity;
-
-		for (let point of this.pointList)
-		{
-			let val = point.valueMap.get(key).value;
-			if (val < minN)
-			{
-				minN = val;
-			}
-			if (val > maxN)
-			{
-				maxN = val;
-			}
-		}
-
-		return [minN, maxN]
+		return new CurveIterator(this.pointList);
 	}
 
 }

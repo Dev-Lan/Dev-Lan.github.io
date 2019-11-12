@@ -52,11 +52,7 @@ export class Toolbar extends BaseComponent{
 	{
 		let textWrapper = document.createElement("div");
 		textWrapper.classList.add("exampleHeaderOuter");
-		// let textWrapperInner = document.createElement("div");
-		// textWrapperInner.classList.add("exampleHeaderInner");
 		textWrapper.textContent = "Examples: ";
-		// textWrapperOuter.appendChild(textWrapperInner);
-		// textWrapper.style.lineHeight = this.height + "px";
 		this.wrapperDiv.appendChild(textWrapper);
 
 		for (let buttonProp of this.buttonList)

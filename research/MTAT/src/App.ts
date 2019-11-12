@@ -110,6 +110,8 @@ export class App<DataType> {
 
 	public SetData(newData: DataType): void
 	{
+		console.log("App.SetData: ");
+		console.log(newData);
 		for (let component of this.componentList)
 		{
 			if (component instanceof BaseWidget)

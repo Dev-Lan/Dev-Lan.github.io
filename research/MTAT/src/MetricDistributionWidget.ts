@@ -1,7 +1,7 @@
 import {BaseWidget} from './BaseWidget';
-import {CurveList} from '../../DataModel/CurveList';
+import {PointCollection} from '../../DataModel/PointCollection';
 
-export class MetricDistributionWidget extends BaseWidget<CurveList> {
+export class MetricDistributionWidget extends BaseWidget<PointCollection> {
 	
 	protected init(): void
 	{

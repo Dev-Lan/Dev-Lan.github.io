@@ -2,12 +2,15 @@ import { DevlibMath } from '../lib/DevlibMath';
 import { DevlibAlgo } from '../lib/DevlibAlgo';
 import { CurveND } from './CurveND';
 import { PointND } from './PointND';
+import { PointCollection } from './PointCollection';
+import { CurveListIterator } from './CurveListIterator';
 
-export class CurveList
+export class CurveList extends PointCollection
 {
 
 	constructor(curveList: CurveND[])
 	{
+		super();
 		this._curveList = curveList;
 		this._minMaxMap = new Map<string, [number, number]>();
 	}
@@ -150,6 +153,11 @@ export class CurveList
 			}
 		}
 		return bandList
+	}
+
+	[Symbol.iterator](): Iterator<PointND>
+	{
+		return new CurveListIterator(this.curveList);
 	}
 
 }
