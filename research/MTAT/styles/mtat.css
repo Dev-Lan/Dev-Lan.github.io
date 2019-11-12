@@ -19,3 +19,38 @@ html, body {
     padding: 30px;
     word-break: break-all;
 }
+
+/* Toolbar */
+
+.wrapperDiv {
+    display: flex;
+    align-items: center;
+}
+
+.exampleHeaderOuter {
+    margin-left: 20px;
+    margin-right: 10px;
+    font-size: 15pt;
+}
+
+.exampleButton {
+    background: hsl(232, 100%, 97%);
+    border: solid black 1px;
+    margin: 2px;
+    text-align: center;
+    cursor: pointer;
+    border-radius: 3px;
+    font-size: 10pt;
+    font-weight: 400;
+    user-select: none;
+    max-height: 24px;
+}
+
+.exampleButton:hover {
+    background: hsl(232, 100%, 78%);
+}
+
+.exampleButton:active {
+    background: hsl(232, 100%, 39%);
+    color: white;
+}

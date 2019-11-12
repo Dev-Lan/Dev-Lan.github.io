@@ -32,21 +32,40 @@ export class Toolbar extends BaseComponent{
 		return this._buttonList;
 	}
 
+	private _wrapperDiv : HTMLDivElement;
+	public get wrapperDiv() : HTMLDivElement {
+		return this._wrapperDiv;
+	}
+
 	protected init(): void
 	{
+		this._wrapperDiv = document.createElement("div");
+		this.wrapperDiv.classList.add("wrapperDiv");
+
 		this._uploadFileButtonWrapper = document.createElement("div");
-		this.container.appendChild(this.uploadFileButtonWrapper);
+		this.wrapperDiv.appendChild(this.uploadFileButtonWrapper);
 		this._uploadFileButton = new UploadFileButton(this.uploadFileButtonWrapper, (data: string, filename: string) => {this.fileLoadCallback(data, filename)})
+		this.container.appendChild(this.wrapperDiv);
 	}
 
 	private initExampleButtons(): void
 	{
+		let textWrapper = document.createElement("div");
+		textWrapper.classList.add("exampleHeaderOuter");
+		// let textWrapperInner = document.createElement("div");
+		// textWrapperInner.classList.add("exampleHeaderInner");
+		textWrapper.textContent = "Examples: ";
+		// textWrapperOuter.appendChild(textWrapperInner);
+		// textWrapper.style.lineHeight = this.height + "px";
+		this.wrapperDiv.appendChild(textWrapper);
+
 		for (let buttonProp of this.buttonList)
 		{
 			let button: HTMLButtonElement = document.createElement("button");
+			button.classList.add("exampleButton");
 			button.textContent = buttonProp.displayName;
 			button.onclick = (ev: Event) => buttonProp.callback();
-			this.container.appendChild(button);
+			this.wrapperDiv.appendChild(button);
 		}
 	}
 
