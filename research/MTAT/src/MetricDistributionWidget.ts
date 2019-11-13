@@ -5,6 +5,11 @@ import {PointCollection} from '../../DataModel/PointCollection';
 import {LayoutFramework} from './LayoutFramework';
 import {Frame, MetricDistributionSubComponentTypes, Direction} from './types';
 
+interface boolWithIndex {
+	value: boolean,
+	rowIndex: number,
+}
+
 export class MetricDistributionWidget extends BaseWidget<PointCollection> {
 	
 
@@ -28,6 +33,21 @@ export class MetricDistributionWidget extends BaseWidget<PointCollection> {
 		return this._basisSelectContainerSelection;
 	}
 
+	private _scatterPlotSelectContainerSelection : HtmlSelection;
+	public get scatterPlotSelectContainerSelection() : HtmlSelection {
+		return this._scatterPlotSelectContainerSelection;
+	}
+
+	private _basisSelectionBooleans : boolean[];
+	public get basisSelectionBooleans() : boolean[] {
+		return this._basisSelectionBooleans;
+	}
+
+	private _scatterplotSelectionBooleans : boolWithIndex[][];
+	public get scatterplotSelectionBooleans() : boolWithIndex[][] {
+		return this._scatterplotSelectionBooleans;
+	}
+
 	protected init(): void
 	{
 		this._wrapperContainer = document.createElement("div");
@@ -46,8 +66,6 @@ export class MetricDistributionWidget extends BaseWidget<PointCollection> {
 				},
 				{
 					direction: Direction.column,
-					minSize: 160,
-					maxSize: 160,
 					inside: MetricDistributionSubComponentTypes.ScatterplotSelect
 				},
 				{
@@ -73,7 +91,9 @@ export class MetricDistributionWidget extends BaseWidget<PointCollection> {
 					this._basisSelectContainerSelection = d3.select(container);
 					break;
 				case MetricDistributionSubComponentTypes.ScatterplotSelect:
-					this.initScatterplotSelect(container);
+					this._scatterPlotSelectContainerSelection = d3.select(container)
+						.append("div")
+						.classed("matrixContainer", true);
 					break;
 				case MetricDistributionSubComponentTypes.DistributionPlot:
 					this.initDistributionPlot(container);
@@ -87,25 +107,41 @@ export class MetricDistributionWidget extends BaseWidget<PointCollection> {
 		}
 	}
 
-	private initScatterplotSelect(container: Element): void
+	private initDistributionPlot(container: HTMLElement): void
 	{
-		(container as HTMLElement).style.border = "solid green 2px";
-
+		container.style.border = "solid blue 2px";
 	}
 
-	private initDistributionPlot(container: Element): void
+	private initScatterplot(container: HTMLElement): void
 	{
-		(container as HTMLElement).style.border = "solid blue 2px";
+		container.style.border = "solid orange 2px";
 	}
-
-	private initScatterplot(container: Element): void
-	{
-		(container as HTMLElement).style.border = "solid orange 2px";
-	}
-
 
 	public OnDataChange(): void
 	{
+		this.updateUIData();
+		this.drawBasisSelect();
+		this.drawScatterPlotSelectContainerSelection();
+	}
+
+	private updateUIData(): void
+	{
+		this._basisSelectionBooleans = [];
+
+		this._scatterplotSelectionBooleans = [];
+		for (let [index, attr1] of this.data.attributeList.entries())
+		{
+			this.basisSelectionBooleans.push(true);
+			let row: boolWithIndex[] = [];
+			for (let attr2 of this.data.attributeList)
+			{
+				row.push({
+					value: attr1 === attr2,
+					rowIndex: index
+					});
+			}
+			this.scatterplotSelectionBooleans.push(row);
+		}
 		this.drawBasisSelect();
 	}
 
@@ -118,14 +154,40 @@ export class MetricDistributionWidget extends BaseWidget<PointCollection> {
 			.join("button")
 			.text(d => d)
 			.classed("toggleButton", true)
-			.classed("on", true)
-			.on('click', function(d)
+			.classed("on", (d, i) => this.basisSelectionBooleans[i])
+			.on('click', function(d, i)
 			{
 				let buttonSelect = d3.select(this);
-				let turnOn = !buttonSelect.classed("on");
+				let turnOn = !thisWidget.basisSelectionBooleans[i];
 				buttonSelect.classed("on", turnOn);
-				console.log(d, turnOn);
+				thisWidget.basisSelectionBooleans[i] = turnOn;
+				thisWidget.drawScatterPlotSelectContainerSelection();
 			});
+	}
+
+	private drawScatterPlotSelectContainerSelection(): void
+	{
+		let thisWidget = this;
+		this.scatterPlotSelectContainerSelection
+			.selectAll("div")
+			.data(this.scatterplotSelectionBooleans)
+		  .join("div")
+			.classed("rowContainer", true)
+			.classed("noDisp", (d, i) => !thisWidget.basisSelectionBooleans[i] )
+			.selectAll("button")
+			.data(d => d)
+		  .join("button")
+		  	.classed("squareButton", true)
+		  	.classed("on", d=> d.value)
+		  	.classed("noDisp", (d, i) => !thisWidget.basisSelectionBooleans[i])
+			.on("click", function(d, i)
+			{
+				let buttonSelect = d3.select(this);
+				let turnOn = !d.value;
+				buttonSelect.classed("on", turnOn);
+				thisWidget.scatterplotSelectionBooleans[d.rowIndex][i].value = turnOn;
+			});
+
 	}
 
 	protected OnResize(): void

@@ -22,3 +22,36 @@
     font-size: 8pt;
     font-family: 'Roboto', sans-serif;
 }
+
+.matrixContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-left: 20px;
+}
+
+.rowContainer {
+    display: flex;
+}
+
+.squareButton {
+    width: 18px;
+    height: 18px;
+    background: bisque;
+    border-radius: 1px;
+    border-width: 0;
+    padding: 0;
+    margin: 1px;
+    cursor: pointer;
+}
+
+.squareButton:focus {
+    outline-width: 2px;
+    outline-style: solid;
+}
+
+.squareButton.on {
+    background: black;
+    border-radius: 1;
+}
+
