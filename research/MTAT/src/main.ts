@@ -3,7 +3,7 @@ import { App } from './App';
 import { CurveList } from '../../DataModel/CurveList';
 import { CurveListFactory } from '../../DataModel/CurveListFactory';
 
-let container: Element = document.getElementById("appContainer")
+let container: HTMLElement = document.getElementById("appContainer") as HTMLElement;
 let app: App<CurveList> = new App<CurveList>(container, CurveListFactory.CreateCurveListFromCSV, CurveListFactory.CreateCurveListFromCSVObject);
 window.onresize = () => app.OnWindowResize();
 

@@ -1,25 +1,25 @@
-import {Frame, ComponentType, Direction} from './types';
+import {Frame, Direction} from './types';
 
 export class LayoutFramework {
 	
-	constructor(container: Element)
+	constructor(container: HTMLElement)
 	{
 		this._container = container;
 	}
 
-	private _container : Element;
-	public get container() : Element {
+	private _container : HTMLElement;
+	public get container() : HTMLElement {
 		return this._container;
 	}
 
-	public InitializeLayout(frame: Frame): Map<Element, ComponentType>
+	public InitializeLayout<ContentType>(frame: Frame<ContentType>): Map<HTMLElement, ContentType>
 	{
-		let elementToComponentType = new Map<Element, ComponentType>();
-		this.addFrame(this.container, frame, elementToComponentType);
+		let elementToComponentType = new Map<HTMLElement, ContentType>();
+		this.addFrame<ContentType>(this.container, frame, elementToComponentType);
 		return elementToComponentType;
 	}
 
-	private addFrame(container: Element, frame: Frame, lookup: Map<Element, ComponentType>): void
+	private addFrame<ContentType>(container: HTMLElement, frame: Frame<ContentType>, lookup: Map<Element, ContentType>): void
 	{
 		container.classList.add("frame");
 		let dirClass: string;
@@ -27,7 +27,7 @@ export class LayoutFramework {
 		if (frame.direction === Direction.column)
 		{
 			dirClass = "dir-col";
-			dirPostFix = "row";
+			dirPostFix = "width";
 		}
 		else if (frame.direction === Direction.row)
 		{
@@ -50,12 +50,6 @@ export class LayoutFramework {
 			frame.fraction = 1;
 		}
 		inlineStyle += `flex-grow: ${frame.fraction}; `;			
-		const addDebugColor = false;
-		if (addDebugColor)
-		{
-			// copied from: https://stackoverflow.com/questions/1152024/best-way-to-generate-a-random-color-in-javascript
-			inlineStyle += `background: ${'#'+(0x1000000+(Math.random())*0xffffff).toString(16).substr(1,6)};`;
-		}
 
 		container.setAttribute("style", inlineStyle);
 

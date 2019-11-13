@@ -13,7 +13,7 @@ import {ButtonProps} from '../../lib/DevLibTypes';
 
 export class App<DataType> {
 	
-	constructor(container: Element, fromCsv: (data: string) => DataType, fromCsvObject: (data: d3.DSVRowArray<string>) => DataType) {
+	constructor(container: HTMLElement, fromCsv: (data: string) => DataType, fromCsvObject: (data: d3.DSVRowArray<string>) => DataType) {
 		this._componentList = [];
 		this._layoutFramework = new LayoutFramework(container);
 		this._dataFromCSV = fromCsv;
@@ -30,8 +30,8 @@ export class App<DataType> {
 		return this._layoutFramework;
 	}
 
-	private _componentContainers : Map<Element, ComponentType>;
-	public get componentContainers() : Map<Element, ComponentType> {
+	private _componentContainers : Map<HTMLElement, ComponentType>;
+	public get componentContainers() : Map<HTMLElement, ComponentType> {
 		return this._componentContainers;
 	}
 
@@ -45,7 +45,7 @@ export class App<DataType> {
 		return this._dataFromCSVObject;
 	}
 
-	public InitializeLayout(frame: Frame): void
+	public InitializeLayout(frame: Frame<ComponentType>): void
 	{
 		// console.log(frame);
 
@@ -56,7 +56,7 @@ export class App<DataType> {
 		}
 	}
 
-	private InitializeComponent(compontentType: ComponentType, container: Element): void
+	private InitializeComponent(compontentType: ComponentType, container: HTMLElement): void
 	{
 		let newComponent: BaseComponent;
 		switch (compontentType) {
@@ -69,7 +69,7 @@ export class App<DataType> {
 				newComponent = new Toolbar(container, (data: string) => this.loadFromCsvString(data), buttonList);
 				break;
 			case ComponentType.Plot2dPathsWidget:
-				newComponent = new Plot2dPathsWidget(container);
+				newComponent = new Plot2dPathsWidget(container, 'x', 'y');
 				break;
 			case ComponentType.Console:
 				newComponent = new Console(container);

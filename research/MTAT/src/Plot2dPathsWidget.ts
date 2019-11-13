@@ -6,10 +6,12 @@ import {Margin, SvgSelection} from '../../lib/DevLibTypes';
 
 export class Plot2dPathsWidget extends BaseWidget<CurveList> {
 	
-	// constructor(container: Element)
-	// {
-	// 	super(container);
-	// }
+	constructor(container: Element, xKey: string, yKey: string)
+	{
+		super(container);
+		this._xKey = xKey;
+		this._yKey = yKey;
+	}
 
 	private _vizWidth : number;
 	public get vizWidth() : number {
@@ -46,6 +48,16 @@ export class Plot2dPathsWidget extends BaseWidget<CurveList> {
 		return this._scaleY;
 	}
 
+	private _xKey : string;
+	public get xKey() : string {
+		return this._xKey;
+	}
+
+	private _yKey : string;
+	public get yKey() : string {
+		return this._yKey;
+	}
+
 	protected init(): void
 	{
 		this._margin = {
@@ -74,8 +86,8 @@ export class Plot2dPathsWidget extends BaseWidget<CurveList> {
 		// console.log(this.data);
 		this.updateScales();
 		let line = d3.line<PointND>()
-			.x((d, i) => { return this.scaleX(d.get("x")) })
-			.y((d) => { return this.scaleY(d.get("y")) });
+			.x((d, i) => { return this.scaleX(d.get(this.xKey)) })
+			.y((d) => { return this.scaleY(d.get(this.yKey)) });
 
 		this.mainGroupSelect.selectAll("path")
 			.data(this.data.curveList)
@@ -89,8 +101,8 @@ export class Plot2dPathsWidget extends BaseWidget<CurveList> {
 		// this code keeps the data aspect ratio square and keeps it centered and as large
 		// as possible in it's container
 		let containerRatio = this.vizHeight / this.vizWidth;
-		let [minX, maxX] = this.data.minMaxMap.get("x");
-		let [minY, maxY] = this.data.minMaxMap.get("y");
+		let [minX, maxX] = this.data.minMaxMap.get(this.xKey);
+		let [minY, maxY] = this.data.minMaxMap.get(this.yKey);
 		let dataRatio = (maxY - minY) / (maxX - minX);
 		if (containerRatio > dataRatio)
 		{
