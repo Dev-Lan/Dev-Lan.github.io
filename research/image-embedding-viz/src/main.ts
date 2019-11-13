@@ -10,8 +10,8 @@ let imageDetails: ImageDetails = new ImageDetails("outerImageDetailsContainer", 
 let attributeData: AttributeData = new AttributeData();
 let dataSelector: DatasetSelector;
 
-// const baseFolder = "https://raw.githubusercontent.com/Dev-Lan/image-embedding-data/master/";
-const baseFolder = "../myData/image-embedding-data/";
+const baseFolder = "https://raw.githubusercontent.com/Dev-Lan/image-embedding-data/master/";
+// const baseFolder = "../myData/image-embedding-data/";
 
 d3.json(baseFolder + 'examples.json').then(data =>
 {
