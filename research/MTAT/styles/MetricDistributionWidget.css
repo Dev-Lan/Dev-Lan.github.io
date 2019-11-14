@@ -6,6 +6,12 @@
 	flex-grow: 1;
 }
 
+.toggleButtonContainer {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
 .toggleButton.on {
     color: white;
     background: black;
@@ -53,5 +59,21 @@
 .squareButton.on {
     background: black;
     border-radius: 1;
+}
+
+.overflow-scroll {
+    overflow: scroll;
+}
+
+.histogramContainer {
+    /*background: firebrick;*/
+    flex-grow: 1;
+    height: 100px;
+}
+
+.histogramBar {
+    fill: #272727;
+    stroke: #272727;
+    stroke-width: .5px;
 }
 

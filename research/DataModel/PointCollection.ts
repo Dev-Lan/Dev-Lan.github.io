@@ -1,13 +1,21 @@
 import { PointND } from './PointND';
 
-export abstract class PointCollection implements Iterable<PointND> {
+export abstract class PointCollection implements Iterable<PointND>, ArrayLike<PointND> {
 	
 	constructor()
 	{
 		this._attributeList = [];
+		this._length = 0;
 	}
 
 	abstract [Symbol.iterator](): Iterator<PointND>;
+
+	protected _length : number;
+	public get length() : number {
+		return this._length;
+	}
+
+	[n: number]: PointND;
 
 	private _attributeList : string[];
 	public get attributeList() : string[] {

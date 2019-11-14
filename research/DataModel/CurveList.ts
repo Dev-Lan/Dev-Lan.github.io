@@ -12,6 +12,17 @@ export class CurveList extends PointCollection
 	{
 		super();
 		this._curveList = curveList;
+		this._length = 0;
+		let i = 0;
+		for (let curve of this.curveList)
+		{
+			this._length += curve.length;
+			for (let point of curve)
+			{
+				this[i] = point;
+				++i;
+			}
+		}
 		this._minMaxMap = new Map<string, [number, number]>();
 	}
 

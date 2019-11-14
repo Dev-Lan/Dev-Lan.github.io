@@ -98,6 +98,8 @@ export class CurveND extends PointCollection {
 	public addPoint(point: PointND): void
 	{
 		this._pointList.push(point);
+		this[this.length] = point;
+		++this._length;
 	}
 
 	public sort(key: string): void

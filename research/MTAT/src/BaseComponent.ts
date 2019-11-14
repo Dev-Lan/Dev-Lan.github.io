@@ -3,6 +3,8 @@ export abstract class BaseComponent {
 	constructor(container: Element)
 	{
 		this._container = container;
+		this._children = [];
+		this.initProps();
 		this.setWidthHeight();
 		this.init();
 	}
@@ -22,6 +24,16 @@ export abstract class BaseComponent {
 		return this._height;
 	}
 
+	private _children : BaseComponent[];
+	public get children() : BaseComponent[] {
+		return this._children;
+	}
+
+	protected initProps(): void
+	{
+		
+	}
+
 	protected init(): void
 	{
 		let notImplementDiv = document.createElement("div");
@@ -34,10 +46,14 @@ export abstract class BaseComponent {
 	public Resize(): void
 	{
 		this.setWidthHeight();
+		for (let child of this.children)
+		{
+			child.Resize();
+		}
 		this.OnResize();
 	}
 
-	private setWidthHeight(): void
+	protected setWidthHeight(): void
 	{
 		let rect = this.container.getBoundingClientRect();
 		this._width = rect.width;

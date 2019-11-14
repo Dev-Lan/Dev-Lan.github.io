@@ -3,6 +3,7 @@ import {HtmlSelection} from '../../lib/DevLibTypes';
 import {BaseWidget} from './BaseWidget';
 import {PointCollection} from '../../DataModel/PointCollection';
 import {LayoutFramework} from './LayoutFramework';
+import {HistogramWidget} from './HistogramWidget';
 import {Frame, MetricDistributionSubComponentTypes, Direction} from './types';
 
 interface boolWithIndex {
@@ -38,6 +39,11 @@ export class MetricDistributionWidget extends BaseWidget<PointCollection> {
 		return this._scatterPlotSelectContainerSelection;
 	}
 
+	private _distributionPlotContainerSelection : HtmlSelection;
+	public get distributionPlotContainerSelection() : HtmlSelection {
+		return this._distributionPlotContainerSelection;
+	}
+
 	private _basisSelectionBooleans : boolean[];
 	public get basisSelectionBooleans() : boolean[] {
 		return this._basisSelectionBooleans;
@@ -47,6 +53,19 @@ export class MetricDistributionWidget extends BaseWidget<PointCollection> {
 	public get scatterplotSelectionBooleans() : boolWithIndex[][] {
 		return this._scatterplotSelectionBooleans;
 	}
+
+	private _histogramWidgets : HistogramWidget[];
+	public get histogramWidgets() : HistogramWidget[] {
+		return this._histogramWidgets;
+	}
+
+	// private _containerToVizMap : ;
+	// public get containerToVizMap() :  {
+	// 	return this._containerToVizMap;
+	// }
+	// public set containerToVizMap(v : ) {
+	// 	this._containerToVizMap = v;
+	// }
 
 	protected init(): void
 	{
@@ -88,15 +107,25 @@ export class MetricDistributionWidget extends BaseWidget<PointCollection> {
 		{
 			switch (subComponent) {
 				case MetricDistributionSubComponentTypes.BasisSelect:
-					this._basisSelectContainerSelection = d3.select(container);
+					this._basisSelectContainerSelection = d3.select(container)
+						.append("div")
+						.classed("overflow-scroll", true)
+						.classed("toggleButtonContainer", true);
+					this.basisSelectContainerSelection.node().style.maxHeight = this.height + "px";
 					break;
 				case MetricDistributionSubComponentTypes.ScatterplotSelect:
 					this._scatterPlotSelectContainerSelection = d3.select(container)
 						.append("div")
+						.classed("overflow-scroll", true)
 						.classed("matrixContainer", true);
+					this.scatterPlotSelectContainerSelection.node().style.maxHeight = this.height + "px";
 					break;
 				case MetricDistributionSubComponentTypes.DistributionPlot:
-					this.initDistributionPlot(container);
+					this._distributionPlotContainerSelection = d3.select(container)
+						.append("div")
+						.classed("overflow-scroll", true);
+					this.distributionPlotContainerSelection.node().style.maxHeight = this.height + "px";
+					// this.initDistributionPlot(container);
 					break;
 				case MetricDistributionSubComponentTypes.Scatterplot:
 					this.initScatterplot(container);
@@ -107,10 +136,10 @@ export class MetricDistributionWidget extends BaseWidget<PointCollection> {
 		}
 	}
 
-	private initDistributionPlot(container: HTMLElement): void
-	{
-		container.style.border = "solid blue 2px";
-	}
+	// private initDistributionPlot(container: HTMLElement): void
+	// {
+	// 	container.style.border = "solid blue 2px";
+	// }
 
 	private initScatterplot(container: HTMLElement): void
 	{
@@ -122,6 +151,7 @@ export class MetricDistributionWidget extends BaseWidget<PointCollection> {
 		this.updateUIData();
 		this.drawBasisSelect();
 		this.drawScatterPlotSelectContainerSelection();
+		this.drawDistributionPlot();
 	}
 
 	private updateUIData(): void
@@ -162,6 +192,7 @@ export class MetricDistributionWidget extends BaseWidget<PointCollection> {
 				buttonSelect.classed("on", turnOn);
 				thisWidget.basisSelectionBooleans[i] = turnOn;
 				thisWidget.drawScatterPlotSelectContainerSelection();
+				thisWidget.drawDistributionPlot();
 			});
 	}
 
@@ -186,13 +217,47 @@ export class MetricDistributionWidget extends BaseWidget<PointCollection> {
 				let turnOn = !d.value;
 				buttonSelect.classed("on", turnOn);
 				thisWidget.scatterplotSelectionBooleans[d.rowIndex][i].value = turnOn;
+				thisWidget.drawDistributionPlot(); // todo only if diagonal
 			});
+	}
 
+	private clearWidgets(): void
+	{
+		this.children.splice(0, this.children.length);
+	}
+
+	private drawDistributionPlot(): void
+	{
+		this.clearWidgets();
+		let thisWidget = this;
+		this._histogramWidgets = [];
+		this.distributionPlotContainerSelection.html(null)
+			.selectAll("div")
+			.data(this.data.attributeList)
+			.join("div")
+			.classed("histogramContainer", true)
+			.classed("noDisp", (d, i) => 
+				{
+					if (!this.basisSelectionBooleans[i])
+					{
+						return true;
+					}
+					return !this.scatterplotSelectionBooleans[i][i].value;
+				})
+			.each(function(d)
+			{
+				let container = this as HTMLDivElement;
+				let newWidget = new HistogramWidget(container, d);
+				thisWidget.children.push(newWidget);
+				newWidget.SetData(thisWidget.data)
+			});
 	}
 
 	protected OnResize(): void
 	{
-		// do nothing css / HTML should handle resize
+		this.basisSelectContainerSelection.node().style.maxHeight = this.height + "px"
+		this.scatterPlotSelectContainerSelection.node().style.maxHeight = this.height + "px"
+		this.distributionPlotContainerSelection.node().style.maxHeight = this.height + "px"
 	}
 
 

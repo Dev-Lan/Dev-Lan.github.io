@@ -13,20 +13,20 @@ export class Plot2dPathsWidget extends BaseWidget<CurveList> {
 		this._yKey = yKey;
 	}
 
-	private _vizWidth : number;
-	public get vizWidth() : number {
-		return this._vizWidth;
-	}
+	// private _vizWidth : number;
+	// public get vizWidth() : number {
+	// 	return this._vizWidth;
+	// }
 
-	private _vizHeight : number;
-	public get vizHeight() : number {
-		return this._vizHeight;
-	}
+	// private _vizHeight : number;
+	// public get vizHeight() : number {
+	// 	return this._vizHeight;
+	// }
 
-	private _margin : Margin;
-	public get margin() : Margin {
-		return this._margin;
-	}
+	// private _margin : Margin;
+	// public get margin() : Margin {
+	// 	return this._margin;
+	// }
 
 	private _svgSelect : SvgSelection;
 	public get svgSelect() : SvgSelection {
@@ -60,26 +60,20 @@ export class Plot2dPathsWidget extends BaseWidget<CurveList> {
 
 	protected init(): void
 	{
-		this._margin = {
-			top: 20,
-			right: 20,
-			bottom: 20,
-			left: 20
-		}
 		this._svgSelect = d3.select(this.container).append("svg")
 		this._mainGroupSelect = this.svgSelect.append("g");
 		this.mainGroupSelect
 			.attr("transform", `translate(${this.margin.left}, ${this.margin.top})`);
-		this.setVizWidthHeight();
+		// this.setVizWidthHeight();
 
 		this.svgSelect.attr("style", 'width: 100%; height: 100%;');
 	}
 
-	private setVizWidthHeight(): void
-	{
-		this._vizWidth = this.width - this.margin.left - this.margin.right;
-		this._vizHeight = this.height - this.margin.top - this.margin.bottom;
-	}
+	// private setVizWidthHeight(): void
+	// {
+	// 	this._vizWidth = this.width - this.margin.left - this.margin.right;
+	// 	this._vizHeight = this.height - this.margin.top - this.margin.bottom;
+	// }
 
 	public OnDataChange(): void
 	{
@@ -137,7 +131,7 @@ export class Plot2dPathsWidget extends BaseWidget<CurveList> {
 
 	protected OnResize(): void
 	{
-		this.setVizWidthHeight();
+		// this.setVizWidthHeight();
 		if (this.data)
 		{
 			this.OnDataChange();
