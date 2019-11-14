@@ -65,15 +65,29 @@
     overflow: scroll;
 }
 
+.distributionPlotContainer {
+/*    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    max-width: 300px;
+    overflow-y: scroll;
+    overflow-x: scroll;*/
+}
+
 .histogramContainer {
     /*background: firebrick;*/
     flex-grow: 1;
     height: 100px;
+    width: 300px;
 }
 
 .histogramBar {
     fill: #272727;
     stroke: #272727;
     stroke-width: .5px;
+}
+
+.axisLabel {
+    text-anchor: middle;
 }
 

@@ -123,6 +123,7 @@ export class MetricDistributionWidget extends BaseWidget<PointCollection> {
 				case MetricDistributionSubComponentTypes.DistributionPlot:
 					this._distributionPlotContainerSelection = d3.select(container)
 						.append("div")
+						.classed("distributionPlotContainer", true)
 						.classed("overflow-scroll", true);
 					this.distributionPlotContainerSelection.node().style.maxHeight = this.height + "px";
 					// this.initDistributionPlot(container);
@@ -135,11 +136,6 @@ export class MetricDistributionWidget extends BaseWidget<PointCollection> {
 			}
 		}
 	}
-
-	// private initDistributionPlot(container: HTMLElement): void
-	// {
-	// 	container.style.border = "solid blue 2px";
-	// }
 
 	private initScatterplot(container: HTMLElement): void
 	{

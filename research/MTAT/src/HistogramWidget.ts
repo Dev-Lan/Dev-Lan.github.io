@@ -10,6 +10,7 @@ export class HistogramWidget extends BaseWidget<PointCollection> {
 	{
 		super(container);
 		this._valueKey = valueKey;
+		this.setLabel()
 	}
 
 	private _valueKey : string;
@@ -27,6 +28,16 @@ export class HistogramWidget extends BaseWidget<PointCollection> {
 		return this._mainGroupSelect;
 	}
 
+	private _axisGroupSelect : SvgSelection;
+	public get axisGroupSelect() : SvgSelection {
+		return this._axisGroupSelect;
+	}
+
+	private _labelTextSelect : SvgSelection;
+	public get labelTextSelect() : SvgSelection {
+		return this._labelTextSelect;
+	}
+
 	private _scaleX : d3.ScaleLinear<number, number>;
 	public get scaleX() : d3.ScaleLinear<number, number> {
 		return this._scaleX;
@@ -40,10 +51,10 @@ export class HistogramWidget extends BaseWidget<PointCollection> {
 	protected setMargin(): void
 	{
 		this._margin = {
-			top: 8,
-			right: 12,
-			bottom: 8,
-			left: 12
+			top: 6,
+			right: 8,
+			bottom: 50,
+			left: 8
 		}
 	}
 
@@ -52,6 +63,18 @@ export class HistogramWidget extends BaseWidget<PointCollection> {
 		this._svgSelect = d3.select(this.container).append("svg");
 		this._mainGroupSelect = this.svgSelect.append("g")
 			.attr('transform', `translate(${this.margin.left}, ${this.margin.top})`);
+		
+		this._axisGroupSelect = this.svgSelect.append('g')
+			.attr('transform', `translate(${this.margin.left}, ${this.margin.top + this.vizHeight})`);
+	}
+
+	private setLabel(): void
+	{	
+		const bufferForAxis = 36;
+		this._labelTextSelect = this.svgSelect.append('text')
+			.attr('transform', `translate(${this.margin.left + this.vizWidth / 2}, ${this.margin.top + this.vizHeight + bufferForAxis})`)
+			.classed('axisLabel', true)
+			.text(this.valueKey);
 	}
 
 	public OnDataChange(): void
@@ -89,30 +112,23 @@ export class HistogramWidget extends BaseWidget<PointCollection> {
 			.attr("y", d => this.vizHeight - this.scaleY(d.length))
 			.attr("width", (d) =>
 			{
-				let diff = this.scaleX(d.x1) - this.scaleX(d.x0);
-				if (diff === 0)
+				if (bins.length === 1)
 				{
-					diff = singleWidth;
+					return singleWidth;
 				}
-				return diff;
+				return this.scaleX(d.x1) - this.scaleX(d.x0);
 			})
 			.attr("height", d => this.scaleY(d.length));
 
-		// console.log(bins);
+			this.drawAxis();
 	}
 
 	private updateScales(bins: d3.Bin<PointND, number>[]): void
 	{
-		// console.log(this.width, this.height);
-		// console.log(this.vizWidth, this.vizHeight);
-		// console.log("minmax");
-		// console.log(minMax);
-		// todo cache minmax in point collection
 
 		let minBinBoundary = d3.min(bins, d => d.x0);
 		let maxBinBoundary = d3.max(bins, d => d.x1);
 
-		// let minMax = this.data.getMinMax(this.valueKey);
 		this._scaleX = d3.scaleLinear<number, number>()
 			.domain([minBinBoundary, maxBinBoundary])
 			.range([0, this.vizWidth]);
@@ -121,6 +137,12 @@ export class HistogramWidget extends BaseWidget<PointCollection> {
 		this._scaleY = d3.scaleLinear<number, number>()
 			.domain([0, biggestBinCount])
 			.range([0, this.vizHeight]);
+	}
+
+	private drawAxis(): void
+	{
+		this.axisGroupSelect
+			.call(d3.axisBottom(this.scaleX))
 	}
 
 	protected OnResize(): void
