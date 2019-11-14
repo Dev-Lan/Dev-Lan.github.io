@@ -60,7 +60,10 @@ export class HistogramWidget extends BaseWidget<PointCollection> {
 
 	public init(): void
 	{
-		this._svgSelect = d3.select(this.container).append("svg");
+		this._svgSelect = d3.select(this.container).append("svg")
+			.attr("width", this.width)
+			.attr("height", this.height);
+
 		this._mainGroupSelect = this.svgSelect.append("g")
 			.attr('transform', `translate(${this.margin.left}, ${this.margin.top})`);
 		
@@ -125,9 +128,8 @@ export class HistogramWidget extends BaseWidget<PointCollection> {
 
 	private updateScales(bins: d3.Bin<PointND, number>[]): void
 	{
-
-		let minBinBoundary = d3.min(bins, d => d.x0);
-		let maxBinBoundary = d3.max(bins, d => d.x1);
+		let minBinBoundary = bins[0].x0;
+		let maxBinBoundary = bins[bins.length - 1].x1;
 
 		this._scaleX = d3.scaleLinear<number, number>()
 			.domain([minBinBoundary, maxBinBoundary])

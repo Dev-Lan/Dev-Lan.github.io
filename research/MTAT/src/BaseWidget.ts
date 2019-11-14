@@ -48,13 +48,13 @@ export abstract class BaseWidget<DataType> extends BaseComponent {
 	{
 		this._data = data;
 		this.OnDataChange();
-		for (let child of this.children)
-		{
-			if (child instanceof BaseWidget)
-			{
-				child.SetData(data);
-			}
-		}
+		// for (let child of this.children)
+		// {
+		// 	if (child instanceof BaseWidget)
+		// 	{
+		// 		child.SetData(data);
+		// 	}
+		// }
 	}
 
 	protected setWidthHeight(): void

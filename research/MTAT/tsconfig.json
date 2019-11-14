@@ -12,6 +12,13 @@
     ],
     "compilerOptions": {
         "noImplicitAny": true,
-        "target": "es2016"
+        "target": "es2016",
+        "lib": [
+            "es2019",
+            "DOM",
+            "ES6",
+            "DOM.Iterable",
+            "ScriptHost"
+         ]
     }
 }

@@ -6,6 +6,8 @@ export abstract class PointCollection implements Iterable<PointND>, ArrayLike<Po
 	{
 		this._attributeList = [];
 		this._length = 0;
+		this._Array = [];
+		this._minMaxCache = new Map<string, [number, number]>();
 	}
 
 	abstract [Symbol.iterator](): Iterator<PointND>;
@@ -26,6 +28,22 @@ export abstract class PointCollection implements Iterable<PointND>, ArrayLike<Po
 		return this._attributeList;
 	}
 
+
+	private _Array : PointND[];
+	public get Array() : PointND[] {
+		if (this._Array.length === 0)
+		{
+			this._Array = Array.from(this);
+		}
+		return this._Array;
+	}
+
+	private _minMaxCache : Map<string, [number, number]>;
+	private get minMaxCache() : Map<string, [number, number]> {
+		return this._minMaxCache;
+	}
+
+
 	private initAttributeList(): void
 	{
 		let pointList = [...this];
@@ -41,6 +59,10 @@ export abstract class PointCollection implements Iterable<PointND>, ArrayLike<Po
 
 	public getMinMax(key: string): [number, number]
 	{
+		if (this.minMaxCache.has(key))
+		{
+			return this.minMaxCache.get(key);
+		}
 		let minN: number = Infinity;
 		let maxN: number = -Infinity;
 
@@ -56,6 +78,7 @@ export abstract class PointCollection implements Iterable<PointND>, ArrayLike<Po
 				maxN = val;
 			}
 		}
+		this.minMaxCache.set(key, [minN, maxN]);
 		return [minN, maxN]
 	}
 }

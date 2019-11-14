@@ -66,19 +66,19 @@
 }
 
 .distributionPlotContainer {
-/*    display: flex;
-    flex-direction: column;
+    display: flex;
+    flex-direction: row;
     flex-wrap: wrap;
-    max-width: 300px;
-    overflow-y: scroll;
-    overflow-x: scroll;*/
+    /*max-width: 300px;*/
+    /*overflow-y: scroll;*/
+    /*overflow-x: scroll;*/
 }
 
 .histogramContainer {
     /*background: firebrick;*/
-    flex-grow: 1;
+    /*flex-grow: 1;*/
     height: 112px;
-    width: 300px;
+    width: 200px;
 }
 
 .histogramBar {
@@ -91,3 +91,25 @@
     text-anchor: middle;
 }
 
+.scatterPlotOuterContainer {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.scatterPlotContainer {
+    /*background: firebrick;*/
+    /*flex-grow: 1;*/
+
+
+
+    height: 200px;
+    width: 200px;
+}
+
+
+.scatterPoint {
+    fill: #282828;
+    r: .5;
+    stroke: none;
+}
