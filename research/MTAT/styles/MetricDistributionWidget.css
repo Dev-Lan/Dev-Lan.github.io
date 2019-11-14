@@ -43,7 +43,7 @@
 .squareButton {
     width: 18px;
     height: 18px;
-    background: bisque;
+    background: wheat;
     border-radius: 1px;
     border-width: 0;
     padding: 0;
@@ -98,11 +98,6 @@
 }
 
 .scatterPlotContainer {
-    /*background: firebrick;*/
-    /*flex-grow: 1;*/
-
-
-
     height: 224px;
     width: 224px;
 }

@@ -54,3 +54,11 @@ html, body {
     background: hsl(232, 100%, 39%);
     color: white;
 }
+
+text.labelColor {
+    fill: #4e4e4e;
+}
+
+.labelColor {
+    color: #4e4e4e;
+}

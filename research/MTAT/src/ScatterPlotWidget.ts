@@ -93,10 +93,12 @@ export class ScatterPlotWidget extends BaseWidget<PointCollection> {
 		this._axisPadding = 2;
 
 		this._xAxisGroupSelect = this.svgSelect.append('g')
-			.attr('transform', `translate(${this.margin.left}, ${this.margin.top + this.vizHeight + this.axisPadding})`);
+			.attr('transform', `translate(${this.margin.left}, ${this.margin.top + this.vizHeight + this.axisPadding})`)
+			.classed("labelColor", true);
 
 		this._yAxisGroupSelect = this.svgSelect.append('g')
-			.attr('transform', `translate(${this.margin.left - this.axisPadding}, ${this.margin.top})`);
+			.attr('transform', `translate(${this.margin.left - this.axisPadding}, ${this.margin.top})`)
+			.classed("labelColor", true);
 	}
 
 	private setLabel(): void
@@ -105,6 +107,7 @@ export class ScatterPlotWidget extends BaseWidget<PointCollection> {
 		this._xLabelTextSelect = this.svgSelect.append('text')
 			.attr('transform', `translate(${this.margin.left + this.vizWidth / 2}, ${this.margin.top + this.vizHeight + bufferForAxis})`)
 			.classed('axisLabel', true)
+			.classed('labelColor', true)
 			.text(this.xKey);
 
 		let transX = this.margin.left - bufferForAxis;
@@ -122,7 +125,8 @@ export class ScatterPlotWidget extends BaseWidget<PointCollection> {
 		this._yLabelTextSelect = this.svgSelect.append('text')
 			.attr('transform', transformText)
 			.classed('axisLabel', true)
-			.classed('verticalLabel', true)
+			// .classed('verticalLabel', true)
+			.classed('labelColor', true)
 			.text(this.yKey);
 
 		console.log(this.yLabelTextSelect);

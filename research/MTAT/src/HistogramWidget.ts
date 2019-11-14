@@ -75,7 +75,8 @@ export class HistogramWidget extends BaseWidget<PointCollection> {
 		this._axisPadding = 2;
 
 		this._axisGroupSelect = this.svgSelect.append('g')
-			.attr('transform', `translate(${this.margin.left}, ${this.margin.top + this.vizHeight + this.axisPadding})`);
+			.attr('transform', `translate(${this.margin.left}, ${this.margin.top + this.vizHeight + this.axisPadding})`)
+			.classed('labelColor', true);
 	}
 
 	private setLabel(): void
@@ -84,12 +85,12 @@ export class HistogramWidget extends BaseWidget<PointCollection> {
 		this._labelTextSelect = this.svgSelect.append('text')
 			.attr('transform', `translate(${this.margin.left + this.vizWidth / 2}, ${this.margin.top + this.vizHeight + bufferForAxis})`)
 			.classed('axisLabel', true)
+			.classed('labelColor', true)
 			.text(this.valueKey);
 	}
 
 	public OnDataChange(): void
 	{
-
 		let count = Math.round(Math.sqrt(this.data.length));
 		let minMax = this.data.getMinMax(this.valueKey);
 
