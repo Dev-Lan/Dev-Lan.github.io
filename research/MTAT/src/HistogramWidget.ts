@@ -70,7 +70,7 @@ export class HistogramWidget extends BaseWidget<PointCollection> {
 
 	private setLabel(): void
 	{	
-		const bufferForAxis = 36;
+		const bufferForAxis = 32;
 		this._labelTextSelect = this.svgSelect.append('text')
 			.attr('transform', `translate(${this.margin.left + this.vizWidth / 2}, ${this.margin.top + this.vizHeight + bufferForAxis})`)
 			.classed('axisLabel', true)
