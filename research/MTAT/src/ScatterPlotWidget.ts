@@ -11,7 +11,7 @@ export class ScatterPlotWidget extends BaseWidget<PointCollection> {
 		super(container);
 		this._xKey = xKey;
 		this._yKey = yKey;
-		// this.afterInit();
+		this.setLabel();
 	}
 
 	private _xKey : string;
@@ -65,39 +65,68 @@ export class ScatterPlotWidget extends BaseWidget<PointCollection> {
 		return this._scaleY;
 	}
 
-	// protected setMargin(): void
-	// {
-	// 	this._margin = {
-	// 		top: 12,
-	// 		right: 12,
-	// 		bottom: 8,
-	// 		left: 8
-	// 	}
-	// }
+	private _axisPadding :  number;
+	public get axisPadding() :  number {
+		return this._axisPadding;
+	}
+
+	protected setMargin(): void
+	{
+		this._margin = {
+			top: 8,
+			right: 8,
+			bottom: 56,
+			left: 56
+		}
+	}
 
 	public init(): void
 	{
-		// console.log('init');
-		console.log(this.width);
-		console.log(this.height);
+		console.log(this);
 		this._svgSelect = d3.select(this.container).append("svg")
 			.attr("width", this.width)
 			.attr("height", this.height);
-		// console.log(this.svgSelect);
+
 		this._mainGroupSelect = this.svgSelect.append("g")
 			.attr('transform', `translate(${this.margin.left}, ${this.margin.top})`);
 		
+		this._axisPadding = 2;
+
 		this._xAxisGroupSelect = this.svgSelect.append('g')
-			.attr('transform', `translate(${this.margin.left}, ${this.margin.top + this.vizHeight})`);
+			.attr('transform', `translate(${this.margin.left}, ${this.margin.top + this.vizHeight + this.axisPadding})`);
 
 		this._yAxisGroupSelect = this.svgSelect.append('g')
-			.attr('transform', `translate(${this.margin.left}, ${this.margin.top})`);
+			.attr('transform', `translate(${this.margin.left - this.axisPadding}, ${this.margin.top})`);
 	}
 
-	// private afterInit(): void
-	// {
-	// 	this.container.textContent = this.xKey + ", " + this.yKey;
-	// }
+	private setLabel(): void
+	{
+		const bufferForAxis = 32 + this.axisPadding;
+		this._xLabelTextSelect = this.svgSelect.append('text')
+			.attr('transform', `translate(${this.margin.left + this.vizWidth / 2}, ${this.margin.top + this.vizHeight + bufferForAxis})`)
+			.classed('axisLabel', true)
+			.text(this.xKey);
+
+		let transX = this.margin.left - bufferForAxis;
+		let transY = this.margin.top + this.vizHeight / 2;
+		let transformText: string;
+		if (this.yKey.length === 1)
+		{
+			transformText = `translate(${transX}, ${transY})`;
+		}
+		else
+		{
+			transformText = `rotate(-90) translate(${-transY}, ${transX})`;
+		}
+
+		this._yLabelTextSelect = this.svgSelect.append('text')
+			.attr('transform', transformText)
+			.classed('axisLabel', true)
+			.classed('verticalLabel', true)
+			.text(this.yKey);
+
+		console.log(this.yLabelTextSelect);
+	}
 
 	public OnDataChange()
 	{
@@ -108,8 +137,9 @@ export class ScatterPlotWidget extends BaseWidget<PointCollection> {
 		  .join("circle")
 			.attr("cx", d => this.scaleX(d.get(this.xKey)))
 			.attr("cy", d => this.scaleY(d.get(this.yKey)))
-			// .attr("r", 1)
 			.classed("scatterPoint", true);
+
+		this.drawAxis();
 	}
 
 	private updateScales(): void
@@ -123,6 +153,15 @@ export class ScatterPlotWidget extends BaseWidget<PointCollection> {
 		this._scaleY = d3.scaleLinear()
 			.domain(minMaxY)
 			.range([this.vizHeight, 0]);
+	}
+
+	private drawAxis(): void
+	{
+		this.xAxisGroupSelect
+			.call(d3.axisBottom(this.scaleX).ticks(5));
+
+		this.yAxisGroupSelect
+			.call(d3.axisLeft(this.scaleY).ticks(5));
 	}
 
 	protected OnResize(): void

@@ -48,6 +48,11 @@ export class HistogramWidget extends BaseWidget<PointCollection> {
 		return this._scaleY;
 	}
 
+	private _axisPadding :  number;
+	public get axisPadding() :  number {
+		return this._axisPadding;
+	}
+
 	protected setMargin(): void
 	{
 		this._margin = {
@@ -67,13 +72,15 @@ export class HistogramWidget extends BaseWidget<PointCollection> {
 		this._mainGroupSelect = this.svgSelect.append("g")
 			.attr('transform', `translate(${this.margin.left}, ${this.margin.top})`);
 		
+		this._axisPadding = 2;
+
 		this._axisGroupSelect = this.svgSelect.append('g')
-			.attr('transform', `translate(${this.margin.left}, ${this.margin.top + this.vizHeight})`);
+			.attr('transform', `translate(${this.margin.left}, ${this.margin.top + this.vizHeight + this.axisPadding})`);
 	}
 
 	private setLabel(): void
 	{	
-		const bufferForAxis = 32;
+		const bufferForAxis = 32 + this.axisPadding;
 		this._labelTextSelect = this.svgSelect.append('text')
 			.attr('transform', `translate(${this.margin.left + this.vizWidth / 2}, ${this.margin.top + this.vizHeight + bufferForAxis})`)
 			.classed('axisLabel', true)
@@ -144,7 +151,7 @@ export class HistogramWidget extends BaseWidget<PointCollection> {
 	private drawAxis(): void
 	{
 		this.axisGroupSelect
-			.call(d3.axisBottom(this.scaleX))
+			.call(d3.axisBottom(this.scaleX).ticks(5))
 	}
 
 	protected OnResize(): void
