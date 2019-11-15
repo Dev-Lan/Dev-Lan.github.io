@@ -82,7 +82,7 @@ export class ScatterPlotWidget extends BaseWidget<PointCollection> {
 
 	public init(): void
 	{
-		console.log(this);
+		// console.log(this);
 		this._svgSelect = d3.select(this.container).append("svg")
 			.attr("width", this.width)
 			.attr("height", this.height);
@@ -129,13 +129,13 @@ export class ScatterPlotWidget extends BaseWidget<PointCollection> {
 			.classed('labelColor', true)
 			.text(this.yKey);
 
-		console.log(this.yLabelTextSelect);
+		// console.log(this.yLabelTextSelect);
 	}
 
 	public OnDataChange()
 	{
 		this.updateScales();
-		console.log("on data change...");
+		// console.log("on data change...");
 		this.mainGroupSelect.selectAll("circle")
 			.data<PointND>(this.data.Array)
 		  .join("circle")

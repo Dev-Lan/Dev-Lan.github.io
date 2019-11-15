@@ -40,6 +40,16 @@ export class MetricDistributionWidget extends BaseWidget<PointCollection> {
 		return this._scatterPlotSelectContainerSelection;
 	}
 
+	private _yAxisMatrixSelect : HtmlSelection;
+	public get yAxisMatrixSelect() : HtmlSelection {
+		return this._yAxisMatrixSelect;
+	}
+
+	private _xAxisMatrixSelect : HtmlSelection;
+	public get xAxisMatrixSelect() : HtmlSelection {
+		return this._xAxisMatrixSelect;
+	}
+
 	private _distributionPlotContainerSelection : HtmlSelection;
 	public get distributionPlotContainerSelection() : HtmlSelection {
 		return this._distributionPlotContainerSelection;
@@ -121,7 +131,15 @@ export class MetricDistributionWidget extends BaseWidget<PointCollection> {
 					this._basisSelectContainerSelection = this.initSubComponent(container, "toggleButtonContainer");
 					break;
 				case MetricDistributionSubComponentTypes.ScatterplotSelect:
-					this._scatterPlotSelectContainerSelection = this.initSubComponent(container, "matrixContainer");
+					let wrapper = d3.select(container).append('div')
+						.classed("matrixWrapperContainer", true);
+					this._yAxisMatrixSelect = this.initSubComponent(wrapper.node(), "yAxisMatrixContainer");
+						
+					let rightWrapper = wrapper.append('div')
+						.classed("matrixRightWrapperContainer", true);
+
+					this._scatterPlotSelectContainerSelection = this.initSubComponent(rightWrapper.node(), "matrixContainer");
+					this._xAxisMatrixSelect = this.initSubComponent(rightWrapper.node(), "xAxisMatrixContainer");
 					break;
 				case MetricDistributionSubComponentTypes.DistributionPlot:
 					this._distributionPlotContainerSelection = this.initSubComponent(container, "distributionPlotContainer");
@@ -149,7 +167,7 @@ export class MetricDistributionWidget extends BaseWidget<PointCollection> {
 		this.updateUIData();
 		this.drawBasisSelect();
 		this.drawScatterPlotSelectContainerSelection();
-		// this.clearWidgets();
+		this.drawMatrixAxis();
 		this.drawHistograms();
 		this.drawScatterPlots(this.getScatterOptionsMatrix());
 	}
@@ -194,12 +212,57 @@ export class MetricDistributionWidget extends BaseWidget<PointCollection> {
 				buttonSelect.classed("on", turnOn);
 				thisWidget.basisSelectionBooleans[i] = turnOn;
 				thisWidget.drawScatterPlotSelectContainerSelection();
-				// thisWidget.clearWidgets();
-				// thisWidget.drawHistograms();
-				// thisWidget.drawScatterPlots(flatData);
+				thisWidget.drawMatrixAxis();
 				thisWidget.updateHistograms();
 				thisWidget.updateScatterPlots(flatData);
 			});
+	}
+
+	private drawMatrixAxis(): void
+	{
+		const buttonWidth = 80;
+		const buttonHeight = 18;
+		let options = this.data.attributeList.filter((d, i) => this.basisSelectionBooleans[i]);
+		this.yAxisMatrixSelect.selectAll("button")
+			.data(options)
+		  .join("button")
+			.classed('axisButton', true)
+			.classed('y', true)
+			.attr("style", (d, i) => `
+				width: ${buttonWidth}px;
+				height: ${buttonHeight}px;`)
+			.text(d => d);
+
+		const halfWidth = buttonWidth / 2; 
+		const rotate = -90;
+		const theta = Math.PI * rotate / 180;
+		const xOffset = -0.5 * (buttonWidth + buttonWidth * Math.cos(-theta) + buttonHeight * Math.sin(-theta));
+
+		// let yPrime = 0.5 * (buttonWidth * Math.sin(theta) + buttonHeight * Math.cos(theta));
+		// console.log("yPrime = ", yPrime);
+
+		// 0.5 * (80 * sin(-60) + 18 * cos(-60))
+
+		const yOffset = 0.5 * (buttonWidth * Math.sin(-theta) + buttonHeight * Math.cos(-theta) - buttonHeight);
+
+		// console.log(yOffset);
+
+		let theta2 = 90 + rotate;
+		theta2 = Math.PI * theta2 / 180;
+		const horizontalPadding = 2;
+		let stepSize = horizontalPadding + buttonHeight / Math.cos(theta2);
+
+
+		this.xAxisMatrixSelect.selectAll("button")
+			.data(options)
+		  .join("button")
+			.classed('axisButton', true)
+			.classed('x', true)
+			.attr("style", (d, i) => `
+				width: ${buttonWidth}px;
+				height: ${buttonHeight}px;
+				transform: translate( ${stepSize * (i + 1) + xOffset}px, ${yOffset}px) rotate(${rotate}deg);`)
+			.text(d => d);
 	}
 
 	private drawScatterPlotSelectContainerSelection(): void
@@ -283,10 +346,10 @@ export class MetricDistributionWidget extends BaseWidget<PointCollection> {
 				let container = this as HTMLDivElement;
 				// let newWidget = new HistogramWidget(container, d);
 				// newWidget.SetData(thisWidget.data)
-				console.log(d, i);
-				console.log(thisWidget);
+				// console.log(d, i);
+				// console.log(thisWidget);
 				let histogramWidget = thisWidget.histogramWidgets[i];
-				console.log(histogramWidget);
+				// console.log(histogramWidget);
 				if (!thisWidget.shouldHide(i) && !histogramWidget.data)
 				{
 					histogramWidget.SetData(thisWidget.data)
