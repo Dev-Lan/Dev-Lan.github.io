@@ -24,6 +24,11 @@ export class UploadFileButton extends BaseComponent {
 		this.container.classList.add("uploadFileButtonContainer");
 	}
 
+	public ResetValue(): void
+	{
+		this.fileInputElement.value = null;
+	}
+
 	private renderDom(): void
 	{
 		this._fileInputElement = document.createElement("input");
@@ -41,7 +46,6 @@ export class UploadFileButton extends BaseComponent {
 		let icon = document.createElement("i")
 		icon.classList.add("fas", "fa-upload", "uploadFileButtonIcon"); // font-awesome
 		labelEl.appendChild(icon);
-		// labelEl.appendChild(document.createElement("br"));
 		labelEl.append("Upload File");
 		this.container.appendChild(this.fileInputElement);
 		this.container.appendChild(labelEl);

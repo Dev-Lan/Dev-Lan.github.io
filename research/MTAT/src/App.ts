@@ -98,12 +98,11 @@ export class App<DataType> {
 
 	private fetchCsv(filename: string): void
 	{
-		console.log("start fetch");
 		d3.csv("../exampleData/" + filename).then(data =>
 		{
-			console.log(data);
+			// console.log(data);
 			let newData: DataType = this.dataFromCSVObject(data);
-			console.log(newData);
+			// console.log(newData);
 			this.SetData(newData)
 		});
 	}

@@ -60,7 +60,11 @@ export class Toolbar extends BaseComponent{
 			let button: HTMLButtonElement = document.createElement("button");
 			button.classList.add("exampleButton");
 			button.textContent = buttonProp.displayName;
-			button.onclick = (ev: Event) => buttonProp.callback();
+			button.onclick = (ev: Event) => 
+			{
+				this.uploadFileButton.ResetValue();
+				buttonProp.callback();
+			}
 			this.wrapperDiv.appendChild(button);
 		}
 	}
