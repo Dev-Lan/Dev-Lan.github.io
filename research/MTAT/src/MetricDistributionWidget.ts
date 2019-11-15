@@ -469,10 +469,16 @@ export class MetricDistributionWidget extends BaseWidget<PointCollection> {
 	{
 		let thisWidget = this;
 		this._histogramWidgets = [];
+
+		let parentElement = this.distributionPlotContainerSelection.node().parentElement;
+		parentElement.classList.remove("noDisp");
+
+
 		this.distributionPlotContainerSelection.html(null)
+			.classed("noDisp", false)
 			.selectAll("div")
 			.data(this.data.attributeList)
-			.join("div")
+		  .join("div")
 			.classed("histogramContainer", true)
 			.each(function(d)
 			{
@@ -535,6 +541,9 @@ export class MetricDistributionWidget extends BaseWidget<PointCollection> {
 	{
 		this._scatterPlotWidgets = [];
 		let thisWidget = this;
+
+		let parentElement = this.scatterPlotContainerSelection.node().parentElement;
+		parentElement.classList.remove("noDisp");
 
 		this.scatterPlotContainerSelection.html(null)
 			.selectAll("div")
