@@ -487,27 +487,39 @@ export class MetricDistributionWidget extends BaseWidget<PointCollection> {
 	private updateHistograms(): void
 	{
 		let thisWidget = this;
-		// this._histogramWidgets = [];
+		let allHidden = true;
 		this.distributionPlotContainerSelection
 			.selectAll("div")
 			.data(this.data.attributeList)
-			// .join("div")
 			.classed("histogramContainer", true)
-			.classed("noDisp", (d, i) => this.shouldHide(i))
+			.classed("noDisp", (d, i) => 
+			{
+				let shouldHide = this.shouldHide(i);
+				if (!shouldHide)
+				{
+					allHidden = false;
+				}
+				return shouldHide;
+			})
 			.each(function(d, i)
 			{
 				let container = this as HTMLDivElement;
-				// let newWidget = new HistogramWidget(container, d);
-				// newWidget.SetData(thisWidget.data)
-				// console.log(d, i);
-				// console.log(thisWidget);
 				let histogramWidget = thisWidget.histogramWidgets[i];
-				// console.log(histogramWidget);
 				if (!thisWidget.shouldHide(i) && !histogramWidget.data)
 				{
 					histogramWidget.SetData(thisWidget.data)
 				}
 			});
+
+		let parentElement = this.distributionPlotContainerSelection.node().parentElement;
+		if (allHidden)
+		{
+			parentElement.classList.add("noDisp");
+		}
+		else
+		{
+			parentElement.classList.remove("noDisp");
+		}
 	}
 
 
@@ -544,10 +556,20 @@ export class MetricDistributionWidget extends BaseWidget<PointCollection> {
 	{
 		let thisWidget = this;
 
+		let allHidden = true;
+
 		this.scatterPlotContainerSelection
 			.selectAll("div")
 			.data(flatData)
-			.classed("noDisp", (d) => this.shouldHide(d))
+			.classed("noDisp", (d) =>
+			{
+				let shouldHide = this.shouldHide(d);
+				if (!shouldHide)
+				{
+					allHidden = false;
+				}
+				return shouldHide;
+			})
 			.each(function(d, i)
 			{
 				let scatterWidget = thisWidget.scatterPlotWidgets[i];
@@ -556,6 +578,15 @@ export class MetricDistributionWidget extends BaseWidget<PointCollection> {
 					scatterWidget.SetData(thisWidget.data)
 				}
 			});
+		let parentElement = this.scatterPlotContainerSelection.node().parentElement;
+		if (allHidden)
+		{
+			parentElement.classList.add("noDisp");
+		}
+		else
+		{
+			parentElement.classList.remove("noDisp");
+		}
 	}
 
 	private shouldHide(d: boolWithIndex | number): boolean
