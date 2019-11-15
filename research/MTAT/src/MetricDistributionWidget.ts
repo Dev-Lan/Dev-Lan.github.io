@@ -60,6 +60,11 @@ export class MetricDistributionWidget extends BaseWidget<PointCollection> {
 		return this._scatterPlotContainerSelection;
 	}
 
+	private _attributeToIndex : Map<string, number>;
+	public get attributeToIndex() : Map<string, number> {
+		return this._attributeToIndex;
+	}
+
 	private _basisSelectionBooleans : boolean[];
 	public get basisSelectionBooleans() : boolean[] {
 		return this._basisSelectionBooleans;
@@ -79,6 +84,8 @@ export class MetricDistributionWidget extends BaseWidget<PointCollection> {
 	public get scatterPlotWidgets() : ScatterPlotWidget[] {
 		return this._scatterPlotWidgets;
 	}
+
+
 
 	// private _containerToVizMap : ;
 	// public get containerToVizMap() :  {
@@ -164,6 +171,12 @@ export class MetricDistributionWidget extends BaseWidget<PointCollection> {
 
 	public OnDataChange(): void
 	{
+		this._attributeToIndex = new Map<string, number>();
+		for (let [index, attr] of this.data.attributeList.entries())
+		{
+			this.attributeToIndex.set(attr, index);
+		}
+
 		this.updateUIData();
 		this.drawBasisSelect();
 		this.drawScatterPlotSelectContainerSelection();
@@ -231,21 +244,42 @@ export class MetricDistributionWidget extends BaseWidget<PointCollection> {
 			.attr("style", (d, i) => `
 				width: ${buttonWidth}px;
 				height: ${buttonHeight}px;`)
-			.text(d => d);
+			.text(d => d)
+			.on("click", (d) => {
+				let rowIndex = this.attributeToIndex.get(d);
+				let row: boolWithIndex[] = this.scatterplotSelectionBooleans[rowIndex];
+				let allTrue = true;
+				for (let cell of row)
+				{
+					if (this.basisSelectionBooleans[cell.index[1]])
+					{
+						if (!cell.value)
+						{
+							allTrue = false;
+						}
+						cell.value = true;
+					}
+				}
+				if (allTrue)
+				{
+					for (let cell of row)
+					{
+						if (this.basisSelectionBooleans[cell.index[1]])
+						{
+							cell.value = false;
+						}
+					}
+				}
+
+				this.afterMultipleMatrixChanges();
+			});
+
 
 		const halfWidth = buttonWidth / 2; 
 		const rotate = -90;
 		const theta = Math.PI * rotate / 180;
 		const xOffset = -0.5 * (buttonWidth + buttonWidth * Math.cos(-theta) + buttonHeight * Math.sin(-theta));
-
-		// let yPrime = 0.5 * (buttonWidth * Math.sin(theta) + buttonHeight * Math.cos(theta));
-		// console.log("yPrime = ", yPrime);
-
-		// 0.5 * (80 * sin(-60) + 18 * cos(-60))
-
 		const yOffset = 0.5 * (buttonWidth * Math.sin(-theta) + buttonHeight * Math.cos(-theta) - buttonHeight);
-
-		// console.log(yOffset);
 
 		let theta2 = 90 + rotate;
 		theta2 = Math.PI * theta2 / 180;
@@ -262,7 +296,67 @@ export class MetricDistributionWidget extends BaseWidget<PointCollection> {
 				width: ${buttonWidth}px;
 				height: ${buttonHeight}px;
 				transform: translate( ${stepSize * (i + 1) + xOffset}px, ${yOffset}px) rotate(${rotate}deg);`)
-			.text(d => d);
+			.text(d => d)
+			.on("click", (d) => {
+				let colIndex = this.attributeToIndex.get(d);
+				let allTrue = true;
+				for (let row of this.scatterplotSelectionBooleans)
+				{
+					for (let cell of row)
+					{
+						let cellRowIndex = cell.index[0];
+						let cellColIndex = cell.index[1];
+
+						if (colIndex === cellColIndex && this.basisSelectionBooleans[cellRowIndex])
+						{
+							if (!cell.value)
+							{
+								allTrue = false;
+							}
+							cell.value = true;
+						}
+					}
+				}
+
+				if (allTrue)
+				{
+					for (let row of this.scatterplotSelectionBooleans)
+					{
+						for (let cell of row)
+						{
+							let cellRowIndex = cell.index[0];
+							let cellColIndex = cell.index[1];
+
+							if (colIndex === cellColIndex && this.basisSelectionBooleans[cellRowIndex])
+							{
+								cell.value = false;
+							}
+						}
+					}
+				}
+				
+				this.afterMultipleMatrixChanges();
+			});
+	}
+
+	private afterMultipleMatrixChanges(): void
+	{
+		this.updateMatrixCellSelections();
+		let flatData = this.getScatterOptionsMatrix()
+		this.updateHistograms();
+		this.updateScatterPlots(flatData);
+	}
+
+	private updateMatrixCellSelections(): void
+	{
+		this.scatterPlotSelectContainerSelection
+			.selectAll("div")
+			.data(this.scatterplotSelectionBooleans)
+		  .join("div")
+			.selectAll("button")
+			.data(d => d)
+		  .join("button")
+		  	.classed("on", d=> d.value);
 	}
 
 	private drawScatterPlotSelectContainerSelection(): void
@@ -298,11 +392,6 @@ export class MetricDistributionWidget extends BaseWidget<PointCollection> {
 			});
 	}
 
-	// private clearWidgets(): void
-	// {
-	// 	this.children.splice(0, this.children.length);
-	// }
-
 	private drawHistograms(): void
 	{
 		let thisWidget = this;
@@ -312,20 +401,11 @@ export class MetricDistributionWidget extends BaseWidget<PointCollection> {
 			.data(this.data.attributeList)
 			.join("div")
 			.classed("histogramContainer", true)
-			// .classed("noDisp", (d, i) => 
-			// 	{
-			// 		if (!this.basisSelectionBooleans[i])
-			// 		{
-			// 			return true;
-			// 		}
-			// 		return !this.scatterplotSelectionBooleans[i][i].value;
-			// 	})
 			.each(function(d)
 			{
 				let container = this as HTMLDivElement;
 				let newWidget = new HistogramWidget(container, d);
 				thisWidget.histogramWidgets.push(newWidget);
-				// newWidget.SetData(thisWidget.data)
 			});
 		this.updateHistograms();
 	}
