@@ -20,4 +20,15 @@ export class DevlibTSUtil {
 		return DevlibTSUtil.asyncSetTimeout(f, 0);
 	}
 
+
+
+	public static getFontAwesomeIcon(iconKey: string): HTMLElement
+	{
+		// <i class="fas fa-{icon}"></i>
+		let icon = document.createElement("i");
+		icon.classList.add('fas');
+		icon.classList.add('fa-' + iconKey);
+		return icon;
+	}
+
 }

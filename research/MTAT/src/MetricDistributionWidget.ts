@@ -1,5 +1,6 @@
 import * as d3 from 'd3';
 import {HtmlSelection} from '../../lib/DevLibTypes';
+import {DevlibTSUtil} from '../../lib/DevlibTSUtil';
 import {BaseWidget} from './BaseWidget';
 import {PointCollection} from '../../DataModel/PointCollection';
 import {LayoutFramework} from './LayoutFramework';
@@ -63,6 +64,11 @@ export class MetricDistributionWidget extends BaseWidget<PointCollection> {
 	private _collapseButtonSelect : HtmlSelection;
 	public get collapseButtonSelect() : HtmlSelection {
 		return this._collapseButtonSelect;
+	}
+
+	private _expandButtonSelect : HtmlSelection;
+	public get expandButtonSelect() : HtmlSelection {
+		return this._expandButtonSelect;
 	}
 
 	private _attributeToIndex : Map<string, number>;
@@ -132,6 +138,7 @@ export class MetricDistributionWidget extends BaseWidget<PointCollection> {
 		};
 		this._subComponentLookup = this.layoutFramework.InitializeLayout<MetricDistributionSubComponentTypes>(layout)
 		this.initSubComponents();
+		// this.initExpandButton();
 	}
 
 	private initSubComponents(): void
@@ -152,28 +159,12 @@ export class MetricDistributionWidget extends BaseWidget<PointCollection> {
 
 					this._scatterPlotSelectContainerSelection = this.initSubComponent(rightWrapper.node(), "matrixContainer");
 					this._xAxisMatrixSelect = this.initSubComponent(rightWrapper.node(), "xAxisMatrixContainer");
-					this._collapseButtonSelect = 
-					rightWrapper.append('div')
-						.classed('collapseContainer', true)
-					  .append('button')
-						.classed('collapseButton', true)
-						.classed('devlibButton', true)
-						.classed('noDisp', true)
-						.text('Collapse')
-						.on('click', () =>
-						{
-							this.basisSelectContainerSelection.node().parentElement.classList.add("noDisp");
-							wrapper.node().parentElement.classList.add("noDisp");
-						})
-						.on('mouseenter', () => {
-							this.basisSelectContainerSelection.node().parentElement.classList.add("hoveredArea");
-							wrapper.node().parentElement.classList.add("hoveredArea");
-						})
-						.on('mouseleave', () => {
-							this.basisSelectContainerSelection.node().parentElement.classList.remove("hoveredArea");
-							wrapper.node().parentElement.classList.remove("hoveredArea");
-						});
-
+					let collapseExpandList: HTMLElement[] = [
+						this.basisSelectContainerSelection.node().parentElement,
+						wrapper.node().parentElement
+					];					
+					this.initCollapseButton(rightWrapper, collapseExpandList);
+					this.initExpandButton(collapseExpandList);
 					break;
 				case MetricDistributionSubComponentTypes.DistributionPlot:
 					this._distributionPlotContainerSelection = this.initSubComponent(container, "distributionPlotContainer");
@@ -195,6 +186,60 @@ export class MetricDistributionWidget extends BaseWidget<PointCollection> {
 			.classed(className, true)
 			.classed("overflow-scroll", true);
 	}
+
+	private initCollapseButton(containerSelect: HtmlSelection, toHide: HTMLElement[]): void
+	{
+		this._collapseButtonSelect = 
+		containerSelect.append('div')
+			.classed('collapseContainer', true)
+		  .append('button')
+			.classed('collapseButton', true)
+			.classed('devlibButton', true)
+			.classed('noDisp', true)
+			.text('Collapse')
+			.on('click', () =>
+			{
+				for (let element of toHide)
+				{
+					element.classList.add("noDisp");
+				}
+				this.expandButtonSelect.classed('noDisp', false);
+			})
+			.on('mouseenter', () =>
+			{
+				for (let element of toHide)
+				{
+					element.classList.add("hoveredArea");
+				}
+			})
+			.on('mouseleave', () =>
+			{
+				for (let element of toHide)
+				{
+					element.classList.remove("hoveredArea");
+				}
+			});
+	}
+
+	private initExpandButton(toShow: HTMLElement[]): void
+	{
+		this._expandButtonSelect = d3.select(this.container).append("button")
+			.classed('expandButton', true)
+			.classed('devlibButton', true)
+			.classed('noDisp', true)
+			.attr("title", "Open distribution selection widget.")
+			.on('click', () =>
+			{
+				this.expandButtonSelect.classed('noDisp', true);
+				for (let element of toShow)
+				{
+					element.classList.remove('noDisp');
+				}
+			})
+		let icon = DevlibTSUtil.getFontAwesomeIcon('th');
+		this.expandButtonSelect.node().appendChild(icon);
+	}
+
 
 	public OnDataChange(): void
 	{

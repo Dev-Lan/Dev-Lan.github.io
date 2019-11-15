@@ -111,14 +111,11 @@
 
 .collapseButton {
     padding: 10px 20px;
-    /*border: solid;*/
-    /*border-width: 2px;*/
-    /*border-radius: 5px;*/
-    /* color: #0070ff; */
-    /* border-color: blue; */
-    /*font-family: 'Roboto', sans-serif;*/
-    /*font-size: 10pt;*/
-    /*cursor: pointer;*/
+}
+
+.expandButton {
+    position: absolute;
+    padding: 2px 3px
 }
 
 .distributionPlotContainer {
