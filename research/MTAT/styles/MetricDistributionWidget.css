@@ -26,7 +26,7 @@
     cursor: pointer;
     border: solid white 1px;
     font-size: 8pt;
-    font-family: 'Roboto', sans-serif;
+    /*font-family: 'Roboto', sans-serif;*/
 }
 
 .matrixWrapperContainer {
@@ -44,16 +44,10 @@
 .yAxisMatrixContainer {
     display: flex;
     flex-direction: column;
-    /*flex-grow: 1;*/
 }
 
 .xAxisMatrixContainer {
-    /*display: flex;*/
-    /*flex-direction: row;*/
     flex-grow: 1;
-    /*background: bisque;*/
-
-    /*align-items: flex-start;*/
 }
 
 .axisButton {
@@ -109,18 +103,31 @@
     overflow: auto;
 }
 
+.collapseContainer {
+    display: flex;
+    align-items: flex-end;
+    flex-direction: column;
+}
+
+.collapseButton {
+    padding: 10px 20px;
+    /*border: solid;*/
+    /*border-width: 2px;*/
+    /*border-radius: 5px;*/
+    /* color: #0070ff; */
+    /* border-color: blue; */
+    /*font-family: 'Roboto', sans-serif;*/
+    /*font-size: 10pt;*/
+    /*cursor: pointer;*/
+}
+
 .distributionPlotContainer {
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
-    /*max-width: 300px;*/
-    /*overflow-y: scroll;*/
-    /*overflow-x: scroll;*/
 }
 
 .histogramContainer {
-    /*background: firebrick;*/
-    /*flex-grow: 1;*/
     height: 112px;
     width: 200px;
 }

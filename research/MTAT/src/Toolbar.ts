@@ -59,6 +59,7 @@ export class Toolbar extends BaseComponent{
 		{
 			let button: HTMLButtonElement = document.createElement("button");
 			button.classList.add("exampleButton");
+			button.classList.add("devlibButton");
 			button.textContent = buttonProp.displayName;
 			button.onclick = (ev: Event) => 
 			{

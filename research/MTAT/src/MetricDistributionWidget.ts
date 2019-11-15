@@ -60,6 +60,11 @@ export class MetricDistributionWidget extends BaseWidget<PointCollection> {
 		return this._scatterPlotContainerSelection;
 	}
 
+	private _collapseButtonSelect : HtmlSelection;
+	public get collapseButtonSelect() : HtmlSelection {
+		return this._collapseButtonSelect;
+	}
+
 	private _attributeToIndex : Map<string, number>;
 	public get attributeToIndex() : Map<string, number> {
 		return this._attributeToIndex;
@@ -147,6 +152,28 @@ export class MetricDistributionWidget extends BaseWidget<PointCollection> {
 
 					this._scatterPlotSelectContainerSelection = this.initSubComponent(rightWrapper.node(), "matrixContainer");
 					this._xAxisMatrixSelect = this.initSubComponent(rightWrapper.node(), "xAxisMatrixContainer");
+					this._collapseButtonSelect = 
+					rightWrapper.append('div')
+						.classed('collapseContainer', true)
+					  .append('button')
+						.classed('collapseButton', true)
+						.classed('devlibButton', true)
+						.classed('noDisp', true)
+						.text('Collapse')
+						.on('click', () =>
+						{
+							this.basisSelectContainerSelection.node().parentElement.classList.add("noDisp");
+							wrapper.node().parentElement.classList.add("noDisp");
+						})
+						.on('mouseenter', () => {
+							this.basisSelectContainerSelection.node().parentElement.classList.add("hoveredArea");
+							wrapper.node().parentElement.classList.add("hoveredArea");
+						})
+						.on('mouseleave', () => {
+							this.basisSelectContainerSelection.node().parentElement.classList.remove("hoveredArea");
+							wrapper.node().parentElement.classList.remove("hoveredArea");
+						});
+
 					break;
 				case MetricDistributionSubComponentTypes.DistributionPlot:
 					this._distributionPlotContainerSelection = this.initSubComponent(container, "distributionPlotContainer");
@@ -181,6 +208,7 @@ export class MetricDistributionWidget extends BaseWidget<PointCollection> {
 		this.drawBasisSelect();
 		this.drawScatterPlotSelectContainerSelection();
 		this.drawMatrixAxis();
+		this.collapseButtonSelect.classed('noDisp', false);
 		this.drawHistograms();
 		this.drawScatterPlots(this.getScatterOptionsMatrix());
 	}
