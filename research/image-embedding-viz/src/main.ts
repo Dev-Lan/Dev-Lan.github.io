@@ -10,8 +10,11 @@ let imageDetails: ImageDetails = new ImageDetails("outerImageDetailsContainer", 
 let attributeData: AttributeData = new AttributeData();
 let dataSelector: DatasetSelector;
 
-const baseFolder = "https://raw.githubusercontent.com/Dev-Lan/image-embedding-data/master/";
-// const baseFolder = "../myData/image-embedding-data/";
+let baseFolder = "https://raw.githubusercontent.com/Dev-Lan/image-embedding-data/master/";
+if (location.hostname === "localhost" || location.hostname === "127.0.0.1")
+{
+	baseFolder = "../myData/image-embedding-data/";
+}
 
 d3.json(baseFolder + 'examples.json').then(data =>
 {
