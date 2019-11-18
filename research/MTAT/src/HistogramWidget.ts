@@ -93,16 +93,33 @@ export class HistogramWidget extends BaseWidget<PointCollection> {
 	{
 		let count = Math.round(Math.sqrt(this.data.length));
 		let minMax = this.data.getMinMax(this.valueKey);
-
+		count = 10; // debug
 		let x = d3.scaleLinear()
 			.domain(minMax)
-			.nice(count);
+			// .nice(count);
 
 		let bins = d3.histogram<PointND, number>()
 			.domain(x.domain() as [number, number])
 			.thresholds(x.ticks(count))
 			.value(d => d.get(this.valueKey))
 			(this.data);
+
+		// debug
+		if (this.valueKey === "score")
+		{
+			console.log("~~~~ bins!");
+			console.log(bins);
+
+			console.log("scale");
+			console.log(x);
+
+			console.log("domain");
+			console.log(x.domain());
+
+			console.log("thresholds");
+			console.log(x.ticks(count));
+		}
+
 		// console.log(this.data);
 		this.updateScales(bins);
 
