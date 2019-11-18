@@ -3,6 +3,7 @@ import {SvgSelection, Margin} from '../../lib/DevLibTypes';
 import {pointWithImage, attributeSelector} from './types';
 import { AttributeData } from './AttributeData';
 import {OptionSelect} from '../../widgets/OptionSelect';
+import {ColorScaleLegend} from './ColorScaleLegend';
 
 export class ScatterPlotWithImage {
 	
@@ -14,7 +15,7 @@ export class ScatterPlotWithImage {
 		const pad = 40;
 		this._margin = {
 			top: pad,
-			right: pad,
+			right: 100,
 			bottom: pad,
 			left: pad
 		}
@@ -47,6 +48,16 @@ export class ScatterPlotWithImage {
 	private _zoomRectSelect : SvgSelection;
 	public get zoomRectSelect() : SvgSelection {
 		return this._zoomRectSelect;
+	}
+
+	private _colorLegendGroupSelect : SvgSelection;
+	public get colorLegendGroupSelect() : SvgSelection {
+		return this._colorLegendGroupSelect;
+	}
+
+	private _colorScaleLegend : ColorScaleLegend;
+	public get colorScaleLegend() : ColorScaleLegend {
+		return this._colorScaleLegend;
 	}
 
 	private _zoom : d3.ZoomBehavior<any, any>;
@@ -208,6 +219,8 @@ export class ScatterPlotWithImage {
 			.join("circle")
 			.attr("fill", d => colorScale(this.colorSelector(d)))
 			.attr("fill-opacity", "1");
+
+		this.colorScaleLegend.onDataChange(colorScale);
 	}
 
 	private setNoColorMap(): void
@@ -217,6 +230,7 @@ export class ScatterPlotWithImage {
 			.data(this.data, (d: pointWithImage) => d.image)
 			.join("circle")
 			.attr("fill-opacity", "0");
+		this.colorScaleLegend.hideLegend();
 	}
 
 	private initialize(): void
@@ -242,39 +256,58 @@ export class ScatterPlotWithImage {
 			.attr("height", this.height)
 			.classed("mainGroup", true);
 
+		let interactPadX = 0;//this.margin.right / 2;
+		let interactPadY = 0;//this.margin.bottom / 2;
 
-		const extentWithMargin: [[number, number],[number, number]] = [[-this.margin.left, -this.margin.top], [ this.width + this.margin.right, this.height + this.margin.bottom]];
+		// const extentWithMargin: [[number, number],[number, number]] = [[-this.margin.left - interactPadX, -this.margin.top + interactPadY], [ this.width + this.margin.right - interactPadX, this.height + this.margin.bottom - interactPadY]];
+		const interactExtent:  [[number, number],[number, number]] = [
+			[
+				-interactPadX,	
+				-interactPadY
+			], 
+			[
+				this.width + this.margin.right + this.margin.left + interactPadX,
+				this.height + this.margin.top + this.margin.bottom + interactPadY
+			]];
+
 
 		// init zoom behavior
 		this._zoomRectSelect = this.svgSelect
 		  .append("g")
 			.attr("id", "zoomGroup")
-			.attr("transform", `translate(${this.margin.top}, ${this.margin.left})`)
+			.attr("transform", `translate(${this.margin.left}, ${this.margin.top})`)
 		  .append("rect");
 		this.zoomRectSelect
 			.attr("width", this.width)
 			.attr("height", this.height)
 			.attr("opacity", 0);
 
-		let zoomPadX = this.margin.right / 2;
-		let zoomPadY = this.margin.bottom / 2;
 
 		this._zoom = d3.zoom()
 			.scaleExtent([1, 20])
-			.translateExtent([[-zoomPadX, -zoomPadY], [this.width + this.margin.right + this.margin.left + zoomPadX, this.height + this.margin.top + this.margin.bottom + zoomPadY]])
+			.translateExtent(interactExtent)
 			.on("zoom", () => { this.zoomHandler(); });
 		this.zoomRectSelect.call(this.zoom);
 
 		// init brush behavior
 		this._brushGroupSelect = this.svgSelect.append("g");
 		this.brushGroupSelect
-			.attr("transform", `translate(${this.margin.top}, ${this.margin.left})`)
+			.attr("transform", `translate(${this.margin.left}, ${this.margin.top})`)
 			.classed("brushContainer", true)
 
 		this._brush = d3.brush()
-			.extent(extentWithMargin)
+			.extent([[0, 0], [this.width, this.height]])
 			.on("start brush end", () => { this.brushHandler(); });
 		this.brushGroupSelect.call(this.brush);
+		
+
+		const legendPadding = 10;
+		this._colorLegendGroupSelect = this.svgSelect.append("g");
+		this.colorLegendGroupSelect
+			.attr("transform", `translate(${this.margin.left + this.width + legendPadding}, ${this.margin.top})`)	
+			.classed("colorLegendGroup", true)
+
+		this._colorScaleLegend = new ColorScaleLegend(this.colorLegendGroupSelect);
 	}
 
 	private brushHandler(): void
