@@ -2,7 +2,10 @@ export interface pointWithImage {
 	x: number,
 	y: number,
 	image: string,
-	attributes?: attributeLookup
+	attributes?: attributeLookup,
+	in2dBrush?: boolean,
+	in1dBrush?: boolean
+
 }
 
 export interface attributeLookup {

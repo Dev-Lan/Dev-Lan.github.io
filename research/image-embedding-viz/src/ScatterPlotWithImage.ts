@@ -7,7 +7,7 @@ import {ColorScaleLegend} from './ColorScaleLegend';
 
 export class ScatterPlotWithImage {
 	
-	constructor(svgContainerId: string, brushChangeCallback: (data: pointWithImage[]) => void)
+	constructor(svgContainerId: string, brushChangeCallback: () => void)
 	{
 		this._svgSelect = d3.select("#" + svgContainerId);
 		this._brushChangeCallback = brushChangeCallback;
@@ -15,7 +15,7 @@ export class ScatterPlotWithImage {
 		const pad = 40;
 		this._margin = {
 			top: pad,
-			right: 100,
+			right: 108,
 			bottom: pad,
 			left: pad
 		}
@@ -119,13 +119,18 @@ export class ScatterPlotWithImage {
 		return this._lastSelectionInValueSpace;
 	}
 
+	private _last1dSelectionInValueSpace : [number, number] | null | undefined;
+	public get last1dSelectionInValueSpace() : [number, number] | null | undefined {
+		return this._last1dSelectionInValueSpace;
+	}
+
 	private _brush : d3.BrushBehavior<any>;
 	public get brush() : d3.BrushBehavior<any> {
 		return this._brush;
 	}
 
-	private _brushChangeCallback : (data: pointWithImage[]) => void;
-	public get brushChangeCallback() : (data: pointWithImage[]) => void {
+	private _brushChangeCallback : () => void;
+	public get brushChangeCallback() : () => void {
 		return this._brushChangeCallback;
 	}
 
@@ -221,6 +226,8 @@ export class ScatterPlotWithImage {
 			.attr("fill-opacity", "1");
 
 		this.colorScaleLegend.onDataChange(colorScale);
+		this.brush1dHandler()
+
 	}
 
 	private setNoColorMap(): void
@@ -256,21 +263,6 @@ export class ScatterPlotWithImage {
 			.attr("height", this.height)
 			.classed("mainGroup", true);
 
-		let interactPadX = 0;//this.margin.right / 2;
-		let interactPadY = 0;//this.margin.bottom / 2;
-
-		// const extentWithMargin: [[number, number],[number, number]] = [[-this.margin.left - interactPadX, -this.margin.top + interactPadY], [ this.width + this.margin.right - interactPadX, this.height + this.margin.bottom - interactPadY]];
-		const interactExtent:  [[number, number],[number, number]] = [
-			[
-				-interactPadX,	
-				-interactPadY
-			], 
-			[
-				this.width + this.margin.right + this.margin.left + interactPadX,
-				this.height + this.margin.top + this.margin.bottom + interactPadY
-			]];
-
-
 		// init zoom behavior
 		this._zoomRectSelect = this.svgSelect
 		  .append("g")
@@ -282,13 +274,21 @@ export class ScatterPlotWithImage {
 			.attr("height", this.height)
 			.attr("opacity", 0);
 
+		const zoomPanExtent: [[number, number],[number, number]] = [
+			[ 0, 0], 
+			[
+				this.width + this.margin.right + this.margin.left,
+				this.height + this.margin.top + this.margin.bottom
+			]];
 
 		this._zoom = d3.zoom()
 			.scaleExtent([1, 20])
-			.translateExtent(interactExtent)
+			.translateExtent(zoomPanExtent)
 			.on("zoom", () => { this.zoomHandler(); });
 		this.zoomRectSelect.call(this.zoom);
 
+		const brushPad = 8;
+		const brushExtent: [[number, number],[number, number]] = [[-brushPad, -brushPad], [this.width + brushPad, this.height + brushPad]];
 		// init brush behavior
 		this._brushGroupSelect = this.svgSelect.append("g");
 		this.brushGroupSelect
@@ -296,7 +296,7 @@ export class ScatterPlotWithImage {
 			.classed("brushContainer", true)
 
 		this._brush = d3.brush()
-			.extent([[0, 0], [this.width, this.height]])
+			.extent(brushExtent)
 			.on("start brush end", () => { this.brushHandler(); });
 		this.brushGroupSelect.call(this.brush);
 		
@@ -307,7 +307,7 @@ export class ScatterPlotWithImage {
 			.attr("transform", `translate(${this.margin.left + this.width + legendPadding}, ${this.margin.top})`)	
 			.classed("colorLegendGroup", true)
 
-		this._colorScaleLegend = new ColorScaleLegend(this.colorLegendGroupSelect);
+		this._colorScaleLegend = new ColorScaleLegend(this.colorLegendGroupSelect, (selection) => this.brush1dHandler(selection) );
 	}
 
 	private brushHandler(): void
@@ -315,11 +315,19 @@ export class ScatterPlotWithImage {
 		const selection: [[number, number], [number, number]] | null  | undefined = d3.event.selection;
 		if (d3.event.sourceEvent && d3.event.sourceEvent.type !== "zoom")
 		{
-			this.updateBrush(selection)
+
+			this.update2dBrushSelection(selection);
+			this.updateDataSelection()
 		}
 	}
 
-	private updateBrush(selection: [[number, number], [number, number]]): void
+	private brush1dHandler(brushRange: [number, number] | null | undefined): void
+	{
+		this.update1dBrushSelection(brushRange);
+		this.updateDataSelection();
+	}
+
+	private update2dBrushSelection(selection: [[number, number], [number, number]]): void
 	{
 		this._lastSelection = selection;
 		this._transformAtLastSelection = this.lastTransform;
@@ -335,14 +343,47 @@ export class ScatterPlotWithImage {
 		top = this.scaleY.invert(top);
 		bottom = this.scaleY.invert(bottom);
 		this._lastSelectionInValueSpace = [[left, top], [right, bottom]];
+	}
 
-		let dataInBrush = this.data.filter((d: pointWithImage) =>
+	private update1dBrushSelection(newSelection: [number, number] | null | undefined): void
+	{
+		this._last1dSelectionInValueSpace = newSelection;
+	}
+
+	private updateDataSelection(): void
+	{
+		let [[left, top], [right, bottom]] = [[Infinity, Infinity], [Infinity, Infinity]];
+		if (typeof this.lastSelectionInValueSpace !== "undefined" && this.lastSelectionInValueSpace !== null)
+		{
+			[[left, top], [right, bottom]] = this.lastSelectionInValueSpace;
+		}
+		let minV: number
+		let maxV: number;
+		if (typeof this.last1dSelectionInValueSpace === "undefined" || this.last1dSelectionInValueSpace === null)
+		{
+			minV = -Infinity;
+			maxV = Infinity;
+		}
+		else 
+		{
+			[minV, maxV] = this.last1dSelectionInValueSpace;
+		}
+
+		for (let d of this.data)
 		{
 			let insideX: boolean = left <= d.x && d.x <= right;
 			let insideY: boolean = bottom <= d.y && d.y <= top;
-			return insideX && insideY;
-		});
-		this.brushChangeCallback(dataInBrush);
+			let insideVal = true;
+			if (this.colorSelector)
+			{
+				let value: number = this.colorSelector(d);
+				insideVal = minV <= value && value <= maxV;
+			}
+			d.in1dBrush = insideVal;
+			d.in2dBrush = insideX && insideY;
+		}
+
+		this.brushChangeCallback();
 	}
 
 	private zoomHandler(): void
@@ -394,11 +435,12 @@ export class ScatterPlotWithImage {
 			.classed("dataInBrush", false);
 	}
 
-	public onBrushSelectionChange(data: pointWithImage[]): void
+	public onBrushSelectionChange(): void
 	{
 		this.mainGroupSelect.selectAll("circle")
-			.data(data, (d: pointWithImage) => d.image)
-			.classed("dataInBrush", true);
+			.data(this.data, (d: pointWithImage) => d.image)
+			.classed("dataInBrush", d => d.in2dBrush)
+			.classed("noDisp", d => !d.in1dBrush);
 	}
 
 	public onWindowResize(): void
@@ -410,15 +452,20 @@ export class ScatterPlotWithImage {
 
 		this.zoomRectSelect.call(this.zoom.transform, this.lastTransform);
 
-		let [[left, top], [right, bottom]] = this.lastSelectionInValueSpace;
-		left = this.scaleX(left);
-		right = this.scaleX(right);
-		top = this.scaleY(top);
-		bottom = this.scaleY(bottom);
+		if (typeof this.lastSelectionInValueSpace !== "undefined" && this.lastSelectionInValueSpace !== null)
+		{
+			let [[left, top], [right, bottom]] = this.lastSelectionInValueSpace;
+			left = this.scaleX(left);
+			right = this.scaleX(right);
+			top = this.scaleY(top);
+			bottom = this.scaleY(bottom);
 
-		let selection: [[number, number], [number, number]] = [[left, top], [right, bottom]];
- 		this.brushGroupSelect.call(this.brush.move, selection);
- 		this.updateBrush(selection);
+			let selection: [[number, number], [number, number]] = [[left, top], [right, bottom]];
+	 		this.brushGroupSelect.call(this.brush.move, selection);
+	 		this.update2dBrushSelection(selection);
+		}
+ 		this.colorScaleLegend.moveBrush(this.last1dSelectionInValueSpace);
+ 		this.updateDataSelection();
 	}
 
 

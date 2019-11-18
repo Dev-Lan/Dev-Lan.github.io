@@ -50,10 +50,11 @@ function onDatasetChange(dataAttr: DatasetAttributes, projAttr?: ProjectionAttri
 }
 
 
-function onBrushSelectionChange(data: pointWithImage[]): void
+function onBrushSelectionChange(): void
 {
-	scatterPlot.onBrushSelectionChange(data);
-	imageDetails.onBrushSelectionChange(data);
+	scatterPlot.onBrushSelectionChange();
+	// imageDetails.onBrushSelectionChange();
+	// todo - add brushing back for images.
 }
 
 window.onresize = () => {
