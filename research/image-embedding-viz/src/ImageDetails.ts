@@ -13,6 +13,7 @@ export class ImageDetails {
 		this._outerContainer = document.getElementById(outerHtmlContainerId);
 		this._innerContainerSelection = d3.select("#" + innerHtmlContainerId);
 		this._sortOptions = new OptionSelect(sortByContainer);
+		this._detailsContainerSelect = d3.select("#detailsContainerPopup");
 
 		this.onWindowResize();
 	}
@@ -75,6 +76,11 @@ export class ImageDetails {
 		return this._attributeData;
 	}
 
+	private _detailsContainerSelect : HtmlSelection;
+	public get detailsContainerSelect() : HtmlSelection {
+		return this._detailsContainerSelect;
+	}
+
 	public onDataChange(attributeData: AttributeData, imageLookup: imageLookup, tiledImgUrl: string, imageWidth: number, imageHeight: number, keepImages: boolean)
 	{
 		this._imageLookup = imageLookup;
@@ -110,6 +116,7 @@ export class ImageDetails {
 
 		this.innerContainerSelection.selectAll("." + noneSelectedClass).remove()
 
+		let thisObj = this;
 		this.innerContainerSelection.selectAll("div")
 			.data(data)
 			.join("div")
@@ -121,7 +128,40 @@ export class ImageDetails {
 				width: ${this.imageWidth}px;
 				height: ${this.imageHeight}px;
 				`)
-			.classed("imageInGrid", true);
+			.classed("imageInGrid", true)
+			.on("mouseenter", function(d)
+			{
+				console.log(this);
+				let rect: DOMRect | ClientRect = (this as HTMLElement).getBoundingClientRect();
+
+
+				thisObj.detailsContainerSelect.html(null)
+					.classed("noDisp", false)
+					.attr("style", 
+						`top: ${rect.bottom + 10}px;
+						left: ${rect.left}px`)
+
+				thisObj.detailsContainerSelect.append("h4")
+					.text(d.image);
+
+				thisObj.detailsContainerSelect.append("p")
+					.text(`x: ${d.x}`)
+
+				thisObj.detailsContainerSelect.append("p")
+					.text(`y: ${d.y}`)
+
+				for (let attr in d.attributes)
+				{
+					let attrObj = d.attributes[attr];
+					thisObj.detailsContainerSelect.append("p")
+						.text(`${attrObj.displayName}: ${attrObj.value}`)
+				}
+			})
+			.on("mouseleave", (d) =>
+			{
+				this.detailsContainerSelect.html(null)
+					.classed("noDisp", true);
+			});
 	}
 
 	private updateSortOptions(): void

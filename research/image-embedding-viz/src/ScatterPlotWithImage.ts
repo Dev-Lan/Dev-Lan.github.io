@@ -119,11 +119,6 @@ export class ScatterPlotWithImage {
 		return this._lastSelectionInValueSpace;
 	}
 
-	// private _last1dSelectionInValueSpace : [number, number] | null | undefined;
-	// public get last1dSelectionInValueSpace() : [number, number] | null | undefined {
-	// 	return this._last1dSelectionInValueSpace;
-	// }
-
 	private _brush : d3.BrushBehavior<any>;
 	public get brush() : d3.BrushBehavior<any> {
 		return this._brush;
@@ -153,11 +148,6 @@ export class ScatterPlotWithImage {
 	public get colorSelector() : attributeSelector {
 		return this._colorSelector;
 	}
-
-	// private _colorScale : d3.ScaleSequential<string>;
-	// public get colorScale() : d3.ScaleSequential<string> {
-	// 	return this._colorScale;
-	// }
 
 	public onDataChange(data: pointWithImage[], attributeData: AttributeData, projectionSwitchOnly: boolean, resetView: boolean, fromResize = false): void
 	{
