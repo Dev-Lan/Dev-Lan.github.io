@@ -119,10 +119,10 @@ export class ScatterPlotWithImage {
 		return this._lastSelectionInValueSpace;
 	}
 
-	private _last1dSelectionInValueSpace : [number, number] | null | undefined;
-	public get last1dSelectionInValueSpace() : [number, number] | null | undefined {
-		return this._last1dSelectionInValueSpace;
-	}
+	// private _last1dSelectionInValueSpace : [number, number] | null | undefined;
+	// public get last1dSelectionInValueSpace() : [number, number] | null | undefined {
+	// 	return this._last1dSelectionInValueSpace;
+	// }
 
 	private _brush : d3.BrushBehavior<any>;
 	public get brush() : d3.BrushBehavior<any> {
@@ -159,7 +159,7 @@ export class ScatterPlotWithImage {
 	// 	return this._colorScale;
 	// }
 
-	public onDataChange(data: pointWithImage[], attributeData: AttributeData, projectionSwitchOnly: boolean, resetView: boolean): void
+	public onDataChange(data: pointWithImage[], attributeData: AttributeData, projectionSwitchOnly: boolean, resetView: boolean, fromResize = false): void
 	{
 		this._data = data;
 		if (resetView)
@@ -197,17 +197,18 @@ export class ScatterPlotWithImage {
 			.attr("r", 2)
 			// .attr("fill", "white")
 			.classed("imagePoint", true);
-		this.onAttributeChange(this.currentAttributeKey, this.colorSelector);
+		this.onAttributeChange(this.currentAttributeKey, this.colorSelector, fromResize);
 	}
 
-	private onAttributeChange(key: string, selector: attributeSelector): void
+	private onAttributeChange(key: string, selector: attributeSelector, fromResize = false): void
 	{
-		// console.log(key);
-		// console.log(selector);
 		this._currentAttributeKey = key;
 		this._colorSelector = selector;
 
-		this.brush1dHandler(null)
+		if (!fromResize)
+		{
+			this.brush1dHandler(null)
+		}
 
 		if (key === "None")
 		{
@@ -219,9 +220,8 @@ export class ScatterPlotWithImage {
 		let colorScale = d3.scaleSequential(d3.interpolateWarm)
 			.domain(domain);
 
-		this.colorScaleLegend.onDataChange(colorScale);
-		
-		// console.log(domain);
+		this.colorScaleLegend.onDataChange(colorScale, fromResize);
+
 		this.mainGroupSelect.selectAll("circle")
 			.data(this.data, (d: pointWithImage) => d.image)
 			.join("circle")
@@ -307,7 +307,13 @@ export class ScatterPlotWithImage {
 			.attr("transform", `translate(${this.margin.left + this.width + legendPadding}, ${this.margin.top})`)	
 			.classed("colorLegendGroup", true)
 
+		let oldSelection;
+		if (this.colorScaleLegend)
+		{
+			 oldSelection = this.colorScaleLegend.lastSelectionInValueSpace;
+		}
 		this._colorScaleLegend = new ColorScaleLegend(this.colorLegendGroupSelect, (selection) => this.brush1dHandler(selection) );
+		this.colorScaleLegend.updateSelection(oldSelection);
 	}
 
 	private brushHandler(): void
@@ -348,7 +354,7 @@ export class ScatterPlotWithImage {
 
 	private update1dBrushSelection(newSelection: [number, number] | null | undefined): void
 	{
-		this._last1dSelectionInValueSpace = newSelection;
+		this.colorScaleLegend.updateSelection(newSelection);
 	}
 
 	private updateDataSelection(): void
@@ -360,14 +366,14 @@ export class ScatterPlotWithImage {
 		}
 		let minV: number
 		let maxV: number;
-		if (typeof this.last1dSelectionInValueSpace === "undefined" || this.last1dSelectionInValueSpace === null)
+		if (typeof this.colorScaleLegend.lastSelectionInValueSpace === "undefined" || this.colorScaleLegend.lastSelectionInValueSpace === null)
 		{
 			minV = -Infinity;
 			maxV = Infinity;
 		}
 		else 
 		{
-			[minV, maxV] = this.last1dSelectionInValueSpace;
+			[minV, maxV] = this.colorScaleLegend.lastSelectionInValueSpace;
 		}
 
 		let filteredData: pointWithImage[] = [];
@@ -376,7 +382,7 @@ export class ScatterPlotWithImage {
 			let insideX: boolean = left <= d.x && d.x <= right;
 			let insideY: boolean = bottom <= d.y && d.y <= top;
 			let insideVal = true;
-			if (this.colorSelector)
+			if (this.currentAttributeKey !== "None")
 			{
 				let value: number = this.colorSelector(d);
 				insideVal = minV <= value && value <= maxV;
@@ -454,7 +460,7 @@ export class ScatterPlotWithImage {
 		this.zoomRectSelect.call(this.zoom.transform, d3.zoomIdentity);
 
 		this.initialize();
-		this.onDataChange(this.data, this.attributeData, false, false);
+		this.onDataChange(this.data, this.attributeData, false, false, true);
 
 		this.zoomRectSelect.call(this.zoom.transform, this.lastTransform);
 
@@ -470,7 +476,7 @@ export class ScatterPlotWithImage {
 	 		this.brushGroupSelect.call(this.brush.move, selection);
 	 		this.update2dBrushSelection(selection);
 		}
- 		this.colorScaleLegend.moveBrush(this.last1dSelectionInValueSpace);
+ 		this.colorScaleLegend.resetBrush();
  		this.updateDataSelection();
 	}
 
