@@ -7,7 +7,7 @@ import {ColorScaleLegend} from './ColorScaleLegend';
 
 export class ScatterPlotWithImage {
 	
-	constructor(svgContainerId: string, brushChangeCallback: () => void)
+	constructor(svgContainerId: string, brushChangeCallback: (data: pointWithImage[]) => void)
 	{
 		this._svgSelect = d3.select("#" + svgContainerId);
 		this._brushChangeCallback = brushChangeCallback;
@@ -129,8 +129,8 @@ export class ScatterPlotWithImage {
 		return this._brush;
 	}
 
-	private _brushChangeCallback : () => void;
-	public get brushChangeCallback() : () => void {
+	private _brushChangeCallback : (data: pointWithImage[]) => void;
+	public get brushChangeCallback() : (data: pointWithImage[]) => void {
 		return this._brushChangeCallback;
 	}
 
@@ -171,7 +171,7 @@ export class ScatterPlotWithImage {
 			}
 			this._attributeData = attributeData;
 			let buttonPropList = this.attributeData.getButtonProps((key, selector) => this.onAttributeChange(key, selector));
-			console.log(buttonPropList);
+			// console.log(buttonPropList);
 			this.colorMapSelect.onDataChange(buttonPropList, true);
 			this._currentAttributeKey = "None";
 			this._colorSelector = null;
@@ -202,10 +202,12 @@ export class ScatterPlotWithImage {
 
 	private onAttributeChange(key: string, selector: attributeSelector): void
 	{
-		console.log(key);
-		console.log(selector);
+		// console.log(key);
+		// console.log(selector);
 		this._currentAttributeKey = key;
 		this._colorSelector = selector;
+
+		this.brush1dHandler(null)
 
 		if (key === "None")
 		{
@@ -217,22 +219,20 @@ export class ScatterPlotWithImage {
 		let colorScale = d3.scaleSequential(d3.interpolateWarm)
 			.domain(domain);
 
-
-		console.log(domain);
+		this.colorScaleLegend.onDataChange(colorScale);
+		
+		// console.log(domain);
 		this.mainGroupSelect.selectAll("circle")
 			.data(this.data, (d: pointWithImage) => d.image)
 			.join("circle")
 			.attr("fill", d => colorScale(this.colorSelector(d)))
 			.attr("fill-opacity", "1");
 
-		this.colorScaleLegend.onDataChange(colorScale);
-		this.brush1dHandler()
-
 	}
 
 	private setNoColorMap(): void
 	{
-		console.log("set to none")
+		// console.log("set to none")
 		this.mainGroupSelect.selectAll("circle")
 			.data(this.data, (d: pointWithImage) => d.image)
 			.join("circle")
@@ -323,6 +323,7 @@ export class ScatterPlotWithImage {
 
 	private brush1dHandler(brushRange: [number, number] | null | undefined): void
 	{
+		console.log("brush 1D handler");
 		this.update1dBrushSelection(brushRange);
 		this.updateDataSelection();
 	}
@@ -369,6 +370,7 @@ export class ScatterPlotWithImage {
 			[minV, maxV] = this.last1dSelectionInValueSpace;
 		}
 
+		let filteredData: pointWithImage[] = [];
 		for (let d of this.data)
 		{
 			let insideX: boolean = left <= d.x && d.x <= right;
@@ -381,9 +383,13 @@ export class ScatterPlotWithImage {
 			}
 			d.in1dBrush = insideVal;
 			d.in2dBrush = insideX && insideY;
+			if (d.in1dBrush && d.in2dBrush)
+			{
+				filteredData.push(d);
+			}
 		}
 
-		this.brushChangeCallback();
+		this.brushChangeCallback(filteredData);
 	}
 
 	private zoomHandler(): void
