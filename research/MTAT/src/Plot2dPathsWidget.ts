@@ -69,25 +69,11 @@ export class Plot2dPathsWidget extends BaseWidget<CurveList> {
 		this.svgSelect.attr("style", 'width: 100%; height: 100%;');
 	}
 
-	// private setVizWidthHeight(): void
-	// {
-	// 	this._vizWidth = this.width - this.margin.left - this.margin.right;
-	// 	this._vizHeight = this.height - this.margin.top - this.margin.bottom;
-	// }
 
 	public OnDataChange(): void
 	{
-		// console.log(this.data);
 		this.updateScales();
-		let line = d3.line<PointND>()
-			.x((d, i) => { return this.scaleX(d.get(this.xKey)) })
-			.y((d) => { return this.scaleY(d.get(this.yKey)) });
-
-		this.mainGroupSelect.selectAll("path")
-			.data(this.data.curveList)
-			.join("path")
-			.attr("d", d => line(d.pointList))
-			.classed("trajectoryPath", true);
+		this.updatePaths();
 	}
 
 	private updateScales(): void
@@ -129,6 +115,20 @@ export class Plot2dPathsWidget extends BaseWidget<CurveList> {
 		}
 	}
 
+	private updatePaths(): void
+	{
+		let line = d3.line<PointND>()
+			.x((d, i) => { return this.scaleX(d.get(this.xKey)) })
+			.y((d) => { return this.scaleY(d.get(this.yKey)) })
+			.defined(d => d.inBrush);
+
+		this.mainGroupSelect.selectAll("path")
+			.data(this.data.curveList)
+			.join("path")
+			.attr("d", d => line(d.pointList))
+			.classed("trajectoryPath", true);
+	}
+
 	protected OnResize(): void
 	{
 		// this.setVizWidthHeight();
@@ -138,6 +138,10 @@ export class Plot2dPathsWidget extends BaseWidget<CurveList> {
 		}
 	}
 
+	public OnBrushChange(): void
+	{
+		this.updatePaths();
+	}
 
 
 

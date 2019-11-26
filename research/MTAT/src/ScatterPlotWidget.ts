@@ -238,7 +238,6 @@ export class ScatterPlotWidget extends BaseWidget<PointCollection> {
 			.data<PointND>(this.data.Array)
 		  .join("circle")
 			.classed("noDisp", d => !d.inBrush);
-
 	}
 
 }
