@@ -258,6 +258,19 @@ export class MetricDistributionWidget extends BaseWidget<PointCollection> {
 		this.drawScatterPlots(this.getScatterOptionsMatrix());
 	}
 
+	public OnBrushChange(): void
+	{
+		for (let hist of this.histogramWidgets)
+		{
+			hist.OnBrushChange();
+		}
+
+		for (let scatter of this.scatterPlotWidgets)
+		{
+			scatter.OnBrushChange();
+		}
+	}
+
 	private updateUIData(): void
 	{
 		this._basisSelectionBooleans = [];

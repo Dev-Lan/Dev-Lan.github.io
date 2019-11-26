@@ -10,14 +10,22 @@ import {MetricDistributionWidget} from './MetricDistributionWidget';
 import {LayoutFramework} from './LayoutFramework';
 import {Frame, ComponentType} from './types';
 import {ButtonProps} from '../../lib/DevLibTypes';
+import {DataEvents} from '../../DataModel/DataEvents';
 
 export class App<DataType> {
 	
 	constructor(container: HTMLElement, fromCsv: (data: string) => DataType, fromCsvObject: (data: d3.DSVRowArray<string>) => DataType) {
+		this._container = container;
 		this._componentList = [];
 		this._layoutFramework = new LayoutFramework(container);
 		this._dataFromCSV = fromCsv;
 		this._dataFromCSVObject = fromCsvObject;
+		document.addEventListener(DataEvents.brushChange, (e: Event) => {this.onBrushChange()})
+	}
+
+	private _container : HTMLElement;
+	public get container() : HTMLElement {
+		return this._container;
 	}
 
 	private _componentList : BaseComponent[];
@@ -126,6 +134,17 @@ export class App<DataType> {
 		{
 			component.Resize();
 		}
-	} 
+	}
+
+	private onBrushChange(): void
+	{
+		for (let component of this.componentList)
+		{
+			if (component instanceof BaseWidget)
+			{
+				component.OnBrushChange();
+			}
+		}
+	}
 
 }

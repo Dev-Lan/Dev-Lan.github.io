@@ -1,7 +1,7 @@
 import * as d3 from 'd3';
 import {SvgSelection} from '../../lib/DevLibTypes';
 import {BaseWidget} from './BaseWidget';
-import {PointCollection} from '../../DataModel/PointCollection';
+import {PointCollection, valueFilter} from '../../DataModel/PointCollection';
 import {PointND} from '../../DataModel/PointND';
 
 export class HistogramWidget extends BaseWidget<PointCollection> {
@@ -26,6 +26,11 @@ export class HistogramWidget extends BaseWidget<PointCollection> {
 	private _mainGroupSelect : SvgSelection;
 	public get mainGroupSelect() : SvgSelection {
 		return this._mainGroupSelect;
+	}
+
+	private _brushGroupSelect : SvgSelection;
+	public get brushGroupSelect() : SvgSelection {
+		return this._brushGroupSelect;
 	}
 
 	private _axisGroupSelect : SvgSelection;
@@ -53,6 +58,11 @@ export class HistogramWidget extends BaseWidget<PointCollection> {
 		return this._axisPadding;
 	}
 
+	private _brush : d3.BrushBehavior<any>;
+	public get brush() : d3.BrushBehavior<any> {
+		return this._brush;
+	}
+
 	protected setMargin(): void
 	{
 		this._margin = {
@@ -72,11 +82,22 @@ export class HistogramWidget extends BaseWidget<PointCollection> {
 		this._mainGroupSelect = this.svgSelect.append("g")
 			.attr('transform', `translate(${this.margin.left}, ${this.margin.top})`);
 		
+		this._brushGroupSelect = this.svgSelect.append("g")
+			.attr('transform', `translate(${this.margin.left}, ${this.margin.top})`)
+			.classed("brushContainer", true);
+
 		this._axisPadding = 2;
 
 		this._axisGroupSelect = this.svgSelect.append('g')
 			.attr('transform', `translate(${this.margin.left}, ${this.margin.top + this.vizHeight + this.axisPadding})`)
 			.classed('labelColor', true);
+
+		this._brush = d3.brushX()
+			.extent([[0, 0], [this.vizWidth, this.vizHeight]])
+			.on("start brush end", () => { this.brushHandler() });
+	
+		this.brushGroupSelect.call(this.brush);
+
 	}
 
 	private setLabel(): void
@@ -175,6 +196,37 @@ export class HistogramWidget extends BaseWidget<PointCollection> {
 	protected OnResize(): void
 	{
 		this.OnDataChange();
+	}
+
+	private brushHandler():  void
+	{
+		const selection: [number, number] | null  | undefined = d3.event.selection;
+		if (typeof selection === "undefined" || selection === null)
+		{
+			this.data.removeBrush(this.getUniqueKey());
+			return;
+		}
+		let [minBound, maxBound] = selection;
+		let minV = this.scaleX.invert(minBound);
+		let maxV = this.scaleX.invert(maxBound);
+
+		let valueFilter: valueFilter = {
+			key: this.valueKey,
+			bound: [minV, maxV]
+		}
+
+		this.data.addBrush(this.getUniqueKey(), valueFilter);
+	}
+
+	private getUniqueKey(): string
+	{
+		return this.constructor.name + "." + this.valueKey;
+	}
+
+	public OnBrushChange(): void
+	{
+
+		console.log("~~~~~~ Histo: OnBrushChange");
 	}
 
 

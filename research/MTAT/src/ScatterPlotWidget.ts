@@ -3,6 +3,7 @@ import {SvgSelection} from '../../lib/DevLibTypes';
 import {BaseWidget} from './BaseWidget';
 import {PointCollection} from '../../DataModel/PointCollection';
 import {PointND} from '../../DataModel/PointND';
+import {valueFilter} from '../../DataModel/PointCollection';
 
 export class ScatterPlotWidget extends BaseWidget<PointCollection> {
 	
@@ -32,6 +33,11 @@ export class ScatterPlotWidget extends BaseWidget<PointCollection> {
 	private _mainGroupSelect : SvgSelection;
 	public get mainGroupSelect() : SvgSelection {
 		return this._mainGroupSelect;
+	}
+
+	private _brushGroupSelect : SvgSelection;
+	public get brushGroupSelect() : SvgSelection {
+		return this._brushGroupSelect;
 	}
 
 	private _xAxisGroupSelect : SvgSelection;
@@ -70,6 +76,11 @@ export class ScatterPlotWidget extends BaseWidget<PointCollection> {
 		return this._axisPadding;
 	}
 
+	private _brush : d3.BrushBehavior<any>;
+	public get brush() : d3.BrushBehavior<any> {
+		return this._brush;
+	}
+
 	protected setMargin(): void
 	{
 		this._margin = {
@@ -90,6 +101,10 @@ export class ScatterPlotWidget extends BaseWidget<PointCollection> {
 		this._mainGroupSelect = this.svgSelect.append("g")
 			.attr('transform', `translate(${this.margin.left}, ${this.margin.top})`);
 		
+		this._brushGroupSelect = this.svgSelect.append("g")
+			.attr('transform', `translate(${this.margin.left}, ${this.margin.top})`)
+			.classed("brushContainer", true);
+
 		this._axisPadding = 0;
 
 		this._xAxisGroupSelect = this.svgSelect.append('g')
@@ -99,6 +114,12 @@ export class ScatterPlotWidget extends BaseWidget<PointCollection> {
 		this._yAxisGroupSelect = this.svgSelect.append('g')
 			.attr('transform', `translate(${this.margin.left - this.axisPadding}, ${this.margin.top})`)
 			.classed("labelColor", true);
+
+		this._brush = d3.brush()
+			.extent([[0, 0], [this.vizWidth, this.vizHeight]])
+			.on("start brush end", () => { this.brushHandler() });
+	
+		this.brushGroupSelect.call(this.brush);
 	}
 
 	private setLabel(): void
@@ -173,5 +194,51 @@ export class ScatterPlotWidget extends BaseWidget<PointCollection> {
 		// resize is handled by css / HTML
 	}
 
+	private brushHandler():  void
+	{
+		const selection: [[number, number], [number, number]] | null  | undefined = d3.event.selection;
+		if (typeof selection === "undefined" || selection === null)
+		{
+			this.data.removeBrush(this.getUniqueKey());
+			return;
+		}
+		let [[left, top], [right, bottom]] = selection;
+		
+		let minX = this.scaleX.invert(left);
+		let maxX = this.scaleX.invert(right);
+		let xValueFilter: valueFilter = {
+			key: this.xKey,
+			bound: [minX, maxX]
+		}
+
+		let minY = this.scaleY.invert(bottom);
+		let maxY = this.scaleY.invert(top);
+		let yValueFilter: valueFilter = {
+			key: this.yKey,
+			bound: [minY, maxY]
+		}
+
+		this.data.addBrush(this.getUniqueKey(), xValueFilter, yValueFilter);
+	}
+
+	private getUniqueKey(): string
+	{
+		return this.constructor.name + "." + this.xKey + "." + this.yKey;
+	}
+
+	public OnBrushChange(): void
+	{
+		if (this.container.classList.contains("noDisp"))
+		{
+			return;
+		}
+
+		// hide dynamically
+		this.mainGroupSelect.selectAll("circle")
+			.data<PointND>(this.data.Array)
+		  .join("circle")
+			.classed("noDisp", d => !d.inBrush);
+
+	}
 
 }

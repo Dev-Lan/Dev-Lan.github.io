@@ -11,11 +11,21 @@ export class PointND {
 			const m = new Metric(pojo[key]);
 			this._valueMap.set(key, m);
 		}
+		this._inBrush = true;
 	}
 
 	private _valueMap : Map<string, Metric>;
 	public get valueMap() : Map<string, Metric> {
 		return this._valueMap;
+	}
+
+	private _inBrush : boolean;
+	public get inBrush() : boolean {
+		return this._inBrush;
+	}
+
+	public set inBrush(v: boolean) {
+		this._inBrush = v;
 	}
 
 	public addValue(key: string, value: number)

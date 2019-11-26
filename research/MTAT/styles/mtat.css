@@ -54,3 +54,9 @@ text.labelColor {
     background: hsla(240, 4%, 93%, 1);
     box-shadow: 3px 3px 2px 0px #0000004d;
 }
+
+.brushContainer .selection {
+    fill: firebrick;
+    stroke: firebrick;
+    opacity: .5;
+}

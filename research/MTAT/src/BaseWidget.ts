@@ -57,6 +57,11 @@ export abstract class BaseWidget<DataType> extends BaseComponent {
 		// }
 	}
 
+	public OnBrushChange(): void
+	{
+		console.log('base: OnBrushChange');
+	}
+
 	protected setWidthHeight(): void
 	{
 		super.setWidthHeight();

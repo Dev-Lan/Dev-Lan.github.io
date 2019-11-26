@@ -1,4 +1,10 @@
 import { PointND } from './PointND';
+import { DataEvents } from './DataEvents';
+
+export interface valueFilter {
+	key: string,
+	bound: [number, number]
+}
 
 export abstract class PointCollection implements Iterable<PointND>, ArrayLike<PointND> {
 	
@@ -8,6 +14,7 @@ export abstract class PointCollection implements Iterable<PointND>, ArrayLike<Po
 		this._length = 0;
 		this._Array = [];
 		this._minMaxCache = new Map<string, [number, number]>();
+		this._brushList = new Map<string, Map<string, [number, number]>>();
 	}
 
 	abstract [Symbol.iterator](): Iterator<PointND>;
@@ -43,6 +50,10 @@ export abstract class PointCollection implements Iterable<PointND>, ArrayLike<Po
 		return this._minMaxCache;
 	}
 
+	private _brushList : Map<string, Map<string, [number, number]>> ;
+	public get brushList() : Map<string, Map<string, [number, number]>>  {
+		return this._brushList;
+	}
 
 	private initAttributeList(): void
 	{
@@ -81,6 +92,50 @@ export abstract class PointCollection implements Iterable<PointND>, ArrayLike<Po
 		this.minMaxCache.set(key, [minN, maxN]);
 		return [minN, maxN]
 	}
+
+	public addBrush(brushKey: string, ...filters: valueFilter[]): void
+	{
+		if (!this.brushList.has(brushKey))
+		{
+			this.brushList.set(brushKey, new Map<string, [number, number]>());
+		}
+		let thisMap = this.brushList.get(brushKey);
+		for (let filter of filters)
+		{
+
+			thisMap.set(filter.key, filter.bound)
+		}
+		this.updateBrush();
+	}
+
+	public removeBrush(brushKey: any): void
+	{
+		this.brushList.delete(brushKey);
+		this.updateBrush();
+	}
+
+	private updateBrush(): void
+	{
+		for (let point of this)
+		{
+			point.inBrush = true;
+			for (let valueFilterMap of this.brushList.values())
+			{
+				for (let [key, bound] of valueFilterMap)
+				{
+					let v: number = point.get(key);
+					let [low, high] = bound;
+					if (v < low || high < v)
+					{
+						point.inBrush = false;
+					}
+				}
+			}
+		}
+		let event = new Event(DataEvents.brushChange);
+		document.dispatchEvent(event);
+	}
+
 }
 
 
