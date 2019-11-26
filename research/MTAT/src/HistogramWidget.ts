@@ -93,7 +93,7 @@ export class HistogramWidget extends BaseWidget<PointCollection> {
 	{
 		let count = Math.round(Math.sqrt(this.data.length));
 		let minMax = this.data.getMinMax(this.valueKey);
-		count = 10; // debug
+		// count = 10; // debug
 		let x = d3.scaleLinear()
 			.domain(minMax)
 			// .nice(count);

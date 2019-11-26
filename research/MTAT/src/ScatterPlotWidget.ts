@@ -90,7 +90,7 @@ export class ScatterPlotWidget extends BaseWidget<PointCollection> {
 		this._mainGroupSelect = this.svgSelect.append("g")
 			.attr('transform', `translate(${this.margin.left}, ${this.margin.top})`);
 		
-		this._axisPadding = 2;
+		this._axisPadding = 0;
 
 		this._xAxisGroupSelect = this.svgSelect.append('g')
 			.attr('transform', `translate(${this.margin.left}, ${this.margin.top + this.vizHeight + this.axisPadding})`)
