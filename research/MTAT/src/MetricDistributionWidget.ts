@@ -358,7 +358,15 @@ export class MetricDistributionWidget extends BaseWidget<PointCollection> {
 				}
 
 				this.afterMultipleMatrixChanges();
-			});
+			})
+			.on("mouseenter", (d) =>
+			{
+				console.log("todo - mouseenter: " + d);
+			})
+			.on("mouseleave", (d) =>
+			{
+				console.log('todo - mouseleave: ' + d);
+			})
 
 
 		const halfWidth = buttonWidth / 2; 
@@ -422,7 +430,15 @@ export class MetricDistributionWidget extends BaseWidget<PointCollection> {
 				}
 				
 				this.afterMultipleMatrixChanges();
-			});
+			})
+			.on("mouseenter", (d) =>
+			{
+				console.log("todo - mouseenter: " + d);
+			})
+			.on("mouseleave", (d) =>
+			{
+				console.log('todo - mouseleave: ' + d);
+			})
 	}
 
 	private afterMultipleMatrixChanges(): void
@@ -475,7 +491,15 @@ export class MetricDistributionWidget extends BaseWidget<PointCollection> {
 				{
 					thisWidget.updateScatterPlots(flatData);
 				}
-			});
+			})
+			.on("mouseenter", (d) =>
+			{
+				console.log("todo - mouseenter: " + d);
+			})
+			.on("mouseleave", (d) =>
+			{
+				console.log('todo - mouseleave: ' + d);
+			})
 	}
 
 	private drawHistograms(): void
