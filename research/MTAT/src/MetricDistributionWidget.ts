@@ -321,7 +321,7 @@ export class MetricDistributionWidget extends BaseWidget<PointCollection> {
 	{
 		const buttonWidth = 80;
 		const buttonHeight = 18;
-		let options = this.data.attributeList.filter((d, i) => this.basisSelectionBooleans[i]);
+		let options = this.getCurrentOptions();
 		this.yAxisMatrixSelect.selectAll("button")
 			.data(options)
 		  .join("button")
@@ -359,14 +359,14 @@ export class MetricDistributionWidget extends BaseWidget<PointCollection> {
 
 				this.afterMultipleMatrixChanges();
 			})
-			.on("mouseenter", (d) =>
+			.on("mouseenter", function(d)
 			{
-				console.log("todo - mouseenter: " + d);
+				d3.select(this).classed("hovered", true);
 			})
-			.on("mouseleave", (d) =>
+			.on("mouseleave", function(d)
 			{
-				console.log('todo - mouseleave: ' + d);
-			})
+				d3.select(this).classed("hovered", false);
+			});
 
 
 		const halfWidth = buttonWidth / 2; 
@@ -431,14 +431,19 @@ export class MetricDistributionWidget extends BaseWidget<PointCollection> {
 				
 				this.afterMultipleMatrixChanges();
 			})
-			.on("mouseenter", (d) =>
+			.on("mouseenter", function(d)
 			{
-				console.log("todo - mouseenter: " + d);
+				d3.select(this).classed("hovered", true);
 			})
-			.on("mouseleave", (d) =>
+			.on("mouseleave", function(d)
 			{
-				console.log('todo - mouseleave: ' + d);
-			})
+				d3.select(this).classed("hovered", false);
+			});
+	}
+
+	private getCurrentOptions(): string[]
+	{
+		return this.data.attributeList.filter((d, i) => this.basisSelectionBooleans[i]);
 	}
 
 	private afterMultipleMatrixChanges(): void
@@ -492,14 +497,34 @@ export class MetricDistributionWidget extends BaseWidget<PointCollection> {
 					thisWidget.updateScatterPlots(flatData);
 				}
 			})
-			.on("mouseenter", (d) =>
+			.on("mouseenter", function (d)
 			{
-				console.log("todo - mouseenter: " + d);
+				let [rowIdx, colIdx] = d.index;
+				let buttonSelect = d3.select(this);
+				buttonSelect.classed("hovered", true);
+				let options = thisWidget.getCurrentOptions();
+				thisWidget.yAxisMatrixSelect.selectAll("button")
+					.data(options)
+					.classed("hovered", (ignore, idx) => idx === rowIdx);
+
+				thisWidget.xAxisMatrixSelect.selectAll("button")
+					.data(options)
+					.classed("hovered", (ignore, idx) => idx === colIdx);
 			})
-			.on("mouseleave", (d) =>
+			.on("mouseleave", function (d)
 			{
-				console.log('todo - mouseleave: ' + d);
-			})
+				let buttonSelect = d3.select(this);
+				buttonSelect.classed("hovered", false);
+
+				let options = thisWidget.getCurrentOptions();
+				thisWidget.yAxisMatrixSelect.selectAll("button")
+					.data(options)
+					.classed("hovered", false);
+
+				thisWidget.xAxisMatrixSelect.selectAll("button")
+					.data(options)
+					.classed("hovered", false);
+			});
 	}
 
 	private drawHistograms(): void
