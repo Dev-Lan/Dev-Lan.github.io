@@ -7,7 +7,7 @@ let container: HTMLElement = document.getElementById("appContainer") as HTMLElem
 let app: App<CurveList> = new App<CurveList>(container, CurveListFactory.CreateCurveListFromCSV, CurveListFactory.CreateCurveListFromCSVObject);
 window.onresize = () => app.OnWindowResize();
 
-d3.json('../config/config.json').then(data =>
+d3.json('../config/config-finished.json').then(data =>
 {
 	app.InitializeLayout(data);
 });
