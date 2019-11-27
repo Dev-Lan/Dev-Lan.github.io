@@ -90,7 +90,7 @@ export class Plot2dPathsWidget extends BaseWidget<CurveList> {
 
 		let playIcon = DevlibTSUtil.getFontAwesomeIcon('play');
 		this.playControlsSelect.append("button")
-			// .text("play")
+			.attr("title", "play")
 			.attr("id", "playButton")
 			.classed("playControlButton", true)
 			.on("click", () =>
@@ -111,6 +111,7 @@ export class Plot2dPathsWidget extends BaseWidget<CurveList> {
 
 		let pauseIcon = DevlibTSUtil.getFontAwesomeIcon('pause');
 		this.playControlsSelect.append("button")
+			.attr("title", "pause")
 			.attr("id", "pauseButton")
 			.classed("noDisp", true)
 			.classed("playControlButton", true)
@@ -125,7 +126,8 @@ export class Plot2dPathsWidget extends BaseWidget<CurveList> {
 
 		let stopIcon = DevlibTSUtil.getFontAwesomeIcon('stop');
 		this.playControlsSelect.append("button")
-		.classed("playControlButton", true)
+			.attr("title", "stop")
+			.classed("playControlButton", true)
 			.on("click", () =>
 			{
 				this.resetAnimation();
@@ -134,7 +136,8 @@ export class Plot2dPathsWidget extends BaseWidget<CurveList> {
 
 		let repeatIcon = DevlibTSUtil.getFontAwesomeIcon('redo') // repeat is only for pro font awesome people
 		this.playControlsSelect.append("button")
-		.classed("playControlButton", true)
+			.attr("title", "repeat")
+			.classed("playControlButton", true)
 			.on("click", () =>
 			{
 				this._shouldRepeat = !this.shouldRepeat;
