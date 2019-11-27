@@ -3,6 +3,7 @@ import {BaseWidget} from './BaseWidget';
 import {CurveList} from '../../DataModel/CurveList';
 import {PointND} from '../../DataModel/PointND';
 import {Margin, SvgSelection, HtmlSelection} from '../../lib/DevLibTypes';
+import {DevlibTSUtil} from '../../lib/DevlibTSUtil';
 
 export class Plot2dPathsWidget extends BaseWidget<CurveList> {
 	
@@ -87,8 +88,11 @@ export class Plot2dPathsWidget extends BaseWidget<CurveList> {
 		this._playControlsSelect = d3.select(this.container).append("div")
 			.classed("playControlsContainer", true);
 
+		let playIcon = DevlibTSUtil.getFontAwesomeIcon('play');
 		this.playControlsSelect.append("button")
-			.text("play")
+			// .text("play")
+			.attr("id", "playButton")
+			.classed("devlibButton", true)
 			.on("click", () =>
 			{
 				if (!this.animating)
@@ -100,33 +104,59 @@ export class Plot2dPathsWidget extends BaseWidget<CurveList> {
 					}
 					window.requestAnimationFrame((ts: number) => this.animationStep(ts));
 				}
-			});
+				d3.select('#playButton').classed("noDisp", true);
+				d3.select('#pauseButton').classed("noDisp", false);
+			})
+			.node().appendChild(playIcon);
 
+		let pauseIcon = DevlibTSUtil.getFontAwesomeIcon('pause');
 		this.playControlsSelect.append("button")
-			.text("pause")
+			.attr("id", "pauseButton")
+			.classed("noDisp", true)
+			.classed("devlibButton", true)
 			.on("click", () =>
 			{
 				this._animating = false;
 				this._lastFrameTime = null;
-			});
+				d3.select('#pauseButton').classed("noDisp", true);
+				d3.select('#playButton').classed("noDisp", false);
+			})
+			.node().appendChild(pauseIcon);
 
+		let stopIcon = DevlibTSUtil.getFontAwesomeIcon('stop');
 		this.playControlsSelect.append("button")
-			.text("repeat")
+		.classed("devlibButton", true)
+			.on("click", () =>
+			{
+				this.resetAnimation();
+			})
+			.node().appendChild(stopIcon);
+
+		let repeatIcon = DevlibTSUtil.getFontAwesomeIcon('redo') // repeat is only for pro font awesome people
+		this.playControlsSelect.append("button")
+		.classed("devlibButton", true)
 			.on("click", () =>
 			{
 				this._shouldRepeat = !this.shouldRepeat;
 				// todo - modify button
 				console.log("repeat");
-			});
+			})
+			.node().appendChild(repeatIcon);
 	}
 
+	private resetAnimation(): void
+	{
+		this._animating = false;
+		this._lastFrameTime = null;
+		this.mainGroupSelect.selectAll("circle").remove();
+		this._animationTime = this.timeBound[0];
+	}
 
 	public OnDataChange(): void
 	{
 		// let [minTime, maxTime] = this.data.minMaxMap.get(this.data.inputKey);
 		this._timeBound = this.data.minMaxMap.get(this.data.inputKey);
-		this._animating = false;
-		this._animationTime = this.timeBound[0];
+		this.resetAnimation();
 		this.updateScales();
 		this.updatePaths();
 	}
@@ -186,6 +216,10 @@ export class Plot2dPathsWidget extends BaseWidget<CurveList> {
 
 	private animationStep(timestep: number): void
 	{
+		if (!this.animating)
+		{
+			return;
+		}
 		if (this.lastFrameTime === null)
 		{
 			this._lastFrameTime = timestep;
@@ -210,10 +244,6 @@ export class Plot2dPathsWidget extends BaseWidget<CurveList> {
 		}
 
 		let pointList: PointND[] = this.data.getPointsAtInput(this.animationTime);
-		// console.log(this.animationTime);
-		// console.log(pointList);
-
-
 
 		this.mainGroupSelect.selectAll("circle")
 			.data(pointList)
