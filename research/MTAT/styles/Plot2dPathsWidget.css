@@ -4,3 +4,9 @@
 	fill: none;
 	opacity: 0.6;
 }
+
+.playControlsContainer {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+}

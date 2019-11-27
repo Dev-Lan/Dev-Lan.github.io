@@ -27,7 +27,11 @@ export class DevlibAlgo {
 		{
 			return [idx1, idx2];
 		}
-		let midIndex = Math.floor(idx1 + idx2 / 2);
+		// if (idx1 === idx2)
+		// {
+		// 	return [undefined, undefined]
+		// }
+		let midIndex = Math.floor((idx1 + idx2) / 2);
 		let element: T = list[midIndex];
 		let compareResult = compareFunction(element);
 		if (compareResult === 0)

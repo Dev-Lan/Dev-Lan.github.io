@@ -86,6 +86,47 @@ export class CurveND extends PointCollection {
 		return val1 + valDiff * portion;
 	}
 
+	// finds point at given input time. Will construct a new point and interpolate all values if it is between points
+	public getPoint(inputValue: number): PointND
+	{
+		let sortFunction = DevlibAlgo.compareProperty<PointND>(inputValue, (point: PointND) => 
+		{
+			return point.get(this.inputKey);
+		});
+		let pointIndex: number | [number, number];
+		pointIndex = DevlibAlgo.BinarySearchIndex(this.pointList, sortFunction);
+		if (typeof pointIndex === "number")
+		{
+			return this.pointList[pointIndex];
+		}
+		const [idx1, idx2] = pointIndex;
+		if (idx1 === undefined || idx2 === undefined)
+		{
+			// out of bounds
+			return undefined;
+		}
+		const point1 = this.pointList[idx1];
+		const point2 = this.pointList[idx2];
+
+		const t1 = point1.get(this.inputKey);
+		const t2 = point2.get(this.inputKey);
+
+		const tDiff = t2 - t1;
+		const portion = (inputValue - t1) / tDiff;
+
+		let interpolatedPoint = new PointND();
+		interpolatedPoint.addValue(this.inputKey, inputValue);
+
+		for (let [key, metric] of point1.valueMap)
+		{
+			let val1 = point1.get(key);
+			let val2 = point2.get(key);
+			let valDiff = val2 - val1;
+			interpolatedPoint.addValue(key, val1 + valDiff * portion);
+		}
+		return interpolatedPoint;
+	}
+
 	public getPointWeight(pointIndex: number): number
 	{
 		const idxLeft = Math.max(pointIndex - 1, 0);

@@ -107,6 +107,22 @@ export class CurveList extends PointCollection
 		this.curveList.sort(sortFunction);
 	}
 
+	public getPointsAtInput(inputValue: number): PointND[]
+	{
+		let pointList: PointND[] = [];
+		for (let curve of this.curveList)
+		{
+			let point = curve.getPoint(inputValue);
+			// console.log(point);
+			if (point)
+			{
+				pointList.push(point);
+			}
+		}
+
+		return pointList;
+	}
+
 	public calculateDepth(depthKey: string, valueKey: string): void
 	{
 		if (this.isKeySet(depthKey))
