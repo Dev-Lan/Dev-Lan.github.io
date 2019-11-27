@@ -503,13 +503,15 @@ export class MetricDistributionWidget extends BaseWidget<PointCollection> {
 				let buttonSelect = d3.select(this);
 				buttonSelect.classed("hovered", true);
 				let options = thisWidget.getCurrentOptions();
+				let rowName = thisWidget.data.attributeList[rowIdx];
+				let colName = thisWidget.data.attributeList[colIdx];
 				thisWidget.yAxisMatrixSelect.selectAll("button")
 					.data(options)
-					.classed("hovered", (ignore, idx) => idx === rowIdx);
+					.classed("hovered", d => d === rowName);
 
 				thisWidget.xAxisMatrixSelect.selectAll("button")
 					.data(options)
-					.classed("hovered", (ignore, idx) => idx === colIdx);
+					.classed("hovered", d => d === colName);
 			})
 			.on("mouseleave", function (d)
 			{
