@@ -137,12 +137,12 @@ export class Plot2dPathsWidget extends BaseWidget<CurveList> {
 		let repeatIcon = DevlibTSUtil.getFontAwesomeIcon('redo') // repeat is only for pro font awesome people
 		this.playControlsSelect.append("button")
 			.attr("title", "repeat")
+			.attr("id", "repeatButton")
 			.classed("playControlButton", true)
 			.on("click", () =>
 			{
 				this._shouldRepeat = !this.shouldRepeat;
-				// todo - modify button
-				console.log("repeat");
+				d3.select('#repeatButton').classed("on", this.shouldRepeat);
 			})
 			.node().appendChild(repeatIcon);
 	}

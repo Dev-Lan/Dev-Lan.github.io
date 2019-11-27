@@ -29,3 +29,17 @@
 .playControlButton:active {
 	background: lightsteelblue;
 }
+
+
+.playControlButton.on {
+	background: black;
+	color: white;
+}
+
+.playControlButton.on:hover {
+	background: gray;
+}
+
+.playControlButton.on:active {
+	background: gray
+}
