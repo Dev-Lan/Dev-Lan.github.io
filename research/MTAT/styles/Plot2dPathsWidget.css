@@ -45,7 +45,7 @@
 }
 
 .animationDot {
-	stroke-width: 2;
+	stroke-width: 1.5;
 	stroke: firebrick;
 	fill: firebrick;
 	fill-opacity: 0;
@@ -53,5 +53,5 @@
 }
 
 .animationDot.inBrush {
-	fill-opacity: .6;
+	fill-opacity: .75;
 }

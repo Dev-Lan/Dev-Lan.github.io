@@ -14,6 +14,7 @@ export class Plot2dPathsWidget extends BaseWidget<CurveList> {
 		this._yKey = yKey;
 		this._shouldRepeat = false;
 		this._lastFrameTime = null;
+		this._animationStopped = true;
 	}
 
 	private _svgSelect : SvgSelection;
@@ -56,9 +57,16 @@ export class Plot2dPathsWidget extends BaseWidget<CurveList> {
 		return this._animationTime;
 	}
 
+	//  controls play/pause
 	private _animating : boolean;
 	public get animating() : boolean {
 		return this._animating;
+	}
+
+	// true if the animation is full on stopped
+	private _animationStopped : boolean;
+	public get animationStopped() : boolean {
+		return this._animationStopped;
 	}
 
 	private _shouldRepeat : boolean;
@@ -86,7 +94,8 @@ export class Plot2dPathsWidget extends BaseWidget<CurveList> {
 		this.svgSelect.attr("style", 'width: 100%; height: 100%;');
 
 		this._playControlsSelect = d3.select(this.container).append("div")
-			.classed("playControlsContainer", true);
+			.classed("playControlsContainer", true)
+			.classed("noDisp", true);
 
 		let playIcon = DevlibTSUtil.getFontAwesomeIcon('play');
 		this.playControlsSelect.append("button")
@@ -95,17 +104,7 @@ export class Plot2dPathsWidget extends BaseWidget<CurveList> {
 			.classed("playControlButton", true)
 			.on("click", () =>
 			{
-				if (!this.animating)
-				{
-					this._animating = true;
-					if (this.animationTime >= this.timeBound[1])
-					{
-						this._animationTime = this.timeBound[0];
-					}
-					window.requestAnimationFrame((ts: number) => this.animationStep(ts));
-				}
-				d3.select('#playButton').classed("noDisp", true);
-				d3.select('#pauseButton').classed("noDisp", false);
+				this.playAnimation();
 			})
 			.node().appendChild(playIcon);
 
@@ -144,11 +143,28 @@ export class Plot2dPathsWidget extends BaseWidget<CurveList> {
 			.node().appendChild(repeatIcon);
 	}
 
+	private playAnimation(): void
+	{
+		if (!this.animating)
+		{
+			this._animating = true;
+			if (this.animationTime >= this.timeBound[1])
+			{
+				this._animationTime = this.timeBound[0];
+			}
+			window.requestAnimationFrame((ts: number) => this.animationStep(ts));
+		}
+		d3.select('#playButton').classed("noDisp", true);
+		d3.select('#pauseButton').classed("noDisp", false);
+		this._animationStopped = false;
+	}
+
 	private stopAnimation(): void
 	{
 		this.pauseAnimation();
 		this.mainGroupSelect.selectAll("circle").remove();
 		this._animationTime = this.timeBound[0];
+		this._animationStopped = true;
 	}
 
 	private pauseAnimation(): void
@@ -168,6 +184,7 @@ export class Plot2dPathsWidget extends BaseWidget<CurveList> {
 		this.stopAnimation();
 		this.updateScales();
 		this.updatePaths();
+		this.playControlsSelect.classed("noDisp", false);
 	}
 
 	private updateScales(): void
@@ -251,6 +268,20 @@ export class Plot2dPathsWidget extends BaseWidget<CurveList> {
 			}
 		}
 
+		this.updateAnimationDots();
+
+		if (this.animating)
+		{
+			window.requestAnimationFrame((ts: number) => this.animationStep(ts));
+		}
+	}
+
+	private updateAnimationDots(): void
+	{
+		if (this.animationStopped)
+		{
+			return;
+		}
 		let pointList: PointND[] = this.data.getPointsAtInput(this.animationTime);
 
 		this.mainGroupSelect.selectAll("circle")
@@ -261,11 +292,6 @@ export class Plot2dPathsWidget extends BaseWidget<CurveList> {
 			.attr("r", 8)
 			.classed('animationDot', true)
 			.classed('inBrush', d => d.inBrush);
-
-		if (this.animating)
-		{
-			window.requestAnimationFrame((ts: number) => this.animationStep(ts));
-		}
 	}
 
 	protected OnResize(): void
@@ -273,15 +299,16 @@ export class Plot2dPathsWidget extends BaseWidget<CurveList> {
 		// this.setVizWidthHeight();
 		if (this.data)
 		{
-			this.OnDataChange();
+			this.updateScales();
+			this.updatePaths();
+			this.updateAnimationDots();
 		}
 	}
 
 	public OnBrushChange(): void
 	{
 		this.updatePaths();
+		this.updateAnimationDots();
 	}
-
-
 
 }
