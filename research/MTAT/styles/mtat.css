@@ -57,8 +57,8 @@ text.labelColor {
 
 .brushContainer .selection {
     /* brush rectangle*/
-    stroke: #020b6f;
-    fill: #020b6f;
+    stroke: firebrick;
+    fill: firebrick;
     stroke-width: 1px;
     stroke-opacity: .6;
     fill-opacity: .25;
