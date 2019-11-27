@@ -124,6 +124,7 @@ export class CurveND extends PointCollection {
 			let valDiff = val2 - val1;
 			interpolatedPoint.addValue(key, val1 + valDiff * portion);
 		}
+		interpolatedPoint.inBrush = point1.inBrush && point2.inBrush;
 		return interpolatedPoint;
 	}
 
