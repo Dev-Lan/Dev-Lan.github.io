@@ -117,10 +117,7 @@ export class Plot2dPathsWidget extends BaseWidget<CurveList> {
 			.classed("playControlButton", true)
 			.on("click", () =>
 			{
-				this._animating = false;
-				this._lastFrameTime = null;
-				d3.select('#pauseButton').classed("noDisp", true);
-				d3.select('#playButton').classed("noDisp", false);
+				this.pauseAnimation();
 			})
 			.node().appendChild(pauseIcon);
 
@@ -130,7 +127,7 @@ export class Plot2dPathsWidget extends BaseWidget<CurveList> {
 			.classed("playControlButton", true)
 			.on("click", () =>
 			{
-				this.resetAnimation();
+				this.stopAnimation();
 			})
 			.node().appendChild(stopIcon);
 
@@ -147,19 +144,28 @@ export class Plot2dPathsWidget extends BaseWidget<CurveList> {
 			.node().appendChild(repeatIcon);
 	}
 
-	private resetAnimation(): void
+	private stopAnimation(): void
 	{
-		this._animating = false;
-		this._lastFrameTime = null;
+		this.pauseAnimation();
 		this.mainGroupSelect.selectAll("circle").remove();
 		this._animationTime = this.timeBound[0];
 	}
+
+	private pauseAnimation(): void
+	{
+		this._animating = false;
+		this._lastFrameTime = null;
+		d3.select('#pauseButton').classed("noDisp", true);
+		d3.select('#playButton').classed("noDisp", false);
+	}
+
+
 
 	public OnDataChange(): void
 	{
 		// let [minTime, maxTime] = this.data.minMaxMap.get(this.data.inputKey);
 		this._timeBound = this.data.minMaxMap.get(this.data.inputKey);
-		this.resetAnimation();
+		this.stopAnimation();
 		this.updateScales();
 		this.updatePaths();
 	}
@@ -241,8 +247,7 @@ export class Plot2dPathsWidget extends BaseWidget<CurveList> {
 			else
 			{
 				this._animationTime = this.timeBound[1];
-				this._animating = false;
-				this._lastFrameTime = null;
+				this.pauseAnimation();
 			}
 		}
 
