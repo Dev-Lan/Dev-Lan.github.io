@@ -130,7 +130,7 @@ export class Plot2dPathsWidget extends BaseWidget<CurveList> {
 			})
 			.node().appendChild(stopIcon);
 
-		let repeatIcon = DevlibTSUtil.getFontAwesomeIcon('redo') // repeat is only for pro font awesome people
+		let repeatIcon = DevlibTSUtil.getFontAwesomeIcon('sync-alt') // repeat is only for pro fontawesome people
 		this.playControlsSelect.append("button")
 			.attr("title", "repeat")
 			.attr("id", "repeatButton")
