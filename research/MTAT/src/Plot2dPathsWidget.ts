@@ -289,7 +289,7 @@ export class Plot2dPathsWidget extends BaseWidget<CurveList> {
 		  .join("circle")
 			.attr("cx", d => this.scaleX(d.get(this.xKey)))
 			.attr("cy", d => this.scaleY(d.get(this.yKey)))
-			.attr("r", 8)
+			.attr("r", 4)
 			.classed('animationDot', true)
 			.classed('inBrush', d => d.inBrush);
 	}
