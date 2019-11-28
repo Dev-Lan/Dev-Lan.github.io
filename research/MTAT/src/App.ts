@@ -172,7 +172,7 @@ export class App<DataType> {
 			document.getElementById("toolbarButton-Tutorial"),
 			[60, 60],
 			LabelPosition.Bottom,
-			"This dataset was modified from the <a href='http://mocap.cs.cmu.edu/'>Carnegie Mellon MoCap database</a>. It shows the motion of a single tracked human running.",
+			"This tool is for the analysis of multivariate trajectory motion. By uploading your own dataset you can start investigating your data. <br><br> In this tutorial, we will be analyzing motion data of a human running. This dataset was modified from the <a href='http://mocap.cs.cmu.edu/'>Carnegie Mellon MoCap database</a>.",
 			true
 			);
 
@@ -195,7 +195,7 @@ export class App<DataType> {
 			plotOfAllPaths.container,
 			[40, 40],
 			LabelPosition.Right,
-			"This top down view shows a tracked human running, where each dot is a single tracked point. The lines show a trace of the point throughout its entire life.",
+			"This top-down view shows a human running, where each dot is a single tracked point. The lines show a trace of the point over time.",
 			true,
 			() =>
 			{
@@ -219,7 +219,7 @@ export class App<DataType> {
 			variableSelectContainer,
 			[20, 20],
 			LabelPosition.Left,
-			"This widget lets you select which variables you want to see plots for. Removing vx, vy, and vz will hide the histograms.",
+			"This widget lets you select the variables you want to see plots for. Removing vx, vy, and vz will hide the histograms.",
 			false,
 			() =>
 			{
@@ -232,7 +232,7 @@ export class App<DataType> {
 			variableSelectContainer,
 			[20, 20],
 			LabelPosition.Left,
-			"This widget lets you select which variables you want to see plots for. Removing vx, vy, and vz will hide the histograms.",
+			"This widget lets you select the variables you want to see plots for. Removing vx, vy, and vz will hide the histograms.",
 			false,
 			);
 
@@ -241,7 +241,7 @@ export class App<DataType> {
 			matrixContainer,
 			[20, 20],
 			LabelPosition.Right,
-			"This widget lets you select which scatterplots you want to look at. Lets add two views that show the runner from different angles.",
+			"This widget lets you select the scatterplots you want to look at. Let’s add two views that show the runner from different angles.",
 			false,
 			() =>
 			{
@@ -254,7 +254,7 @@ export class App<DataType> {
 			scatterPlotListContainer,
 			[-10, 20],
 			LabelPosition.Left,
-			"Here we can see the runner face on in the first scatterplot, and from the side in the second.",
+			"Here we can see the front view of the runner in the first scatterplot. In the second we see the side view.",
 			false
 			);
 
@@ -263,7 +263,7 @@ export class App<DataType> {
 			collapseButton,
 			[60, 60],
 			LabelPosition.Right,
-			"We can free space by collapsing this widget.",
+			"To free space, you can clear the selection widget.",
 			true,
 			() =>
 			{
@@ -323,7 +323,7 @@ export class App<DataType> {
 			timeHistogram,
 			[60, 60],
 			LabelPosition.Bottom,
-			"Selecting a time window will update the other plots to only show if they are in the time window. In this case, we have filtered to points between time 0 and 0.2.",
+			"You can drag your mouse in the histogram to select a range of data to focus on. This filter will be applied to the other visualizations. In this scenario, we have filtered to motion data between time 0 and 0.2.",
 			false,
 			() =>
 			{
@@ -335,7 +335,7 @@ export class App<DataType> {
 			timeHistogram,
 			[60, 60],
 			LabelPosition.Bottom,
-			"Dragging the window will update the plots as well.",
+			"You can also drag the window to focus on other ranges in the histogram.",
 			false,
 			() =>
 			{
@@ -351,7 +351,7 @@ export class App<DataType> {
 			lengthHistogram,
 			[60, 60],
 			LabelPosition.Bottom,
-			"The length shows the length of the bones the tracking points are attached to. If we select a good range we can filter to just the feet.",
+			"In this dataset, the length parameter represents the length of the bones the tracking points are attached to. To further analyze the data you can filter to a specific bone length to see motion for different areas of the body, like the feet.",
 			false,
 			() =>
 			{
@@ -364,7 +364,7 @@ export class App<DataType> {
 			plotOfAllPaths.container,
 			[40, 40],
 			LabelPosition.Right,
-			"With only the lines for the feet drawn, it is easier to track the feet.",
+			"While the non-feet tracking points are still included in the animation, the tracking points on the feet are bold and have trace lines to allow you to focus on them.",
 			true,
 			() =>
 			{
@@ -375,7 +375,7 @@ export class App<DataType> {
 			plotOfAllPaths.container,
 			[40, 40],
 			LabelPosition.Right,
-			"In this view it is easier to start making more detailed analysis. Here we can see that when humanas run, their feet are only under their center of mass when planted.",
+			"In this view, it is easier to do a more detailed analysis. For example, here you can see that the feet are only under the center of mass when planted.",
 			true);
 
 
