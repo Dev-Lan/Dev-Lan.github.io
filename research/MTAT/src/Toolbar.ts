@@ -69,6 +69,57 @@ export class Toolbar extends BaseComponent{
 			}
 			this.wrapperDiv.appendChild(button);
 		}
+
+		this.addClassLinks();
+
+	}
+
+
+	private addClassLinks(): void
+	{
+
+		let textWrapper = document.createElement("div");
+		textWrapper.classList.add("exampleHeaderOuter");
+		textWrapper.textContent = "For Class: ";
+		this.wrapperDiv.appendChild(textWrapper);
+
+		let processBookLink = document.createElement("a")
+		processBookLink.href = "../dataVizClass/Viz Process Book.pdf";
+		processBookLink.innerText = "Process Book";
+
+		this.wrapperDiv.appendChild(processBookLink);
+
+		let youtubeLink = document.createElement("button");
+		youtubeLink.classList.add("youtubeLink");
+
+		let shieldElement = document.createElement("div");
+		shieldElement.classList.add("shieldBackground");
+		shieldElement.classList.add("noDisp");
+
+
+		youtubeLink.innerHTML = 'Video <i class="fab fa-youtube"></i>'
+		youtubeLink.onclick = () =>
+		{
+			popupContainer.innerHTML = '<iframe width="560" height="315" src="https://www.youtube.com/embed/Fizrb56M-6g" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>'
+			popupContainer.classList.remove("noDisp");
+			shieldElement.classList.remove("noDisp");
+		}
+
+
+		this.wrapperDiv.appendChild(youtubeLink);
+
+		let popupContainer = document.createElement("div");
+		popupContainer.classList.add("videoContainer");
+		popupContainer.classList.add("noDisp");
+		shieldElement.onclick = () =>
+		{
+			popupContainer.classList.add("noDisp");
+			popupContainer.innerHTML = null;
+			shieldElement.classList.add("noDisp");
+		}
+
+		this.wrapperDiv.appendChild(shieldElement);
+		this.wrapperDiv.appendChild(popupContainer);
 	}
 
 	protected OnResize(): void
