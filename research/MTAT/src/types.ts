@@ -27,3 +27,20 @@ export enum MetricDistributionSubComponentTypes {
 	DistributionPlot = "DistributionPlot",
 	Scatterplot = "Scatterplot"
 }
+
+export interface Label
+{
+	padSize: [number, number],
+	anchorElement: Element,
+	position: LabelPosition,
+	text: string,
+	oval: boolean, // if true maximum corner rounding applied, otherwise, only minmal rounding
+	callBeforeNext?: Function
+}
+
+export enum LabelPosition {
+	// Top = "Top", // top is harder to program, and I don't need it..
+	Right = "Right",
+	Bottom = "Bottom",
+	Left = "Left"
+}

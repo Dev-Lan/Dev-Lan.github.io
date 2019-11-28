@@ -180,6 +180,16 @@ export class HistogramWidget extends BaseWidget<PointCollection> {
 			.range([0, this.vizHeight]);
 	}
 
+	public MoveBrush(newRange: [number, number] | null): void
+	{
+		if (newRange)
+		{
+			newRange[0] = this.scaleX(newRange[0]);
+			newRange[1] = this.scaleX(newRange[1]);
+		}
+		this.brushGroupSelect.call(this.brush.move, newRange);
+	}
+
 	private drawAxis(): void
 	{
 		this.axisGroupSelect

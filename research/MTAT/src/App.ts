@@ -7,10 +7,12 @@ import {Console} from './Console';
 import {TableWidget} from './TableWidget';
 import {LevelOfDetailWidget} from './LevelOfDetailWidget';
 import {MetricDistributionWidget} from './MetricDistributionWidget';
+import {Overlay} from './Overlay';
 import {LayoutFramework} from './LayoutFramework';
 import {Frame, ComponentType} from './types';
 import {ButtonProps} from '../../lib/DevLibTypes';
 import {DataEvents} from '../../DataModel/DataEvents';
+import {LabelPosition} from './types';
 
 export class App<DataType> {
 	
@@ -20,7 +22,8 @@ export class App<DataType> {
 		this._layoutFramework = new LayoutFramework(container);
 		this._dataFromCSV = fromCsv;
 		this._dataFromCSVObject = fromCsvObject;
-		document.addEventListener(DataEvents.brushChange, (e: Event) => {this.onBrushChange()})
+		document.addEventListener(DataEvents.brushChange, (e: Event) => {this.onBrushChange()});
+		this._overlay = new Overlay("overlayContainer");
 	}
 
 	private _container : HTMLElement;
@@ -53,6 +56,14 @@ export class App<DataType> {
 		return this._dataFromCSVObject;
 	}
 
+	private _overlay : Overlay;
+	public get overlay() : Overlay {
+		return this._overlay;
+	}
+	public set overlay(v : Overlay) {
+		this._overlay = v;
+	}
+
 	public InitializeLayout(frame: Frame<ComponentType>): void
 	{
 		// console.log(frame);
@@ -70,8 +81,10 @@ export class App<DataType> {
 		switch (compontentType) {
 			case ComponentType.Toolbar:
 				let buttonList: ButtonProps[] = [
-					{displayName: "Firework Simulation", callback: () => this.fetchCsv('firework.csv')},
-					{displayName: "Klein Bottle", callback: () => this.fetchCsv('klein.csv')}
+					// {displayName: "Firework Simulation", callback: () => this.fetchCsv('firework.csv')},
+					// {displayName: "Klein Bottle", callback: () => this.fetchCsv('klein.csv')},
+					{displayName: "Tutorial", callback: async () => this.runStorySteps() },
+					{displayName: "Walk Up Slope", callback: () => this.fetchCsv('walkUpSlope.csv') }
 				];
 
 				newComponent = new Toolbar(container, (data: string) => this.loadFromCsvString(data), buttonList);
@@ -104,15 +117,16 @@ export class App<DataType> {
 		this.SetData(newData);
 	}
 
-	private fetchCsv(filename: string): void
+	private async fetchCsv(filename: string): Promise<void>
 	{
-		d3.csv("../exampleData/" + filename).then(data =>
+		await d3.csv("../exampleData/" + filename).then(data =>
 		{
 			// console.log(data);
 			let newData: DataType = this.dataFromCSVObject(data);
 			// console.log(newData);
 			this.SetData(newData)
 		});
+		return;
 	}
 
 	public SetData(newData: DataType): void
@@ -145,6 +159,236 @@ export class App<DataType> {
 				component.OnBrushChange();
 			}
 		}
+	}
+
+
+	private async runStorySteps(): Promise<void>
+	{
+		await this.fetchCsv('run.csv');
+
+		this.overlay.clearLabels();
+
+		this.overlay.addLabel(
+			document.getElementById("toolbarButton-Tutorial"),
+			[60, 60],
+			LabelPosition.Bottom,
+			"This dataset was modified from the Carnegie Mellon MoCap database. <a href='http://mocap.cs.cmu.edu/'>(link)</a>. This dataset shows the motion of a single tracked human running.",
+			true
+			);
+
+
+		let plotOfAllPathsList = this.componentList.filter(d => d instanceof Plot2dPathsWidget);
+		let plotOfAllPaths: Plot2dPathsWidget = plotOfAllPathsList[0] as Plot2dPathsWidget;
+
+		this.overlay.addLabel(
+			document.getElementById("playButton"),
+			[60, 60],
+			LabelPosition.Right,
+			"By pressing the play button we can see an animation of the motion.",
+			true,
+			() =>
+			{
+				plotOfAllPaths.playAnimation();
+			});
+
+		this.overlay.addLabel(
+			plotOfAllPaths.container,
+			[40, 40],
+			LabelPosition.Right,
+			"This top down view shows a tracked human running, where each dot is a single tracked point. The lines show a trace of the point throughout its entire life.",
+			true,
+			() =>
+			{
+				plotOfAllPaths.pauseAnimation();
+			});
+
+
+		let histogramListContainer = document.getElementById('distributionPlotContainer');
+		this.overlay.addLabel(
+			histogramListContainer,
+			[-10, 20],
+			LabelPosition.Left,
+			"These histograms show the distribution of different values recorded for every sampled point in the motion data.",
+			false,
+			);
+
+
+
+		let variableSelectContainer = document.getElementById('toggleButtonContainer');
+		this.overlay.addLabel(
+			variableSelectContainer,
+			[20, 20],
+			LabelPosition.Left,
+			"This widget lets you select which variables you want to see plots for. Removing vx, vy, and vz will hide the histograms.",
+			false,
+			() =>
+			{
+				(document.getElementById("MetricDistributionWidget-varSelect-vx") as HTMLButtonElement).click();
+				(document.getElementById("MetricDistributionWidget-varSelect-vy") as HTMLButtonElement).click();
+				(document.getElementById("MetricDistributionWidget-varSelect-vz") as HTMLButtonElement).click();
+			});
+
+		this.overlay.addLabel(
+			variableSelectContainer,
+			[20, 20],
+			LabelPosition.Left,
+			"This widget lets you select which variables you want to see plots for. Removing vx, vy, and vz will hide the histograms.",
+			false,
+			);
+
+		let matrixContainer = document.getElementById('matrixWrapperContainer');
+		this.overlay.addLabel(
+			matrixContainer,
+			[20, 20],
+			LabelPosition.Right,
+			"This widget lets you select which scatterplots you want to look at. Lets add two views that show the runner from different angles.",
+			false,
+			() =>
+			{
+				(document.getElementById("MetricDistributionWidget-scatterSelect-2-0") as HTMLButtonElement).click();
+				(document.getElementById("MetricDistributionWidget-scatterSelect-2-1") as HTMLButtonElement).click();
+			});
+
+		let scatterPlotListContainer = document.getElementById('scatterPlotOuterContainer');
+		this.overlay.addLabel(
+			scatterPlotListContainer,
+			[-10, 20],
+			LabelPosition.Left,
+			"Here we can see the runner face on in the first scatterplot, and from the side in the second.",
+			false
+			);
+
+		let collapseButton = document.getElementById('MetricDistributionWidget-collapseButton') as HTMLButtonElement;
+		this.overlay.addLabel(
+			collapseButton,
+			[60, 60],
+			LabelPosition.Right,
+			"We can free space by collapsing this widget.",
+			true,
+			() =>
+			{
+				collapseButton.click();
+			});
+
+		let metricDistributionWidgetList = this.componentList.filter(d => d instanceof MetricDistributionWidget);
+		let metricDistributionWidget: MetricDistributionWidget = metricDistributionWidgetList[0] as MetricDistributionWidget;
+		let timeHistogramWidget = metricDistributionWidget.histogramWidgets[3];
+
+
+		let timeHistogram = document.getElementById('MetricDistributionWidget-histogramContainer-time');
+		this.overlay.addLabel(
+			timeHistogram,
+			[60, 60],
+			LabelPosition.Bottom,
+			"Let's focus on the time histogram.",
+			false,
+			() =>
+			{
+				timeHistogramWidget.MoveBrush([0, .2]);				
+			});
+
+
+		let playBackSpeed = 0.4;
+		let lastAnimationTime: number;
+		let brushStartVal = 0;
+		let direction = 1;
+		let animating = true;
+
+		let updateBrush = (timestamp: number) =>
+		{
+			if (!animating)
+			{
+				return;
+			}
+			if (!lastAnimationTime)
+			{
+				lastAnimationTime = timestamp
+			}
+			let elapsedTime = timestamp - lastAnimationTime;
+			brushStartVal += direction * playBackSpeed * elapsedTime / 1000;
+			timeHistogramWidget.MoveBrush([brushStartVal, brushStartVal + 0.2]);
+			lastAnimationTime = timestamp;
+			if (brushStartVal > 1)
+			{
+				direction = -1;
+			}
+			if (brushStartVal < 0)
+			{
+				direction = 1;
+			}
+			window.requestAnimationFrame(updateBrush);
+		}
+
+		this.overlay.addLabel(
+			timeHistogram,
+			[60, 60],
+			LabelPosition.Bottom,
+			"Selecting a time window will update the other plots to only show if they are in the time window. In this case, we have filtered to points between time 0 and 0.2.",
+			false,
+			() =>
+			{
+				window.requestAnimationFrame(updateBrush);
+			});
+
+
+		this.overlay.addLabel(
+			timeHistogram,
+			[60, 60],
+			LabelPosition.Bottom,
+			"Dragging the window will update the plots as well.",
+			false,
+			() =>
+			{
+				animating = false;;
+				timeHistogramWidget.MoveBrush(null);
+			});
+
+
+		let lengthHistogram = document.getElementById('MetricDistributionWidget-histogramContainer-length');
+		let lengthHistogramWidget = metricDistributionWidget.histogramWidgets[4];
+
+		this.overlay.addLabel(
+			lengthHistogram,
+			[60, 60],
+			LabelPosition.Bottom,
+			"The length shows the length of the bones the tracking points are attached to. If we select a good range we can filter to just the feet.",
+			false,
+			() =>
+			{
+				lengthHistogramWidget.MoveBrush([.052, .072]);
+				animating = false;
+				plotOfAllPaths.playAnimation();
+			});
+
+		this.overlay.addLabel(
+			plotOfAllPaths.container,
+			[40, 40],
+			LabelPosition.Right,
+			"With only the lines for the feet drawn, it is easier to track the feet.",
+			true,
+			() =>
+			{
+				plotOfAllPaths.pauseAnimationAtTime(.7);
+			});
+
+		this.overlay.addLabel(
+			plotOfAllPaths.container,
+			[40, 40],
+			LabelPosition.Right,
+			"In this view it is easier to start making more detailed analysis. Here we can see that when humanas run, their feet are only under their center of mass when planted.",
+			true);
+
+
+		this.overlay.addLabel(
+			plotOfAllPaths.container,
+			[40, 40],
+			LabelPosition.Right,
+			"Feel free to explore! <i class='fas fa-hiking'></i>",
+			true);
+
+		let expandButton = document.getElementById('MetricDistributionWidget-expandButton') as HTMLButtonElement;
+		expandButton.click();
+		this.overlay.showLabels();
 	}
 
 }

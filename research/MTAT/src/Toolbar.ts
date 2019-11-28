@@ -61,6 +61,7 @@ export class Toolbar extends BaseComponent{
 			button.classList.add("exampleButton");
 			button.classList.add("devlibButton");
 			button.textContent = buttonProp.displayName;
+			button.id = "toolbarButton-" + buttonProp.displayName;
 			button.onclick = (ev: Event) => 
 			{
 				this.uploadFileButton.ResetValue();

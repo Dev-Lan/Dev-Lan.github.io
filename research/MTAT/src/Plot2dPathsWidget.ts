@@ -12,9 +12,6 @@ export class Plot2dPathsWidget extends BaseWidget<CurveList> {
 		super(container);
 		this._xKey = xKey;
 		this._yKey = yKey;
-		this._shouldRepeat = false;
-		this._lastFrameTime = null;
-		this._animationStopped = true;
 	}
 
 	private _svgSelect : SvgSelection;
@@ -84,8 +81,22 @@ export class Plot2dPathsWidget extends BaseWidget<CurveList> {
 		return this._timeBound;
 	}
 
+	private _pauseTime : number;
+	public get pauseTime() : number {
+		return this._pauseTime;
+	}
+
+	private _looped : boolean;
+	public get looped() : boolean {
+		return this._looped;
+	}
+
 	protected init(): void
 	{
+		this._shouldRepeat = true;
+		this._lastFrameTime = null;
+		this._animationStopped = true;
+
 		this._svgSelect = d3.select(this.container).append("svg")
 		this._mainGroupSelect = this.svgSelect.append("g");
 		this.mainGroupSelect
@@ -130,11 +141,13 @@ export class Plot2dPathsWidget extends BaseWidget<CurveList> {
 			})
 			.node().appendChild(stopIcon);
 
+		console.log("should repeat = " + this.shouldRepeat);
 		let repeatIcon = DevlibTSUtil.getFontAwesomeIcon('sync-alt') // repeat is only for pro fontawesome people
 		this.playControlsSelect.append("button")
 			.attr("title", "repeat")
 			.attr("id", "repeatButton")
 			.classed("playControlButton", true)
+			.classed("on", this.shouldRepeat)
 			.on("click", () =>
 			{
 				this._shouldRepeat = !this.shouldRepeat;
@@ -143,7 +156,7 @@ export class Plot2dPathsWidget extends BaseWidget<CurveList> {
 			.node().appendChild(repeatIcon);
 	}
 
-	private playAnimation(): void
+	public playAnimation(): void
 	{
 		if (!this.animating)
 		{
@@ -159,7 +172,13 @@ export class Plot2dPathsWidget extends BaseWidget<CurveList> {
 		this._animationStopped = false;
 	}
 
-	private stopAnimation(): void
+	public pauseAnimationAtTime(time: number): void
+	{
+		this._pauseTime = time;
+		this._looped = false;
+	}
+
+	public stopAnimation(): void
 	{
 		this.pauseAnimation();
 		this.mainGroupSelect.selectAll("circle").remove();
@@ -167,7 +186,7 @@ export class Plot2dPathsWidget extends BaseWidget<CurveList> {
 		this._animationStopped = true;
 	}
 
-	private pauseAnimation(): void
+	public pauseAnimation(): void
 	{
 		this._animating = false;
 		this._lastFrameTime = null;
@@ -179,7 +198,6 @@ export class Plot2dPathsWidget extends BaseWidget<CurveList> {
 
 	public OnDataChange(): void
 	{
-		// let [minTime, maxTime] = this.data.minMaxMap.get(this.data.inputKey);
 		this._timeBound = this.data.minMaxMap.get(this.data.inputKey);
 		this.stopAnimation();
 		this.updateScales();
@@ -260,12 +278,24 @@ export class Plot2dPathsWidget extends BaseWidget<CurveList> {
 			{
 				let over = this.animationTime - this.timeBound[1];
 				this._animationTime = this.timeBound[0] + over;
+				if (this.pauseTime)
+				{
+					this._looped = true;
+				}
 			}
 			else
 			{
 				this._animationTime = this.timeBound[1];
 				this.pauseAnimation();
 			}
+		}
+
+		if (this.looped && this.animationTime > this.pauseTime)
+		{
+			this._animationTime = this.pauseTime;
+			this._pauseTime = null;
+			this._looped = false;
+			this.pauseAnimation();
 		}
 
 		this.updateAnimationDots();

@@ -162,7 +162,8 @@ export class ScatterPlotWidget extends BaseWidget<PointCollection> {
 		  .join("circle")
 			.attr("cx", d => this.scaleX(d.get(this.xKey)))
 			.attr("cy", d => this.scaleY(d.get(this.yKey)))
-			.classed("scatterPoint", true);
+			.classed("scatterPoint", true)
+			.classed("noDisp", d => !d.inBrush);
 
 		this.drawAxis();
 	}

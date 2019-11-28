@@ -96,16 +96,6 @@ export class MetricDistributionWidget extends BaseWidget<PointCollection> {
 		return this._scatterPlotWidgets;
 	}
 
-
-
-	// private _containerToVizMap : ;
-	// public get containerToVizMap() :  {
-	// 	return this._containerToVizMap;
-	// }
-	// public set containerToVizMap(v : ) {
-	// 	this._containerToVizMap = v;
-	// }
-
 	protected init(): void
 	{
 		this._wrapperContainer = document.createElement("div");
@@ -151,7 +141,9 @@ export class MetricDistributionWidget extends BaseWidget<PointCollection> {
 					break;
 				case MetricDistributionSubComponentTypes.ScatterplotSelect:
 					let wrapper = d3.select(container).append('div')
-						.classed("matrixWrapperContainer", true);
+						.classed("matrixWrapperContainer", true)
+						.attr("id", "matrixWrapperContainer");
+
 					this._yAxisMatrixSelect = this.initSubComponent(wrapper.node(), "yAxisMatrixContainer");
 						
 					let rightWrapper = wrapper.append('div')
@@ -184,7 +176,8 @@ export class MetricDistributionWidget extends BaseWidget<PointCollection> {
 		return d3.select(container)			
 			.append("div")
 			.classed(className, true)
-			.classed("overflow-scroll", true);
+			.classed("overflow-scroll", true)
+			.attr("id", className);
 	}
 
 	private initCollapseButton(containerSelect: HtmlSelection, toHide: HTMLElement[]): void
@@ -196,6 +189,7 @@ export class MetricDistributionWidget extends BaseWidget<PointCollection> {
 			.classed('collapseButton', true)
 			.classed('devlibButton', true)
 			.classed('noDisp', true)
+			.attr("id", "MetricDistributionWidget-collapseButton")
 			.text('Collapse')
 			.on('click', () =>
 			{
@@ -227,6 +221,7 @@ export class MetricDistributionWidget extends BaseWidget<PointCollection> {
 			.classed('expandButton', true)
 			.classed('devlibButton', true)
 			.classed('noDisp', true)
+			.attr('id', 'MetricDistributionWidget-expandButton')
 			.attr("title", "Open distribution selection widget.")
 			.on('click', () =>
 			{
@@ -304,6 +299,7 @@ export class MetricDistributionWidget extends BaseWidget<PointCollection> {
 			.text(d => d)
 			.classed("toggleButton", true)
 			.classed("on", (d, i) => this.basisSelectionBooleans[i])
+			.attr("id", d => "MetricDistributionWidget-varSelect-" + d)
 			.on('click', function(d, i)
 			{
 				let buttonSelect = d3.select(this);
@@ -482,6 +478,7 @@ export class MetricDistributionWidget extends BaseWidget<PointCollection> {
 		  	.classed("squareButton", true)
 		  	.classed("on", d=> d.value)
 		  	.classed("noDisp", (d, i) => !thisWidget.basisSelectionBooleans[i])
+			.attr("id", d => "MetricDistributionWidget-scatterSelect-" + d.index[0] + "-" + d.index[1])
 			.on("click", function(d, i)
 			{
 				let buttonSelect = d3.select(this);
@@ -544,6 +541,7 @@ export class MetricDistributionWidget extends BaseWidget<PointCollection> {
 			.data(this.data.attributeList)
 		  .join("div")
 			.classed("histogramContainer", true)
+			.attr("id", d => "MetricDistributionWidget-histogramContainer-" + d)
 			.each(function(d)
 			{
 				let container = this as HTMLDivElement;
