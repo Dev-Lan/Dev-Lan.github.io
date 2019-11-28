@@ -172,7 +172,7 @@ export class App<DataType> {
 			document.getElementById("toolbarButton-Tutorial"),
 			[60, 60],
 			LabelPosition.Bottom,
-			"This dataset was modified from the Carnegie Mellon MoCap database. <a href='http://mocap.cs.cmu.edu/'>(link)</a>. This dataset shows the motion of a single tracked human running.",
+			"This dataset was modified from the <a href='http://mocap.cs.cmu.edu/'>Carnegie Mellon MoCap database</a>. It shows the motion of a single tracked human running.",
 			true
 			);
 
