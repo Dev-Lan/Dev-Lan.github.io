@@ -5,8 +5,8 @@
 		<div class="pubAuthorContainer">{{ include.authors }}</div>
 		<div class="pubLocationContainer">In <span class="location">{{ include.locationTitle }}<span></div>
 		<div class="pubIconLinksContainer">
-			<div class="pubIconLink"><a href="{{ include.pdfURL }}">Paper <i class="far fa-file-pdf"></i></a></div>
-			<div class="pubIconLink"><a href="{{ include.videoURL }}">Video <i class="fab fa-youtube"></i></a></div>
+			<button class="pubIconLink" onclick="window.location.href = '{{ include.pdfURL }}';">Paper <i class="far fa-file-pdf"></i></button>
+			<button class="pubIconLink" onclick='onYouTubeLinkClick("{{ include.youTubeId }}")'>Video <i class="fab fa-youtube"></i></button>
 		</div>
 	</div>
 </div>
