@@ -44,6 +44,11 @@ function initialize() {
 		centerGrid(initialGrid, screenCenter, DLCenter);
 		initializeBalls(initialGrid, cellRadius);
 	});
+	// toss in stuff sort of related
+	let imgEl = document.getElementById("mePicture");
+	let bbox = imgEl.getBoundingClientRect();
+	let aboutMeContainerEl = document.getElementById("aboutMeContainer");
+	aboutMeContainerEl.style.maxWidth = bbox.width + "px";
 }
 
 function calculateCellRadius() {
@@ -59,11 +64,18 @@ function calculateCellRadius() {
 
 function calculateCenterPoint() {
 	var bounds = getClientBounds();
-	return scaleVector(bounds, 0.5);
+	let imgEl = document.getElementById("mePicture");
+	let bbox = imgEl.getBoundingClientRect();
+	bounds = scaleVector(bounds, 0.5);
+	bounds.x += bbox.width;
+	return bounds;
 }
 
 function getClientBounds() {
-	var width = document.documentElement.clientWidth;
+	let imgEl = document.getElementById("mePicture");
+	let bbox = imgEl.getBoundingClientRect();
+
+	var width = document.documentElement.clientWidth - bbox.width;
 	var height = document.documentElement.clientHeight - NAVBAR_HEIGHT;
 	return Vector2(width, height);
 }
