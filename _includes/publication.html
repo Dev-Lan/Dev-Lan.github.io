@@ -1,0 +1,12 @@
+<div class="pubContainer">
+	<a href="{{ include.paperURL }}"><img class="pubThumbnail" src="{{ include.thumbnailURL }}"></a>
+	<div class="pubContentContainer">
+		<div class="pubTitleContainer"><a href="{{ include.paperURL }}">{{ include.paperTitle }}</a></div>
+		<div class="pubAuthorContainer">{{ include.authors }}</div>
+		<div class="pubLocationContainer">In <span class="location">{{ include.locationTitle }}<span></div>
+		<div class="pubIconLinksContainer">
+			<div class="pubIconLink"><a href="{{ include.pdfURL }}">Paper <i class="far fa-file-pdf"></i></a></div>
+			<div class="pubIconLink"><a href="{{ include.videoURL }}">Video <i class="fab fa-youtube"></i></a></div>
+		</div>
+	</div>
+</div>
