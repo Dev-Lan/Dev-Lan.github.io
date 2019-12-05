@@ -1,0 +1,56 @@
+---
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  {% include headBoilerplate.html title="Dev_Lan" %}
+  {% include navOffset.html %}
+</head>
+<body>
+
+{% include navbarSimple.html %}
+
+{% include blogBodyStart.html %}
+
+<h1>Publications</h1>
+<hr />
+
+{% include publication.html
+	thumbnailURL="publication/thumbnail/2017-trajectory.png"
+	
+	paperURL="https://diglib.eg.org/handle/10.2312/eurovisshort20171141"
+	
+	authors="Devin Lange, Francesca Samsel, Ioannis Karamouzas, S. J. Guy, Rodney Dockter, Timothy Kowalewski, Daniel F. Keefe"
+	
+	paperTitle="Trajectory Mapper: Interactive Widgets and Artist-Designed Encodings for Visualizing Multivariate Trajectory Data"
+	
+	locationTitle="EuroVis 2017 – Short Papers, 2017"
+
+	pdfURL="publication/pdf/2017-trajectory.pdf"
+
+	videoURL="https://youtu.be/IlOVqapORuk"
+%}
+
+{% include publication.html
+	thumbnailURL="publication/thumbnail/2014-optimization.png"
+	
+	paperURL="https://dl.acm.org/citation.cfm?id=2668094"
+	
+	authors="Jose Guillermo Rangel Ramirez, Devin Lange, Panayiotis Charalambous, Claudia Esteves, Julien Pettré"
+	
+	paperTitle="Optimization-based Computation of Locomotion Trajectories for Crowd Patches"
+	
+	locationTitle="Proceedings of the Seventh International Conference on Motion in Games (MIG '14)"
+
+	pdfURL="publication/pdf/2014-optimization.pdf"
+
+	videoURL="https://youtu.be/Zlqvp6et9cU"
+%}
+
+
+{% include blogBodyEnd.html %}
+
+{% include footer.html %}
+
+</body>
+</html>

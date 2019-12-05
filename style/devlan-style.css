@@ -365,3 +365,60 @@ body {
   transform: translateZ(-4px) scale(5);
   z-index:-1;
 }
+
+.pubContainer {
+  /*background: bisque;*/
+  display: flex;
+  flex-direction: row;
+  /*width: 100%;*/
+  /*border: solid black 1px;*/
+  /*margin: 5px;  */
+  align-items: center;
+  margin: 20px 0px;
+}
+
+.pubThumbnail {
+  width: 200px;
+  height: 100px;
+  box-shadow: 3px 3px 4px 2px #9e9e9e;
+  /*background: firebrick;*/
+}
+
+.pubContentContainer {
+  display: flex;
+  flex-direction: column;
+  margin-left: 20px;
+}
+
+.pubAuthorContainer {
+
+}
+
+.pubTitleContainer {
+    font-weight: 600;
+    font-size: 11.5pt;
+}
+
+.pubTitleContainer a {
+    color: #315b7d;
+}
+
+.pubLocationContainer .location{
+    font-style: italic;
+}
+
+.pubIconLinksContainer {
+  display: flex;
+  flex-direction: row;
+}
+
+.pubIconLink {
+    margin-right: 20px;
+    font-size: 10pt;
+}
+
+.pubIconLink i {
+    font-size: 14pt;
+    vertical-align: middle;
+    padding-left: 2px;
+}
