@@ -35,6 +35,13 @@ window.onload = function onload() {
 
 function initialize() {
 	initializeContainer("animateContainer");
+
+	var bounds = getClientBounds();
+	if (bounds.x < 200)
+	{
+		pause();
+		return;
+	}
 	var fillPercent = 0.7;
 	var cellRadius = fillPercent * calculateCellRadius();
 	var screenCenter = calculateCenterPoint();
