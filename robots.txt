@@ -4,5 +4,11 @@ Disallow: /classes.html
 Disallow: /projects.html
 Disallow: /contact.html
 Disallow: /ee/
+Disallow: /_includes/
+Disallow: /AlgorithmsVisualized/
+Disallow: /applications/
+Disallow: /img/
+Disallow: /tutorials/
+Disallow: /source/
 Disallow: /*/src/
 Sitemap: https://www.devinlange.com/sitemap.txt
