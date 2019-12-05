@@ -1,0 +1,8 @@
+User-agent: *
+Disallow: /research.html
+Disallow: /classes.html
+Disallow: /projects.html
+Disallow: /contact.html
+Disallow: /ee/
+Disallow: /*/src/
+Sitemap: https://www.devinlange.com/sitemap.txt
