@@ -354,17 +354,8 @@ export class ScatterPlotWithImage {
 		{
 			[[left, top], [right, bottom]] = this.lastSelectionInValueSpace;
 		}
-		let minV: number
-		let maxV: number;
-		if (typeof this.colorScaleLegend.lastSelectionInValueSpace === "undefined" || this.colorScaleLegend.lastSelectionInValueSpace === null)
-		{
-			minV = -Infinity;
-			maxV = Infinity;
-		}
-		else 
-		{
-			[minV, maxV] = this.colorScaleLegend.lastSelectionInValueSpace;
-		}
+
+		let [minV, maxV] = this.getColorScaleFilterBounds();
 
 		let filteredData: pointWithImage[] = [];
 		for (let d of this.data)
@@ -386,6 +377,22 @@ export class ScatterPlotWithImage {
 		}
 
 		this.brushChangeCallback(filteredData);
+	}
+
+	public getColorScaleFilterBounds(): [number, number]
+	{
+		let minV: number
+		let maxV: number;
+		if (typeof this.colorScaleLegend.lastSelectionInValueSpace === "undefined" || this.colorScaleLegend.lastSelectionInValueSpace === null)
+		{
+			minV = -Infinity;
+			maxV = Infinity;
+		}
+		else 
+		{
+			[minV, maxV] = this.colorScaleLegend.lastSelectionInValueSpace;
+		}
+		return [minV, maxV]
 	}
 
 	private zoomHandler(): void

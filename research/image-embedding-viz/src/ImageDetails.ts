@@ -14,7 +14,6 @@ export class ImageDetails {
 		this._innerContainerSelection = d3.select("#" + innerHtmlContainerId);
 		this._sortOptions = new OptionSelect(sortByContainer);
 		this._detailsContainerSelect = d3.select("#detailsContainerPopup");
-
 		this.onWindowResize();
 	}
 
@@ -70,6 +69,12 @@ export class ImageDetails {
 	public get currentSortSelector() : attributeSelector {
 		return this._currentSortSelector;
 	}
+
+	private _currentSortKey : string;
+	public get currentSortKey() : string {
+		return this._currentSortKey;
+	}
+	
 
 	private _attributeData : AttributeData;
 	public get attributeData() : AttributeData {
@@ -167,10 +172,15 @@ export class ImageDetails {
 	private updateSortOptions(): void
 	{
 		let buttonPropList: ButtonProps[] = this.attributeData.getButtonProps((key, selector) => {
+			this._currentSortKey = key;
 			this._currentSortSelector = selector;
 			this.onBrushSelectionChange(this.currentSelection)
 		}, true);
+
+		// by default the X-Axis sorting is first
+		this._currentSortKey = 'X-Axis'; 
 		this._currentSortSelector = buttonPropList[0].callback as attributeSelector;
+
 		this.sortOptions.onDataChange(buttonPropList, true);
 	}
 

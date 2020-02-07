@@ -20,6 +20,15 @@
     font-size: 9pt;
 }
 
+.exportSubsetButton {
+    border-radius: 3px;
+    margin-right: 5px;
+    border: solid black 1px;
+    font-size: 10pt;
+    background: #3c5f00;
+    color: white;
+}
+
 .selected {
 	color: white;
     background: #000c6f;
