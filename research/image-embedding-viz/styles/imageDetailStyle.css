@@ -11,6 +11,7 @@
 .imageInGrid {
     border: solid gray 1px;
     margin: 1px;
+    margin-bottom: 10px;
     vertical-align: middle;
     display: inline-block;
     background-repeat: no-repeat;
