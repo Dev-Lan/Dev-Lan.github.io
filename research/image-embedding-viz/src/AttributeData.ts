@@ -8,11 +8,21 @@ export class AttributeData {
 	{
 		this._minMaxLookup = new Map();
 		this._attributeKeys = [];
+		this.hasDistanceMatrix = false;
 	}
 
 	private _data : pointWithImage[];
 	public get data() : pointWithImage[] {
 		return this._data;
+	}
+
+	
+	private _hasDistanceMatrix : boolean;
+	public get hasDistanceMatrix() : boolean {
+		return this._hasDistanceMatrix;
+	}
+	public set hasDistanceMatrix(v : boolean) {
+		this._hasDistanceMatrix = v;
 	}
 
 	private _attributeKeys : string[];
@@ -23,6 +33,21 @@ export class AttributeData {
 	private _minMaxLookup : Map<string, [number, number]>;
 	private get minMaxLookup() : Map<string, [number, number]> {
 		return this._minMaxLookup;
+	}
+
+	public addDistanceMatrix(distMatrix: d3.DSVRowArray<string>): void
+	{
+		this.hasDistanceMatrix = true;
+		for (let i = 0; i < this.data.length; i++)
+		{
+			let thisDistanceTo: number[] = [];
+			let row = distMatrix[i];
+			for (let key in row)
+			{
+				thisDistanceTo.push(+row[key])
+			}
+			this.data[i].distanceTo = thisDistanceTo;
+		}
 	}
 
 	public onDataChange(data: pointWithImage[]): void

@@ -134,6 +134,10 @@ export class ImageDetails {
 				height: ${this.imageHeight}px;
 				`)
 			.classed("imageInGrid", true)
+			.on('click', function(d)
+			{
+				// todo - open distance filter functionality
+			})
 			.on("mouseenter", function(d)
 			{
 				console.log(this);

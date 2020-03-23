@@ -8,6 +8,7 @@ export interface DatasetAttributes
 	displayName: string,
 	imageWidth: number,
 	imageHeight: number,
+	hasDistanceMatrix?: boolean,
 	projectionList: ProjectionAttributes[]
 }
 

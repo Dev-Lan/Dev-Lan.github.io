@@ -3,6 +3,7 @@ export interface pointWithImage {
 	y: number,
 	image: string,
 	attributes?: attributeLookup,
+	distanceTo?: number[],
 	in2dBrush?: boolean,
 	in1dBrush?: boolean
 

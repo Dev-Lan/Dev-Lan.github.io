@@ -45,15 +45,40 @@ function onDatasetChange(dataAttr: DatasetAttributes, projAttr?: ProjectionAttri
 	d3.json(dataFolder + projAttr.filename).then((data: pointWithImage[]) =>
 	{
 		attributeData.onDataChange(data);
-		scatterPlot.onDataChange(data, attributeData, projectionSwitchOnly, true);
 
-		d3.json(dataFolder + 'imageLookup.json').then((imageLookup: imageLookup)  =>
+
+		maybeLoadDistanceMatrix(dataAttr, dataFolder).then(() =>
 		{
-			imageDetails.onDataChange(attributeData, imageLookup, dataFolder + "tiledImg.png", dataAttr.imageWidth, dataAttr.imageHeight, projectionSwitchOnly);
-		});
+			scatterPlot.onDataChange(data, attributeData, projectionSwitchOnly, true);
 
+			d3.json(dataFolder + 'imageLookup.json').then((imageLookup: imageLookup)  =>
+			{
+				imageDetails.onDataChange(
+					attributeData,
+					imageLookup,
+					dataFolder + "tiledImg.png",
+					dataAttr.imageWidth,
+					dataAttr.imageHeight,
+					projectionSwitchOnly
+					);
+			});
+		})
 	});
 
+}
+
+async function maybeLoadDistanceMatrix(dataAttr: DatasetAttributes, dataFolder: string): Promise<void>
+{
+	if (dataAttr.hasDistanceMatrix)
+	{
+		await d3.csv(dataFolder + 'distanceMatrix.txt').then((distMatrix: d3.DSVRowArray<string>) => {
+			attributeData.addDistanceMatrix(distMatrix);
+		})
+	}
+	else
+	{
+		attributeData.hasDistanceMatrix = false;
+	}
 }
 
 
