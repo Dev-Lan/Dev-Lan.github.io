@@ -296,6 +296,7 @@ export class ScatterPlotWithImage {
 		this.colorLegendGroupSelect
 			.attr("transform", `translate(${this.margin.left + this.width + legendPadding}, ${this.margin.top})`)	
 			.classed("colorLegendGroup", true)
+			// todo - add buffer for pinned image
 
 		let oldSelection;
 		if (this.colorScaleLegend)

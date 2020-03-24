@@ -9,6 +9,7 @@ export class AttributeData {
 		this._minMaxLookup = new Map();
 		this._attributeKeys = [];
 		this.hasDistanceMatrix = false;
+		this._currentSelectedPoint = null;
 	}
 
 	private _data : pointWithImage[];
@@ -16,7 +17,14 @@ export class AttributeData {
 		return this._data;
 	}
 
-	
+	private _currentSelectedPoint : pointWithImage | null;
+	public get currentSelectedPoint() : pointWithImage | null {
+		return this._currentSelectedPoint;
+	}
+	public set currentSelectedPoint(v: pointWithImage | null) {
+		this._currentSelectedPoint = v;
+	}
+
 	private _hasDistanceMatrix : boolean;
 	public get hasDistanceMatrix() : boolean {
 		return this._hasDistanceMatrix;
@@ -35,6 +43,16 @@ export class AttributeData {
 		return this._minMaxLookup;
 	}
 
+	private _imageWidth : number;
+	public get imageWidth() : number {
+		return this._imageWidth;
+	}
+
+	private _imageHeight : number;
+	public get imageHeight() : number {
+		return this._imageHeight;
+	}
+
 	public addDistanceMatrix(distMatrix: d3.DSVRowArray<string>): void
 	{
 		this.hasDistanceMatrix = true;
@@ -50,7 +68,7 @@ export class AttributeData {
 		}
 	}
 
-	public onDataChange(data: pointWithImage[]): void
+	public onDataChange(data: pointWithImage[], imageWidth: number, imageHeight: number): void
 	{
 		this._data = data;
 		if (data.length > 0)
@@ -66,6 +84,9 @@ export class AttributeData {
 			}
 		}
 		this.minMaxLookup.clear();
+		
+		this._imageWidth = imageWidth;
+		this._imageHeight = imageHeight;
 	}
 
 	public getMinMax(key: string): [number, number]

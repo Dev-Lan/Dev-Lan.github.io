@@ -15,7 +15,6 @@ export class ImageDetails {
 		this._sortOptions = new OptionSelect(sortByContainer);
 		this._detailsContainerSelect = d3.select("#detailsContainerPopup");
 		this._selectedPointContainer = document.getElementById(selectedPointContainerId);
-		this._currentSelectedPoint = null;
 		this.onWindowResize();
 	} 
 
@@ -57,16 +56,6 @@ export class ImageDetails {
 		return this._tiledImgUrl;
 	}
 
-	private _imageWidth : number;
-	public get imageWidth() : number {
-		return this._imageWidth;
-	}
-
-	private _imageHeight : number;
-	public get imageHeight() : number {
-		return this._imageHeight;
-	}
-
 	private _sortOptions : OptionSelect;
 	public get sortOptions() : OptionSelect {
 		return this._sortOptions;
@@ -82,11 +71,6 @@ export class ImageDetails {
 		return this._currentSortKey;
 	}
 
-	private _currentSelectedPoint : pointWithImage | null;
-	public get currentSelectedPoint() : pointWithImage | null {
-		return this._currentSelectedPoint;
-	}
-
 	private _attributeData : AttributeData;
 	public get attributeData() : AttributeData {
 		return this._attributeData;
@@ -97,12 +81,10 @@ export class ImageDetails {
 		return this._detailsContainerSelect;
 	}
 
-	public onDataChange(attributeData: AttributeData, imageLookup: imageLookup, tiledImgUrl: string, imageWidth: number, imageHeight: number, keepImages: boolean)
+	public onDataChange(attributeData: AttributeData, imageLookup: imageLookup, tiledImgUrl: string, keepImages: boolean)
 	{
 		this._imageLookup = imageLookup;
 		this._tiledImgUrl = tiledImgUrl;
-		this._imageWidth = imageWidth;
-		this._imageHeight = imageHeight;
 		this._attributeData = attributeData;
 		if (!keepImages)
 		{
@@ -148,7 +130,7 @@ export class ImageDetails {
 	}
 
 	private onClick(d: pointWithImage) {
-		if (d !== this.currentSelectedPoint)
+		if (d !== this.attributeData.currentSelectedPoint)
 		{
 			this.updateSelectedPoint(d);
 		}
@@ -194,14 +176,14 @@ export class ImageDetails {
 				background-position-x: ${-this.imageLookup[d.image].left}px;
 				background-position-y: ${-this.imageLookup[d.image].top}px;
 				background-image: url(${this.tiledImgUrl});
-				width: ${this.imageWidth}px;
-				height: ${this.imageHeight}px;
+				width: ${this.attributeData.imageWidth}px;
+				height: ${this.attributeData.imageHeight}px;
 				`;
 	}
 
 	private updateSelectedPoint(point: pointWithImage | null): void
 	{
-		this._currentSelectedPoint = point;
+		this.attributeData.currentSelectedPoint = point;
 		if (point === null)
 		{
 			this.selectedPointContainer.classList.add('noDisp');

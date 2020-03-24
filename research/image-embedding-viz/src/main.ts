@@ -44,7 +44,7 @@ function onDatasetChange(dataAttr: DatasetAttributes, projAttr?: ProjectionAttri
 	currentProjectionDisplayName = projAttr.displayName;
 	d3.json(dataFolder + projAttr.filename).then((data: pointWithImage[]) =>
 	{
-		attributeData.onDataChange(data);
+		attributeData.onDataChange(data, dataAttr.imageWidth, dataAttr.imageHeight);
 
 
 		maybeLoadDistanceMatrix(dataAttr, dataFolder).then(() =>
@@ -57,8 +57,6 @@ function onDatasetChange(dataAttr: DatasetAttributes, projAttr?: ProjectionAttri
 					attributeData,
 					imageLookup,
 					dataFolder + "tiledImg.png",
-					dataAttr.imageWidth,
-					dataAttr.imageHeight,
 					projectionSwitchOnly
 					);
 			});
