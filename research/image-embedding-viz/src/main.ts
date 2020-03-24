@@ -6,7 +6,7 @@ import { DatasetSelector, DatasetAttributes, ProjectionAttributes} from './Datas
 import { pointWithImage, imageLookup } from './types';
 import { scaleBand, color } from 'd3';
 
-let scatterPlot: ScatterPlotWithImage = new ScatterPlotWithImage("scatterPlot", onBrushSelectionChange);
+let scatterPlot: ScatterPlotWithImage = new ScatterPlotWithImage("scatterPlot", "selectedPointContainer", onBrushSelectionChange);
 let imageDetails: ImageDetails = new ImageDetails("outerImageDetailsContainer", "innerImageDetailsContainer","selectedPointContainer", "sortByContainer", onPointSelectionChange);
 let attributeData: AttributeData = new AttributeData();
 let dataSelector: DatasetSelector;

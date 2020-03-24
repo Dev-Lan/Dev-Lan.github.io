@@ -1,5 +1,5 @@
 import * as d3 from 'd3';
-import {SvgSelection, Margin, ButtonProps} from '../../lib/DevLibTypes';
+import {SvgSelection, HtmlSelection, Margin, ButtonProps} from '../../lib/DevLibTypes';
 import {pointWithImage, attributeSelector} from './types';
 import { AttributeData } from './AttributeData';
 import {OptionSelect} from '../../widgets/OptionSelect';
@@ -7,9 +7,10 @@ import {ColorScaleLegend} from './ColorScaleLegend';
 
 export class ScatterPlotWithImage {
 	
-	constructor(svgContainerId: string, brushChangeCallback: (data: pointWithImage[]) => void)
+	constructor(svgContainerId: string, selectedImageContainerId: string, brushChangeCallback: (data: pointWithImage[]) => void)
 	{
 		this._svgSelect = d3.select("#" + svgContainerId);
+		this._selectedPointContainerSelect = d3.select("#" + selectedImageContainerId);
 		this._brushChangeCallback = brushChangeCallback;
 
 		const pad = 40;
@@ -54,6 +55,12 @@ export class ScatterPlotWithImage {
 	public get colorLegendGroupSelect() : SvgSelection {
 		return this._colorLegendGroupSelect;
 	}
+
+	
+	private _selectedPointContainerSelect : HtmlSelection;
+	public get selectedPointContainerSelect() : HtmlSelection {
+		return this._selectedPointContainerSelect;
+	}	
 
 	private _colorScaleLegend : ColorScaleLegend;
 	public get colorScaleLegend() : ColorScaleLegend {
@@ -173,8 +180,15 @@ export class ScatterPlotWithImage {
 			`translate(
 				${this.margin.left + this.width + legendPadding},
 				${this.margin.top + this.attributeData.imageHeight + legendPadding})`
-		)	
+		)
 
+		let top: number = this.svgSelect.node().getBoundingClientRect().top;
+
+		this.selectedPointContainerSelect.attr('style', 
+			`left: ${legendPadding + this.margin.right + this.width - this.attributeData.imageWidth}px;
+			top: ${legendPadding + top}px;`
+			);
+		// this.selectedPointContainerSelect.attr('left', `${this.margin.top}px`);
 
 		let minX = d3.min(this.data, d => d.x);
 		let maxX = d3.max(this.data, d => d.x);
