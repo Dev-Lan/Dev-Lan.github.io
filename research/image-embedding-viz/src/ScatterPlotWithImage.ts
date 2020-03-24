@@ -167,6 +167,15 @@ export class ScatterPlotWithImage {
 			this._colorSelector = null;
 		}
 
+		// position color scale legend since it depends on the size of the thumbnails
+		const legendPadding = 10;
+		this.colorLegendGroupSelect.attr("transform", 
+			`translate(
+				${this.margin.left + this.width + legendPadding},
+				${this.margin.top + this.attributeData.imageHeight + legendPadding})`
+		)	
+
+
 		let minX = d3.min(this.data, d => d.x);
 		let maxX = d3.max(this.data, d => d.x);
 		this._scaleX = d3.scaleLinear()
@@ -290,13 +299,8 @@ export class ScatterPlotWithImage {
 			.on("start brush end", () => { this.brushHandler(); });
 		this.brushGroupSelect.call(this.brush);
 		
-
-		const legendPadding = 10;
 		this._colorLegendGroupSelect = this.svgSelect.append("g");
-		this.colorLegendGroupSelect
-			.attr("transform", `translate(${this.margin.left + this.width + legendPadding}, ${this.margin.top})`)	
-			.classed("colorLegendGroup", true)
-			// todo - add buffer for pinned image
+		this.colorLegendGroupSelect.classed("colorLegendGroup", true);			
 
 		let oldSelection;
 		if (this.colorScaleLegend)
