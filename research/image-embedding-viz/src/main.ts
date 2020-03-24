@@ -7,7 +7,7 @@ import { pointWithImage, imageLookup } from './types';
 import { scaleBand, color } from 'd3';
 
 let scatterPlot: ScatterPlotWithImage = new ScatterPlotWithImage("scatterPlot", onBrushSelectionChange);
-let imageDetails: ImageDetails = new ImageDetails("outerImageDetailsContainer", "innerImageDetailsContainer","selectedPointContainer", "sortByContainer");
+let imageDetails: ImageDetails = new ImageDetails("outerImageDetailsContainer", "innerImageDetailsContainer","selectedPointContainer", "sortByContainer", onPointSelectionChange);
 let attributeData: AttributeData = new AttributeData();
 let dataSelector: DatasetSelector;
 document.getElementById('exportSubsetButton').onclick = () => onExportSubsetClick();
@@ -84,6 +84,11 @@ function onBrushSelectionChange(data: pointWithImage[]): void
 {
 	scatterPlot.onBrushSelectionChange();
 	imageDetails.onBrushSelectionChange(data);
+}
+
+function onPointSelectionChange(data: pointWithImage | null): void
+{
+	scatterPlot.onSelectedPointChange(data);
 }
 
 function onExportSubsetClick(): void

@@ -79,6 +79,6 @@ export class DatasetSelector {
 			}
 			projPropsList.push(buttonProps);
 		}
-		this.projectionOptions.onDataChange(projPropsList, true);
+		this.projectionOptions.onDataChange(projPropsList, 0);
 	}
 }

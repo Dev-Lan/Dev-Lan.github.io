@@ -7,7 +7,7 @@ import { AttributeData } from './AttributeData';
 
 export class ImageDetails {
 	
-	constructor(outerHtmlContainerId: string, innerHtmlContainerId: string, selectedPointContainerId: string, sortByContainer: string)
+	constructor(outerHtmlContainerId: string, innerHtmlContainerId: string, selectedPointContainerId: string, sortByContainer: string, pointChangeCallback: (data: pointWithImage | null) => void)
 	{
 		this._outerContainerId = outerHtmlContainerId;
 		this._outerContainer = document.getElementById(outerHtmlContainerId);
@@ -15,6 +15,7 @@ export class ImageDetails {
 		this._sortOptions = new OptionSelect(sortByContainer);
 		this._detailsContainerSelect = d3.select("#detailsContainerPopup");
 		this._selectedPointContainer = document.getElementById(selectedPointContainerId);
+		this._pointChangeCallback = pointChangeCallback;
 		this.onWindowResize();
 	} 
 
@@ -80,6 +81,12 @@ export class ImageDetails {
 	public get detailsContainerSelect() : HtmlSelection {
 		return this._detailsContainerSelect;
 	}
+
+	
+	private _pointChangeCallback : (d: pointWithImage | null) => void;
+	public get pointChangeCallback() : (d: pointWithImage | null) => void {
+		return this._pointChangeCallback;
+	}	
 
 	public onDataChange(attributeData: AttributeData, imageLookup: imageLookup, tiledImgUrl: string, keepImages: boolean)
 	{
@@ -184,6 +191,7 @@ export class ImageDetails {
 	private updateSelectedPoint(point: pointWithImage | null): void
 	{
 		this.attributeData.currentSelectedPoint = point;
+		this.pointChangeCallback(point);
 		if (point === null)
 		{
 			this.selectedPointContainer.classList.add('noDisp');
@@ -215,7 +223,7 @@ export class ImageDetails {
 		this._currentSortKey = 'X-Axis'; 
 		this._currentSortSelector = buttonPropList[0].callback as attributeSelector;
 
-		this.sortOptions.onDataChange(buttonPropList, true);
+		this.sortOptions.onDataChange(buttonPropList, 0);
 	}
 
 	public onWindowResize(): void

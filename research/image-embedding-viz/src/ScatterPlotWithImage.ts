@@ -1,5 +1,5 @@
 import * as d3 from 'd3';
-import {SvgSelection, Margin} from '../../lib/DevLibTypes';
+import {SvgSelection, Margin, ButtonProps} from '../../lib/DevLibTypes';
 import {pointWithImage, attributeSelector} from './types';
 import { AttributeData } from './AttributeData';
 import {OptionSelect} from '../../widgets/OptionSelect';
@@ -162,7 +162,7 @@ export class ScatterPlotWithImage {
 			this._attributeData = attributeData;
 			let buttonPropList = this.attributeData.getButtonProps((key, selector) => this.onAttributeChange(key, selector));
 			// console.log(buttonPropList);
-			this.colorMapSelect.onDataChange(buttonPropList, true);
+			this.colorMapSelect.onDataChange(buttonPropList, 0);
 			this._currentAttributeKey = "None";
 			this._colorSelector = null;
 		}
@@ -206,7 +206,7 @@ export class ScatterPlotWithImage {
 
 		if (!fromResize)
 		{
-			this.brush1dHandler(null)
+			this.brush1dHandler(null);
 		}
 
 		if (key === "None")
@@ -215,7 +215,7 @@ export class ScatterPlotWithImage {
 			return
 		}
 
-		let domain = this.attributeData.getMinMax(key);
+		let domain: [number, number] = this.attributeData.getMinMax(key);
 		let colorScale = d3.scaleSequential(d3.interpolateWarm)
 			.domain(domain);
 
@@ -226,7 +226,42 @@ export class ScatterPlotWithImage {
 			.join("circle")
 			.attr("fill", d => colorScale(this.colorSelector(d)))
 			.attr("fill-opacity", "1");
+	}
 
+	private onChangeToDistanceToSelection(d: pointWithImage): void
+	{
+		let distanceToPoint = d.distanceTo;
+		this.brush1dHandler(null);
+		let min: number = d3.min(distanceToPoint);
+		let max: number = d3.max(distanceToPoint);
+		let domain: [number, number] = [min, max];
+
+		let colorScale = d3.scaleSequential(d3.interpolateWarm)
+			.domain(domain);
+
+		this.colorScaleLegend.onDataChange(colorScale, false);
+
+		this.mainGroupSelect.selectAll("circle")
+			.data(this.data, (d: pointWithImage) => d.image)
+			.join("circle")
+			.attr("fill", (d, i) => colorScale(distanceToPoint[i]))
+			.attr("fill-opacity", "1");
+	}
+
+	public onSelectedPointChange(point: pointWithImage | null): void
+	{
+		const distanceButtonName = "Distance To Selection";
+		if (point === null)
+		{
+			this.colorMapSelect.removeButton(distanceButtonName);
+			return;
+		}
+
+		let newButton: ButtonProps = {
+			displayName: distanceButtonName,
+			callback: () => this.onChangeToDistanceToSelection(point)
+		};
+		this.colorMapSelect.replaceButton(distanceButtonName, newButton);
 	}
 
 	private setNoColorMap(): void
