@@ -74,6 +74,10 @@ export class OptionSelect {
 	public removeButton(displayName: string, callDefaultCallback = true): void
 	{
 		let currentSelectedIndex = this.getCurrentSelectionIndex();
+		if (!this.data)
+		{
+			return;
+		}
 		let removeIndex = this.data.findIndex((button: ButtonProps) => button.displayName === displayName);
 		if (removeIndex === -1)
 		{

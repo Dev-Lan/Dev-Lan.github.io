@@ -107,10 +107,10 @@ export class ImageDetails {
 		this.sortImages();
 		let folder = "../data/images/"
 		d3.select("#numSelected")
-			.html(data.length.toString());
+			.html(this.currentSelection.length.toString());
 
 		const noneSelectedClass = "noneSelectedMessage";
-		if (data.length === 0)
+		if (this.currentSelection.length === 0)
 		{
 			this.innerContainerSelection.html(null);
 			this.innerContainerSelection
@@ -124,7 +124,7 @@ export class ImageDetails {
 
 		let thisObj = this;
 		this.innerContainerSelection.selectAll("div")
-			.data(data)
+			.data(this.currentSelection)
 			.join("div")
 			.attr("style", d => this.getThumbnailStyle(d))
 			.classed("imageInGrid", true)
@@ -192,6 +192,7 @@ export class ImageDetails {
 	{
 		this.attributeData.currentSelectedPoint = point;
 		this.pointChangeCallback(point);
+		this.updateDistanceSortOption(point);
 		if (point === null)
 		{
 			this.selectedPointContainer.classList.add('noDisp');
@@ -216,7 +217,7 @@ export class ImageDetails {
 		let buttonPropList: ButtonProps[] = this.attributeData.getButtonProps((key, selector) => {
 			this._currentSortKey = key;
 			this._currentSortSelector = selector;
-			this.onBrushSelectionChange(this.currentSelection)
+			this.onBrushSelectionChange(this.currentSelection);
 		}, true);
 
 		// by default the X-Axis sorting is first
@@ -224,6 +225,33 @@ export class ImageDetails {
 		this._currentSortSelector = buttonPropList[0].callback as attributeSelector;
 
 		this.sortOptions.onDataChange(buttonPropList, 0);
+	}
+	
+	private updateDistanceSortOption(point: pointWithImage | null): void
+	{
+		if (!this.attributeData.hasDistanceMatrix)
+		{
+			return;
+		}
+		const distanceButtonName = "Distance To Selection";
+		if (point === null)
+		{
+			this.sortOptions.removeButton(distanceButtonName);
+			return;
+		}
+
+		let newButton: ButtonProps = {
+			displayName: distanceButtonName,
+			callback: () => this.onChangeToDistanceToSelection(point)
+		};
+		this.sortOptions.replaceButton(distanceButtonName, newButton);
+	}
+
+	private onChangeToDistanceToSelection(point: pointWithImage | null): void
+	{
+		this._currentSortKey = "distanceTo-" + point.image;
+		this._currentSortSelector = null;
+		this.onBrushSelectionChange(this.currentSelection);
 	}
 
 	public onWindowResize(): void
@@ -247,10 +275,44 @@ export class ImageDetails {
 	{
 		if (typeof this.currentSortSelector === "undefined" || this.currentSortSelector === null)
 		{
+			if (!this.attributeData || !this.attributeData.hasDistanceMatrix || !this.attributeData.currentSelectedPoint)
+			{
+				return;
+			}
+			this.sortImagesBasedOnDistanceToCurrentSelection();
 			return;
 		}
 		let sortCompareFunction = DevlibAlgo.sortOnProperty<pointWithImage>(this.currentSortSelector);
 		this.currentSelection.sort(sortCompareFunction);
+	}
+
+	private sortImagesBasedOnDistanceToCurrentSelection(): void
+	{
+		let distanceTo: number[] = this.attributeData.currentSelectedPoint.distanceTo;
+		let distanceToWithOriginalIndex: [number, number][] = []
+		for (let i = 0; i < distanceTo.length; i++)
+		{
+			let dist = distanceTo[i];
+			distanceToWithOriginalIndex.push([dist, i]);
+		}
+		let getFirst = (tuple: [number, number]) => tuple[0];
+		let sortFunc = DevlibAlgo.sortOnProperty<[number, number]>(getFirst);
+		distanceToWithOriginalIndex.sort(sortFunc);
+		let sortedSelection: pointWithImage[] = [];
+		let tempDataLookup = new Set<string>();
+		for (let point of this.currentSelection)
+		{
+			tempDataLookup.add(point.image);
+		}
+		for (let [dist, index] of distanceToWithOriginalIndex)
+		{
+			let point = this.attributeData.data[index];
+			if (tempDataLookup.has(point.image))
+			{
+				sortedSelection.push(point);
+			}
+		}
+		this._currentSelection = sortedSelection;
 	}
 
 }
