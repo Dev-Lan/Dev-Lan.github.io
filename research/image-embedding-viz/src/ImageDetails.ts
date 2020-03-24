@@ -7,15 +7,17 @@ import { AttributeData } from './AttributeData';
 
 export class ImageDetails {
 	
-	constructor(outerHtmlContainerId: string, innerHtmlContainerId: string, sortByContainer: string)
+	constructor(outerHtmlContainerId: string, innerHtmlContainerId: string, selectedPointContainerId: string, sortByContainer: string)
 	{
 		this._outerContainerId = outerHtmlContainerId;
 		this._outerContainer = document.getElementById(outerHtmlContainerId);
 		this._innerContainerSelection = d3.select("#" + innerHtmlContainerId);
 		this._sortOptions = new OptionSelect(sortByContainer);
 		this._detailsContainerSelect = d3.select("#detailsContainerPopup");
+		this._selectedPointContainer = document.getElementById(selectedPointContainerId);
+		this._currentSelectedPoint = null;
 		this.onWindowResize();
-	}
+	} 
 
 	private _outerContainerId : string;
 	public get outerContainerId() : string {
@@ -34,6 +36,11 @@ export class ImageDetails {
 	public set innerContainerSelection(v : HtmlSelection) {
 		this._innerContainerSelection = v;
 	}
+	
+	private _selectedPointContainer : HTMLElement;
+	public get selectedPointContainer() : HTMLElement {
+		return this._selectedPointContainer;
+	}	
 
 	private _currentSelection : pointWithImage[];
 	public get currentSelection() : pointWithImage[] {
@@ -74,7 +81,11 @@ export class ImageDetails {
 	public get currentSortKey() : string {
 		return this._currentSortKey;
 	}
-	
+
+	private _currentSelectedPoint : pointWithImage | null;
+	public get currentSelectedPoint() : pointWithImage | null {
+		return this._currentSelectedPoint;
+	}
 
 	private _attributeData : AttributeData;
 	public get attributeData() : AttributeData {
@@ -97,6 +108,7 @@ export class ImageDetails {
 		{
 			this.onBrushSelectionChange([]);
 		}
+		this.updateSelectedPoint(null);
 		this.updateSortOptions();
 	}
 
@@ -125,52 +137,88 @@ export class ImageDetails {
 		this.innerContainerSelection.selectAll("div")
 			.data(data)
 			.join("div")
-			.attr("style", d =>
-				`
+			.attr("style", d => this.getThumbnailStyle(d))
+			.classed("imageInGrid", true)
+			.on('click', (d) => this.onClick(d))
+			.on("mouseenter", function(d)
+			{
+				thisObj.onMouseEnter(this as HTMLElement, d);
+			})
+			.on("mouseleave", () => this.onMouseLeave());
+	}
+
+	private onClick(d: pointWithImage) {
+		if (d !== this.currentSelectedPoint)
+		{
+			this.updateSelectedPoint(d);
+		}
+		else
+		{
+			this.updateSelectedPoint(null);
+		}
+	}
+
+	private onMouseEnter(enterElement: HTMLElement, d: pointWithImage)
+	{
+		let rect: DOMRect | ClientRect = enterElement.getBoundingClientRect();
+		this.detailsContainerSelect.html(null)
+			.classed("noDisp", false)
+			.attr("style", 
+				`top: ${rect.bottom + 10}px;
+				left: ${rect.left}px`
+				);
+
+		this.detailsContainerSelect.append("h4")
+			.text(d.image);
+		this.detailsContainerSelect.append("p")
+			.text(`x: ${d.x}`);
+		this.detailsContainerSelect.append("p")
+			.text(`y: ${d.y}`);
+
+		for (let attr in d.attributes)
+		{
+			let attrObj = d.attributes[attr];
+			this.detailsContainerSelect.append("p")
+				.text(`${attrObj.displayName}: ${attrObj.value}`);
+		}
+	}
+
+	private onMouseLeave() {
+		this.detailsContainerSelect.html(null)
+			.classed("noDisp", true);
+	}
+
+	private getThumbnailStyle(d: pointWithImage): string
+	{
+		return `
 				background-position-x: ${-this.imageLookup[d.image].left}px;
 				background-position-y: ${-this.imageLookup[d.image].top}px;
 				background-image: url(${this.tiledImgUrl});
 				width: ${this.imageWidth}px;
 				height: ${this.imageHeight}px;
-				`)
-			.classed("imageInGrid", true)
-			.on('click', function(d)
-			{
-				// todo - open distance filter functionality
-			})
-			.on("mouseenter", function(d)
-			{
-				console.log(this);
-				let rect: DOMRect | ClientRect = (this as HTMLElement).getBoundingClientRect();
+				`;
+	}
+
+	private updateSelectedPoint(point: pointWithImage | null): void
+	{
+		this._currentSelectedPoint = point;
+		if (point === null)
+		{
+			this.selectedPointContainer.classList.add('noDisp');
+			return;
+		}
+		this.selectedPointContainer.classList.remove('noDisp');
+
+		let styleString: string = this.getThumbnailStyle(point);
 
 
-				thisObj.detailsContainerSelect.html(null)
-					.classed("noDisp", false)
-					.attr("style", 
-						`top: ${rect.bottom + 10}px;
-						left: ${rect.left}px`)
 
-				thisObj.detailsContainerSelect.append("h4")
-					.text(d.image);
+		d3.selectAll(".selectedImageContainer")
+			.attr('style', styleString)
+			.on('click', () => this.onClick(point))
+			.on("mouseenter", () => this.onMouseEnter(this.selectedPointContainer, point))
+			.on("mouseleave", () => this.onMouseLeave());
 
-				thisObj.detailsContainerSelect.append("p")
-					.text(`x: ${d.x}`)
-
-				thisObj.detailsContainerSelect.append("p")
-					.text(`y: ${d.y}`)
-
-				for (let attr in d.attributes)
-				{
-					let attrObj = d.attributes[attr];
-					thisObj.detailsContainerSelect.append("p")
-						.text(`${attrObj.displayName}: ${attrObj.value}`)
-				}
-			})
-			.on("mouseleave", (d) =>
-			{
-				this.detailsContainerSelect.html(null)
-					.classed("noDisp", true);
-			});
 	}
 
 	private updateSortOptions(): void

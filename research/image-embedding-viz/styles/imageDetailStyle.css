@@ -69,3 +69,11 @@
     border-radius: 12px;
     text-align: center;
 }
+
+.selectedPointContainer {
+    position: absolute;
+    top: 200px;
+    left: 200px;
+    border: solid black 1px;
+    padding: 10px;
+}
