@@ -230,6 +230,8 @@ export class ScatterPlotWithImage {
 
 	private onChangeToDistanceToSelection(d: pointWithImage): void
 	{
+		this._currentAttributeKey = "distanceTo-" + d.image;
+		this._colorSelector = null;
 		let distanceToPoint = d.distanceTo;
 		this.brush1dHandler(null);
 		let min: number = d3.min(distanceToPoint);
@@ -250,6 +252,10 @@ export class ScatterPlotWithImage {
 
 	public onSelectedPointChange(point: pointWithImage | null): void
 	{
+		if (!this.attributeData.hasDistanceMatrix)
+		{
+			return;
+		}
 		const distanceButtonName = "Distance To Selection";
 		if (point === null)
 		{
@@ -398,14 +404,23 @@ export class ScatterPlotWithImage {
 		let [minV, maxV] = this.getColorScaleFilterBounds();
 
 		let filteredData: pointWithImage[] = [];
-		for (let d of this.data)
+		for (let i = 0; i < this.data.length; i++)
 		{
+			let d: pointWithImage = this.data[i];
 			let insideX: boolean = left <= d.x && d.x <= right;
 			let insideY: boolean = bottom <= d.y && d.y <= top;
 			let insideVal = true;
 			if (this.currentAttributeKey !== "None")
 			{
-				let value: number = this.colorSelector(d);
+				let value: number;
+				if (this.colorSelector)
+				{
+					value = this.colorSelector(d);
+				}
+				else
+				{
+					value = this.attributeData.currentSelectedPoint.distanceTo[i];
+				}
 				insideVal = minV <= value && value <= maxV;
 			}
 			d.in1dBrush = insideVal;
