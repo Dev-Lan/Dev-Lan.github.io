@@ -53,20 +53,34 @@ export class AttributeData {
 		return this._imageHeight;
 	}
 
-	public addDistanceMatrix(distMatrix: d3.DSVRowArray<string>): void
+
+	public addDistanceMatrixFromArray(flatArray: Float32Array): void
 	{
 		this.hasDistanceMatrix = true;
-		for (let i = 0; i < this.data.length; i++)
+		let numCols = this.data.length;
+		for (let i = 0; i < numCols; i++)
 		{
-			let thisDistanceTo: number[] = [];
-			let row = distMatrix[i];
-			for (let key in row)
-			{
-				thisDistanceTo.push(+row[key])
-			}
-			this.data[i].distanceTo = thisDistanceTo;
+			let startIndex: number = i * numCols;
+			let endIndex = startIndex + numCols;
+			let thisDistanceTo: number[];
+			this.data[i].distanceTo = flatArray.slice(startIndex, endIndex);
 		}
 	}
+
+	// public addDistanceMatrix(distMatrix: d3.DSVRowArray<string>): void
+	// {
+	// 	this.hasDistanceMatrix = true;
+	// 	for (let i = 0; i < this.data.length; i++)
+	// 	{
+	// 		let thisDistanceTo: number[] = [];
+	// 		let row = distMatrix[i];
+	// 		for (let key in row)
+	// 		{
+	// 			thisDistanceTo.push(+row[key])
+	// 		}
+	// 		this.data[i].distanceTo = thisDistanceTo;
+	// 	}
+	// }
 
 	public onDataChange(data: pointWithImage[], imageWidth: number, imageHeight: number): void
 	{

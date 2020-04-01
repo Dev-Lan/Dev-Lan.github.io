@@ -288,7 +288,7 @@ export class ImageDetails {
 
 	private sortImagesBasedOnDistanceToCurrentSelection(): void
 	{
-		let distanceTo: number[] = this.attributeData.currentSelectedPoint.distanceTo;
+		let distanceTo: Float32Array = this.attributeData.currentSelectedPoint.distanceTo;
 		let distanceToWithOriginalIndex: [number, number][] = []
 		for (let i = 0; i < distanceTo.length; i++)
 		{

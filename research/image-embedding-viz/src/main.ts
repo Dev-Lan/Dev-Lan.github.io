@@ -69,9 +69,11 @@ async function maybeLoadDistanceMatrix(dataAttr: DatasetAttributes, dataFolder: 
 {
 	if (dataAttr.hasDistanceMatrix)
 	{
-		d3.csv(dataFolder + 'distanceMatrix.txt').then((distMatrix: d3.DSVRowArray<string>) => {
-			attributeData.addDistanceMatrix(distMatrix);
-		})
+		d3.buffer(dataFolder + 'distanceMatrix.bin').then((data: ArrayBuffer) =>
+		{
+			let rawArray = new Float32Array(data);
+			attributeData.addDistanceMatrixFromArray(rawArray);
+		});
 	}
 	else
 	{
