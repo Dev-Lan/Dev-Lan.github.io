@@ -69,7 +69,7 @@ async function maybeLoadDistanceMatrix(dataAttr: DatasetAttributes, dataFolder: 
 {
 	if (dataAttr.hasDistanceMatrix)
 	{
-		await d3.csv(dataFolder + 'distanceMatrix.txt').then((distMatrix: d3.DSVRowArray<string>) => {
+		d3.csv(dataFolder + 'distanceMatrix.txt').then((distMatrix: d3.DSVRowArray<string>) => {
 			attributeData.addDistanceMatrix(distMatrix);
 		})
 	}
