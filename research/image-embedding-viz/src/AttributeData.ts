@@ -67,21 +67,6 @@ export class AttributeData {
 		}
 	}
 
-	// public addDistanceMatrix(distMatrix: d3.DSVRowArray<string>): void
-	// {
-	// 	this.hasDistanceMatrix = true;
-	// 	for (let i = 0; i < this.data.length; i++)
-	// 	{
-	// 		let thisDistanceTo: number[] = [];
-	// 		let row = distMatrix[i];
-	// 		for (let key in row)
-	// 		{
-	// 			thisDistanceTo.push(+row[key])
-	// 		}
-	// 		this.data[i].distanceTo = thisDistanceTo;
-	// 	}
-	// }
-
 	public onDataChange(data: pointWithImage[], imageWidth: number, imageHeight: number): void
 	{
 		this._data = data;

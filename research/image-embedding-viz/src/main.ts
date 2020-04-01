@@ -67,9 +67,9 @@ function onDatasetChange(dataAttr: DatasetAttributes, projAttr?: ProjectionAttri
 
 async function maybeLoadDistanceMatrix(dataAttr: DatasetAttributes, dataFolder: string): Promise<void>
 {
-	if (dataAttr.hasDistanceMatrix)
+	if (dataAttr.distanceMatrixFilename)
 	{
-		d3.buffer(dataFolder + 'distanceMatrix.bin').then((data: ArrayBuffer) =>
+		d3.buffer(dataFolder + dataAttr.distanceMatrixFilename).then((data: ArrayBuffer) =>
 		{
 			let rawArray = new Float32Array(data);
 			attributeData.addDistanceMatrixFromArray(rawArray);
