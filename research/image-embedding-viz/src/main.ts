@@ -16,6 +16,7 @@ let currentProjectionDisplayName: string;
 
 
 let baseFolder = "https://raw.githubusercontent.com/Dev-Lan/image-embedding-data/master/";
+let lfsBaseFolder = "https://media.githubusercontent.com/media/Dev-Lan/image-embedding-data/master/"
 if (location.hostname === "localhost" || location.hostname === "127.0.0.1")
 {
 	baseFolder = "../myData/image-embedding-data/";
@@ -30,11 +31,13 @@ d3.json(baseFolder + 'examples.json').then(data =>
 function onDatasetChange(dataAttr: DatasetAttributes, projAttr?: ProjectionAttributes): void
 {
 	currentDatasetDisplayName = dataAttr.displayName;
-	let dataFolder = baseFolder + dataAttr.folderName;
-	if (dataFolder[dataFolder.length - 1] !== "/")
+	let extraPath = dataAttr.folderName;
+	if (extraPath[extraPath.length - 1] !== "/")
 	{
-		dataFolder += "/";
+		extraPath += "/";
 	}
+	let dataFolder = baseFolder + extraPath;
+	let lfsDataFolder = lfsBaseFolder + extraPath;
 	let projectionSwitchOnly = true;
 	if (!projAttr)
 	{
@@ -46,8 +49,7 @@ function onDatasetChange(dataAttr: DatasetAttributes, projAttr?: ProjectionAttri
 	{
 		attributeData.onDataChange(data, dataAttr.imageWidth, dataAttr.imageHeight);
 
-
-		maybeLoadDistanceMatrix(dataAttr, dataFolder).then(() =>
+		maybeLoadDistanceMatrix(dataAttr, lfsDataFolder).then(() =>
 		{
 			scatterPlot.onDataChange(data, attributeData, projectionSwitchOnly, true);
 
