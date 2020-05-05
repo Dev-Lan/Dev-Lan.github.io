@@ -25,6 +25,10 @@ if (location.hostname === "localhost" || location.hostname === "127.0.0.1")
 d3.json(baseFolder + 'examples.json').then(data =>
 {
 	dataSelector = new DatasetSelector("examplesContainer", "projectionSelectContainer", data, onDatasetChange);
+	
+	// Choose first dataset by default
+	onDatasetChange(data[0]);
+	dataSelector.updateProjectionList(data[0]);
 });
 
 

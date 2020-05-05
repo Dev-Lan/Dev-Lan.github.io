@@ -64,7 +64,7 @@ export class DatasetSelector {
 			.classed("selected", false);
 	}
 
-	private updateProjectionList(dataSelection: DatasetAttributes): void
+	public updateProjectionList(dataSelection: DatasetAttributes): void
 	{
 		let projectionList = dataSelection.projectionList
 		let projPropsList: ButtonProps[] = [];
