@@ -4,7 +4,7 @@ class IntervalData
 
     update(deltaTime)
     {
-        this.timeElapsed += deltaTime * 100;
+        this.timeElapsed += deltaTime;
         let timeRemaining = this.timeRemaining();
         if (timeRemaining <= 0)
         {
