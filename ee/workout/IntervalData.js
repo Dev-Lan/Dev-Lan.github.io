@@ -130,7 +130,7 @@ class IntervalData
         while (workoutList.length < workoutCount)
         {
             let type = workoutTypes[typeIndex];
-            typeIndex = (typeIndex + 1) % 2;
+            typeIndex = (typeIndex + 1) % workoutTypes.length;
             let options = workoutOptions.get(type);
             let thisWorkout = options.splice(Math.floor(Math.random() * options.length), 1)[0];
             workoutList.push(thisWorkout.Activity);
