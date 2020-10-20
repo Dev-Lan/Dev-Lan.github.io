@@ -112,10 +112,11 @@ class IntervalData
     static BuildData(workoutOptions, bigIntervalCount, intervalPattern)
     {
         let outData = new IntervalData();
+        let workoutOptionsCopy = _.cloneDeep(workoutOptions);
 
         // main workout
         let workoutCount = 4 * bigIntervalCount;
-        let workoutTypes = ['core', 'upper'];
+        let workoutTypes =  [...workoutOptions.keys()].filter(type => type !== 'warm-up' && type !== 'stretch')
         let workoutList = [];
         let typeIndex = 0;
         while (workoutList.length < workoutCount)
@@ -125,6 +126,10 @@ class IntervalData
             let options = workoutOptions.get(type);
             let thisWorkout = options.splice(Math.floor(Math.random() * options.length), 1)[0];
             workoutList.push(thisWorkout.Activity);
+            if (options.length === 0)
+            {
+                workoutOptions.set(type, [...workoutOptionsCopy.get(type)]);
+            }
         }
 
         if (intervalPattern)
