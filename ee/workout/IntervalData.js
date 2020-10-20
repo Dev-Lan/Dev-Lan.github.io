@@ -4,7 +4,7 @@ class IntervalData
 
     update(deltaTime)
     {
-        this.timeElapsed += deltaTime;
+        this.timeElapsed += deltaTime * 100;
         let timeRemaining = this.timeRemaining();
         if (timeRemaining <= 0)
         {
@@ -12,7 +12,7 @@ class IntervalData
             {
                 this.warmUpComplete = true;
             }
-            else
+            else if (!this.mainWorkoutComplete())
             {
                 this.intervalIndex++;
                 if (this.intervalIndex === this.intervalPattern.length)
@@ -20,6 +20,10 @@ class IntervalData
                     this.intervalIndex = 0;
                     this.workoutIndex++;
                 }
+            }
+            else if (!this.stretchComplete)
+            {
+                this.stretchComplete = true;
             }
             this.timeElapsed = Math.abs(timeRemaining);
         }
@@ -32,14 +36,31 @@ class IntervalData
             let i = Math.floor(this.percentDone() * this.warmUpList.length);
             return this.warmUpList[i];
         }
-        return this.mainWorkoutList[this.workoutIndex];
+        if (!this.mainWorkoutComplete())
+        {
+            return this.mainWorkoutList[this.workoutIndex];
+            
+        }
+        if (!this.stretchComplete)
+        {
+            let i = Math.floor(this.percentDone() * this.stretchList.length);
+            return this.stretchList[i];
+        }
+        return 'Workout Complete!';
     }
 
     nextWorkout()
     {
         if (this.workoutIndex >= this.mainWorkoutList.length - 1)
         {
-            return 'Done!';
+            if (this.stretchComplete)
+            {
+                return 'Done!';
+            }
+            else
+            {
+                return 'Stretch'
+            }
         }
         return this.mainWorkoutList[this.workoutIndex + 1];
     }
@@ -50,13 +71,21 @@ class IntervalData
         {
             return this.warmUpLength - this.timeElapsed;
         }
-
-        let thisTimePeriod = this.intervalPattern[this.intervalIndex];
-        if (this.workoutIndex % this.countPerPass === this.countPerPass - 1 && this.intervalIndex === this.intervalPattern.length - 1)
+        if (!this.mainWorkoutComplete())
         {
-            thisTimePeriod += this.extraBreak;
+
+            let thisTimePeriod = this.intervalPattern[this.intervalIndex];
+            if (this.workoutIndex % this.countPerPass === this.countPerPass - 1 && this.intervalIndex === this.intervalPattern.length - 1)
+            {
+                thisTimePeriod += this.extraBreak;
+            }
+            return thisTimePeriod - this.timeElapsed;
         }
-        return thisTimePeriod - this.timeElapsed;
+        if (!this.stretchComplete)
+        {
+            return this.stretchLength - this.timeElapsed;
+        }
+        return 0;
     }
 
     percentDone()
@@ -65,22 +94,36 @@ class IntervalData
         {
             return this.timeElapsed / this.warmUpLength;
         }
-        let thisTimePeriod = this.intervalPattern[this.intervalIndex];
-        if (this.workoutIndex % this.countPerPass === this.countPerPass - 1 && this.intervalIndex === this.intervalPattern.length - 1)
+        if (!this.mainWorkoutComplete())
         {
-            thisTimePeriod += this.extraBreak;
+
+            let thisTimePeriod = this.intervalPattern[this.intervalIndex];
+            if (this.workoutIndex % this.countPerPass === this.countPerPass - 1 && this.intervalIndex === this.intervalPattern.length - 1)
+            {
+                thisTimePeriod += this.extraBreak;
+            }
+            return this.timeElapsed / thisTimePeriod;
         }
-        return this.timeElapsed / thisTimePeriod;
+        if (!this.stretchComplete)
+        {
+            return this.timeElapsed / this.stretchLength;
+        }
+        return 1;
     }
 
-    isDone()
+    mainWorkoutComplete()
     {
         return this.workoutIndex >= this.mainWorkoutList.length;
     }
 
+    isDone()
+    {
+        return this.mainWorkoutComplete() && this.stretchComplete;
+    }
+
     onCooldown()
     {
-        return this.intervalIndex % 2 === 1;
+        return this.intervalIndex % 2 === 1 || this.mainWorkoutComplete();
     }
 
     getRunState()
@@ -132,6 +175,7 @@ class IntervalData
         let outData = new IntervalData();
         let workoutOptionsCopy = _.cloneDeep(workoutOptions);
 
+        // WARM UP
         let warmUpOptions = workoutOptions.get('warm-up');
         let warmUpList = [];
 
@@ -152,6 +196,28 @@ class IntervalData
         outData.warmUpList = warmUpList;
         outData.warmUpComplete = warmUpList.length === 0;
 
+        // STRETCHES
+        let stretchOptions = workoutOptions.get('stretch');
+        let stretchList = [];
+
+        if (stretchOptions)
+        {
+            while (stretchList.length < 6)
+            {
+                let thisStretch = stretchOptions.splice(Math.floor(Math.random() * stretchOptions.length), 1)[0];
+                stretchList.push(thisStretch.Activity);
+                if (stretchList.length === 0)
+                {
+                    stretchList = [...workoutOptionsCopy.get('stretch')];
+                }
+            }
+        }
+        outData.stretchLength = 180; // 3 minutes
+        outData.stretchIntervalLength = 30; // 30 seconds
+        outData.stretchList = stretchList;
+        outData.stretchComplete = stretchList.length === 0;
+
+        // MAIN WORKOUT 
         if (intervalPattern)
         {
             outData.intervalPattern = intervalPattern.split(',').map( d => parseInt(d));

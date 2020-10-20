@@ -124,13 +124,17 @@ class IntervalTimerDisplay
         
         let workoutName = this.data.currentWorkout();
         const onCooldown = this.data.onCooldown();
-        if (onCooldown)
+        if (onCooldown && !this.data.mainWorkoutComplete())
         {
             workoutName = `Rest <span style="font-size: min(8vw, 8vh);">(${workoutName})</span>`;
         }
         if (!this.data.warmUpComplete)
         {
             workoutName = '<u style="font-size: min(8vw, 8vh);">Warm Up:</u><br>' + workoutName;
+        }
+        if (this.data.mainWorkoutComplete() && !this.data.stretchComplete)
+        {
+            workoutName = '<u style="font-size: min(8vw, 8vh);">Stretch:</u><br>' + workoutName;
         }
 
         d3.select('#outer-container')
@@ -164,7 +168,7 @@ class IntervalTimerDisplay
                 this.startAudio.play();
             }
         }
-        else
+        else if (!this.data.mainWorkoutComplete())
         {
             let container = d3.select('#small-roadmap-viz-container');
             if (container.classed('no-display'))
@@ -180,9 +184,29 @@ class IntervalTimerDisplay
             this.updateLargeRoadmap();
             this.updateSmallRoadmap();
         }
+        else if (!this.data.stretchComplete)
+        {
+            this.updateLargeRoadmap();
+            if (timeRemaining % this.data.stretchIntervalLength < 3)
+            {
+                this.startAudio.play();
+            }
+        }
 
+        if (this.data.mainWorkoutComplete())
+        {
+            let container = d3.select('#small-roadmap-viz-container');
+            if (!container.classed('no-display'))
+            {
+                container.classed('no-display', true);
+                // console.log(document.body.offsetHeight);
+                // this.resize();
+            }
+            // this.playing = false;
+        }
         if (this.data.isDone())
         {
+            this.updateLargeRoadmap();
             this.playing = false;
         }
         if (this.playing)
