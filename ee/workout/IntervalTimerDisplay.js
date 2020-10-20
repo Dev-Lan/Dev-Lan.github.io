@@ -108,9 +108,19 @@ class IntervalTimerDisplay
         this.updateLargeRoadmap();
         this.updateSmallRoadmap();
 
+        let dateObj = new Date(1000 * timeRemaining);
+        let timeString = '';
+        if (timeRemaining >= 60)
+        {
+            timeString = `${dateObj.getMinutes()}:${('0' + dateObj.getSeconds()).slice(-2)}`;
+        }
+        else
+        {
+            timeString = timeRemaining.toFixed(1);
+        }
         this.containerSelect
             .select('#countdown-time')
-            .text(timeRemaining.toFixed(1));
+            .text(timeString);
 
         if (this.data.isDone())
         {
