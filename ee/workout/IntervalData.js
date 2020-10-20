@@ -109,7 +109,7 @@ class IntervalData
         return state;
     }
 
-    static BuildData(workoutOptions, bigIntervalCount)
+    static BuildData(workoutOptions, bigIntervalCount, intervalPattern)
     {
         let outData = new IntervalData();
 
@@ -126,23 +126,19 @@ class IntervalData
             let thisWorkout = options.splice(Math.floor(Math.random() * options.length), 1)[0];
             workoutList.push(thisWorkout.Activity);
         }
-        
-        // workoutList = workoutList.map(d => {
-        //     return {
-        //         name: d,
-        //         completed: 0 
-        //     }
-        // });
 
-        // outData.intervalPattern = [20,10, 20,10, 40,20, 60,40];
-        outData.intervalPattern = [5, 5, 5, 5,5, 5,5, 5,];
-        // outData.intervalPattern = [2,1, 2,1, 4,2, 6,4];
-        // outData.intervalPattern = [1,.1, 1,.1, 1,.1, 1,.1];
+        if (intervalPattern)
+        {
+            outData.intervalPattern = intervalPattern.split(',').map( d => parseInt(d));
+        }
+        else
+        {
+            outData.intervalPattern = [20,10, 20,10, 40,20, 60,40];
+        }
+
         outData.extraBreak = 20;
         outData.workoutLength = outData.intervalPattern.reduce((x,y) => x + y) * workoutList.length;
         outData.workoutLength += outData.extraBreak * bigIntervalCount;
-        
-        // console.log(workoutList);
         
         outData.mainWorkoutList = workoutList;
 
