@@ -38,7 +38,7 @@ class IntervalData
     timeRemaining()
     {
         let thisTimePeriod = this.intervalPattern[this.intervalIndex];
-        if (this.workoutIndex % 4 === 3 && this.intervalIndex === this.intervalPattern.length - 1)
+        if (this.workoutIndex % this.countPerPass === this.countPerPass - 1 && this.intervalIndex === this.intervalPattern.length - 1)
         {
             thisTimePeriod += this.extraBreak;
         }
@@ -48,7 +48,7 @@ class IntervalData
     percentDone()
     {
         let thisTimePeriod = this.intervalPattern[this.intervalIndex];
-        if (this.workoutIndex % 4 === 3 && this.intervalIndex === this.intervalPattern.length - 1)
+        if (this.workoutIndex % this.countPerPass === this.countPerPass - 1 && this.intervalIndex === this.intervalPattern.length - 1)
         {
             thisTimePeriod += this.extraBreak;
         }
@@ -114,8 +114,19 @@ class IntervalData
         let outData = new IntervalData();
         let workoutOptionsCopy = _.cloneDeep(workoutOptions);
 
-        // main workout
-        let workoutCount = 4 * bigIntervalCount;
+        if (intervalPattern)
+        {
+            outData.intervalPattern = intervalPattern.split(',').map( d => parseInt(d));
+        }
+        else
+        {
+            outData.intervalPattern = [20,10, 20,10, 40,20, 60,40];
+        }
+
+        const singlePassIntervalLength = outData.intervalPattern.reduce((x,y) => x + y)
+        outData.countPerPass = Math.max(1, Math.floor(15 * 60 / singlePassIntervalLength));
+
+        let workoutCount = outData.countPerPass * bigIntervalCount;
         let workoutTypes =  [...workoutOptions.keys()].filter(type => type !== 'warm-up' && type !== 'stretch')
         let workoutList = [];
         let typeIndex = 0;
@@ -130,15 +141,6 @@ class IntervalData
             {
                 workoutOptions.set(type, [...workoutOptionsCopy.get(type)]);
             }
-        }
-
-        if (intervalPattern)
-        {
-            outData.intervalPattern = intervalPattern.split(',').map( d => parseInt(d));
-        }
-        else
-        {
-            outData.intervalPattern = [20,10, 20,10, 40,20, 60,40];
         }
 
         outData.extraBreak = 20;

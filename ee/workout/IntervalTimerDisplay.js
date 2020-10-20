@@ -148,11 +148,11 @@ class IntervalTimerDisplay
             .classed('incomplete', (d, i) => i > this.data.workoutIndex)
             
         // long break lines
-        const numBreaks = Math.floor(this.data.mainWorkoutList.length / 4);
+        const numBreaks = Math.floor(this.data.mainWorkoutList.length / this.data.countPerPass);
         let breaks = [];
         for (let i = 1; i < numBreaks; i++)
         {
-            breaks.push(i * 4 - 0.5);
+            breaks.push(i * this.data.countPerPass - 0.5);
         }
 
         const lineHalfLength = this.largeRoadmapDotR * 1.3
