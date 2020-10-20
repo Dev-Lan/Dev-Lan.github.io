@@ -10,6 +10,8 @@ d3.csv(`https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:csv`).
 	console.log(grouped);
 	let intervalData = IntervalData.BuildData(grouped, N, intervalPattern);
 	let timerDisplay = new IntervalTimerDisplay(intervalData, 'outer-container');
-	timerDisplay.update();
 	console.log(intervalData);
+
+	// window.onresize = () => timerDisplay.resize();
+
 });

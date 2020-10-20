@@ -9,9 +9,6 @@ class IntervalTimerDisplay
         this.startAudio = new Audio('./assets/321-go.mp3');
         this.endAudio = new Audio('./assets/321-rest.mp3');
         
-
-        this.largeRoadmapHeight = 160;
-        this.largeRoadmapWidth = 1000;
         this.largeRoadmapMargin = 50;
         this.largeRoadmapDotR = 25;
         let numSpaces = this.data.mainWorkoutList.length;
@@ -22,8 +19,8 @@ class IntervalTimerDisplay
 
         this.largeRoadmapSvg = d3.select('#roadmap-viz-container')
             .append('svg')
-            .attr('width', this.largeRoadmapWidth)
-            .attr('height', this.largeRoadmapHeight);
+            .attr('width', 0)
+            .attr('height', 0);
 
         
         // small roadmap init
@@ -42,12 +39,13 @@ class IntervalTimerDisplay
 
         this.smallRoadmapSvg = d3.select('#small-roadmap-viz-container')
             .append('svg')
-            .attr('width', this.smallRoadmapWidth)
-            .attr('height', this.smallRoadmapHeight)
+            .attr('width', 0)
+            .attr('height', 0)
             .classed('small-roadmap-viz', true);
-            // .style('background', 'white');
             
         this.init();
+        this.update();
+        this.resize();
         this.playing = false;
         d3.select('#play-button').on('click', () => this.play());
         d3.select('#pause-button').on('click', () => this.pause());
@@ -64,6 +62,57 @@ class IntervalTimerDisplay
         d3.select('#top-roadmap').selectAll('.clock-time')
             .data([start, end])
             .text(d => d);
+    }
+
+    resize()
+    {
+
+        let bbox = d3.select('#roadmap-viz-container').node().getBoundingClientRect();
+        this.largeRoadmapHeight = bbox.height * 0.9;
+        this.largeRoadmapWidth = bbox.width;
+
+        const pad = 4 +  this.largeRoadmapHeight * 0.1;// 4 is based on stroke-width of .in-progress css class
+
+        this.largeRoadmapMargin = this.largeRoadmapHeight;
+        this.largeRoadmapDotR = this.largeRoadmapHeight / 2 - pad;
+        this.largeRoadmapDotR = Math.min(this.largeRoadmapDotR, 0.8 * this.largeRoadmapWidth / (2 * this.data.mainWorkoutList.length));
+
+        let numSpaces = this.data.mainWorkoutList.length;
+
+        this.largeRoadmapScaleX = d3.scaleLinear()
+            .domain([0, numSpaces - 1])
+            .range([this.largeRoadmapMargin, this.largeRoadmapWidth - this.largeRoadmapMargin]);
+
+
+        this.largeRoadmapSvg
+            .attr('width', this.largeRoadmapWidth)
+            .attr('height', this.largeRoadmapHeight);
+
+
+
+        bbox = d3.select('#small-roadmap-viz-container').node().getBoundingClientRect();
+        this.smallRoadmapHeight = bbox.height;
+        this.smallRoadmapWidth = bbox.width * 0.8;
+
+
+        this.smallRoadmapDotR = this.smallRoadmapWidth / 14;
+
+        this.smallRoadmapScaleX = d3.scaleLinear()
+            .domain([0, this.data.intervalPattern.length/2 + 1])
+            .range([0, this.smallRoadmapWidth]);
+
+        const gapWidth = this.smallRoadmapScaleX(1) - this.smallRoadmapScaleX(0) - 2 * this.smallRoadmapDotR;
+
+        this.smallRoadmapScaleWidth = d3.scaleLinear()
+            .domain([0, 1])
+            .range([0, gapWidth]);
+
+
+        this.smallRoadmapSvg
+            .attr('width', this.smallRoadmapWidth)
+            .attr('height', this.smallRoadmapHeight)
+
+        this.update();
     }
 
     
@@ -179,21 +228,18 @@ class IntervalTimerDisplay
         this.smallRoadmapSvg.selectAll('circle')
             .data(workoutState)
             .join('circle')
-            // .attr('d', d => arc({endAngle: 2 * d * Math.PI}))
             .attr('cx', (d, i) => this.smallRoadmapScaleX(i) + this.smallRoadmapDotR)
             .attr('cy', midY)
             .attr('r', this.smallRoadmapDotR)
             .style('fill', 'white')
-            // .style('stroke', 'black');
 
         // add arcs
         var arc = d3.arc()
             .innerRadius(0)
             .outerRadius(this.smallRoadmapDotR)
             .startAngle(0);
-            // .endAngle(Math.PI / 2);
 
-        // let workoutState = this.data.getRunState();
+
         this.smallRoadmapSvg.selectAll('.dot')
             .data(workoutState)
             .join('path')
