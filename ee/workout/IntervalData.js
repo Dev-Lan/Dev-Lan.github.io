@@ -8,11 +8,18 @@ class IntervalData
         let timeRemaining = this.timeRemaining();
         if (timeRemaining <= 0)
         {
-            this.intervalIndex++;
-            if (this.intervalIndex === this.intervalPattern.length)
+            if (!this.warmUpComplete)
             {
-                this.intervalIndex = 0;
-                this.workoutIndex++;
+                this.warmUpComplete = true;
+            }
+            else
+            {
+                this.intervalIndex++;
+                if (this.intervalIndex === this.intervalPattern.length)
+                {
+                    this.intervalIndex = 0;
+                    this.workoutIndex++;
+                }
             }
             this.timeElapsed = Math.abs(timeRemaining);
         }
@@ -20,6 +27,11 @@ class IntervalData
 
     currentWorkout()
     {
+        if (!this.warmUpComplete)
+        {
+            let i = Math.floor(this.percentDone() * this.warmUpList.length);
+            return this.warmUpList[i];
+        }
         return this.mainWorkoutList[this.workoutIndex];
     }
 
@@ -34,6 +46,11 @@ class IntervalData
 
     timeRemaining()
     {
+        if (!this.warmUpComplete)
+        {
+            return this.warmUpLength - this.timeElapsed;
+        }
+
         let thisTimePeriod = this.intervalPattern[this.intervalIndex];
         if (this.workoutIndex % this.countPerPass === this.countPerPass - 1 && this.intervalIndex === this.intervalPattern.length - 1)
         {
@@ -44,6 +61,10 @@ class IntervalData
 
     percentDone()
     {
+        if (!this.warmUpComplete)
+        {
+            return this.timeElapsed / this.warmUpLength;
+        }
         let thisTimePeriod = this.intervalPattern[this.intervalIndex];
         if (this.workoutIndex % this.countPerPass === this.countPerPass - 1 && this.intervalIndex === this.intervalPattern.length - 1)
         {
@@ -111,6 +132,26 @@ class IntervalData
         let outData = new IntervalData();
         let workoutOptionsCopy = _.cloneDeep(workoutOptions);
 
+        let warmUpOptions = workoutOptions.get('warm-up');
+        let warmUpList = [];
+
+        if (warmUpOptions)
+        {
+            while (warmUpList.length < 6)
+            {
+                let thisWarmup = warmUpOptions.splice(Math.floor(Math.random() * warmUpOptions.length), 1)[0];
+                warmUpList.push(thisWarmup.Activity);
+                if (warmUpList.length === 0)
+                {
+                    warmUpList = [...workoutOptionsCopy.get('warm-up')];
+                }
+            }
+        }
+        outData.warmUpLength = 180; // 3 minutes
+        outData.warmUpIntervalLength = 30; // 30 seconds
+        outData.warmUpList = warmUpList;
+        outData.warmUpComplete = warmUpList.length === 0;
+
         if (intervalPattern)
         {
             outData.intervalPattern = intervalPattern.split(',').map( d => parseInt(d));
@@ -143,6 +184,10 @@ class IntervalData
         outData.extraBreak = 20;
         outData.workoutLength = outData.intervalPattern.reduce((x,y) => x + y) * workoutList.length;
         outData.workoutLength += outData.extraBreak * bigIntervalCount;
+        if (!outData.warmUpComplete)
+        {
+            outData.workoutLength += outData.warmUpLength;
+        }
         
         outData.mainWorkoutList = workoutList;
 

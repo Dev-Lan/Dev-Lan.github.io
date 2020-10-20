@@ -46,6 +46,7 @@ class IntervalTimerDisplay
         this.init();
         this.update();
         this.resize();
+        this.update();
         this.playing = false;
         d3.select('#play-button').on('click', () => this.play());
         d3.select('#pause-button').on('click', () => this.pause());
@@ -112,7 +113,6 @@ class IntervalTimerDisplay
             .attr('width', this.smallRoadmapWidth)
             .attr('height', this.smallRoadmapHeight)
 
-        this.update();
     }
 
     
@@ -126,7 +126,11 @@ class IntervalTimerDisplay
         const onCooldown = this.data.onCooldown();
         if (onCooldown)
         {
-            workoutName += ' (rest)'
+            workoutName = `Rest <span style="font-size: min(8vw, 8vh);">(${workoutName})</span>`;
+        }
+        if (!this.data.warmUpComplete)
+        {
+            workoutName = '<u style="font-size: min(8vw, 8vh);">Warm Up:</u><br>' + workoutName;
         }
 
         d3.select('#outer-container')
@@ -135,27 +139,9 @@ class IntervalTimerDisplay
 
         this.containerSelect
             .select('#name-container')
-            .text(workoutName);
+            .html(workoutName);
 
         let timeRemaining = this.data.timeRemaining();
-
-        if (onCooldown)
-        {
-            if (timeRemaining < 3)
-            {
-                this.startAudio.play();
-            }
-        }
-        else
-        {
-            if (timeRemaining < 3)
-            {
-                this.endAudio.play();
-            }
-        }
-
-        this.updateLargeRoadmap();
-        this.updateSmallRoadmap();
 
         let dateObj = new Date(1000 * timeRemaining);
         let timeString = '';
@@ -170,6 +156,30 @@ class IntervalTimerDisplay
         this.containerSelect
             .select('#countdown-time')
             .text(timeString);
+
+        if (!this.data.warmUpComplete)
+        {
+            if (timeRemaining % this.data.warmUpIntervalLength < 3)
+            {
+                this.startAudio.play();
+            }
+        }
+        else
+        {
+            let container = d3.select('#small-roadmap-viz-container');
+            if (container.classed('no-display'))
+            {
+                container.classed('no-display', false);
+                console.log(document.body.offsetHeight);
+                this.resize();
+            }
+            if (timeRemaining < 3)
+            {
+                this.data.onCooldown() ? this.startAudio.play() : this.endAudio.play();
+            }
+            this.updateLargeRoadmap();
+            this.updateSmallRoadmap();
+        }
 
         if (this.data.isDone())
         {
@@ -282,13 +292,16 @@ class IntervalTimerDisplay
             .data([this.data.nextWorkout()])
             .join('foreignObject')
             .attr('x', xPos)
-            .attr('y', midY - this.smallRoadmapDotR)
-            .attr('width', 300)
-            .attr('height', 300)
-            .selectAll('div')
+            .attr('y', 0)
+            .attr('width', this.smallRoadmapWidth - xPos)
+            .attr('height', this.smallRoadmapHeight)
+          .selectAll('div')
             .data(d => [d])
             .join('xhtml:div')
-            .classed('medium label', true)
+            .classed('medium label next', true)
+          .selectAll('div')
+            .data(d => [d])
+            .join('div')
             .html(d => d.replaceAll(' ', '<br>'));
     }
 

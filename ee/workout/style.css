@@ -69,8 +69,18 @@ body, html {
     flex-direction: column;
 }
 
+
+
 .label {
     font-family: 'Roboto', sans-serif;
+    text-align: center;
+}
+
+.next.label {
+    display: flex;
+    text-align: left;
+    align-items: center;
+    height: 100%;
 }
 
 .huge.label {
