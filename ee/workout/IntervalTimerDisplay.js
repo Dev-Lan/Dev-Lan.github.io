@@ -261,7 +261,6 @@ class IntervalTimerDisplay
             .attr('width', d => this.smallRoadmapScaleWidth(1))
             .attr('height', pathWidth)
             .style('fill', 'white')
-            // .style('stroke', 'white')
             .classed('rest-line-incomplete', true);
 
         this.smallRoadmapSvg.selectAll('.rest-line')
@@ -291,8 +290,6 @@ class IntervalTimerDisplay
             .join('xhtml:div')
             .classed('medium label', true)
             .html(d => d.replaceAll(' ', '<br>'));
-
-
     }
 
     play()

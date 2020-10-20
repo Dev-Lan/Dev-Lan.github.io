@@ -1,9 +1,6 @@
 class IntervalData
 {
-    constructor()
-    {
-
-    }
+    constructor() { }
 
     update(deltaTime)
     {

@@ -67,19 +67,6 @@ body, html {
     align-items: center;
     display: flex;
     flex-direction: column;
-
-    /* border: solid black 1px;
-    border-radius: 150px;
-    margin-left: 20px;
-    margin-right: 20px; */
-}
-
-.small-roadmap-viz {
-    /* border: solid black 1px; */
-    /* padding: 30px; */
-    /* border-radius: 300px; */
-    /* margin: 30px; */
-    /* padding-left: 70px; */
 }
 
 .label {
@@ -87,21 +74,14 @@ body, html {
 }
 
 .huge.label {
-    /* font-size: 72pt; */
     font-size: 12vw;
 }
 
-/* .big.label {
-    font-size: 48pt;
-} */
-
 .medium.label {
-    /* font-size: 8pt; */
     font-size: 3vw;
 }
 
 .small.label {
-    /* font-size: 18pt; */
     font-size: 2vw;
 }
 
