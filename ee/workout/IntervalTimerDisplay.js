@@ -278,20 +278,21 @@ class IntervalTimerDisplay
         // add next workout text
         const offset = 8;
         const xPos = offset + this.smallRoadmapScaleX(restState.length);
-        this.smallRoadmapSvg.selectAll('text')
+
+        this.smallRoadmapSvg.selectAll('foreignObject')
             .data([this.data.nextWorkout()])
-            .join('text')
+            .join('foreignObject')
             .attr('x', xPos)
-            .attr('y', midY)
-            .attr('alignment-baseline', 'middle')
-            .classed('label', true)
-            .classed('medium', true)
-         .selectAll('tspan')
-            .data(d => d.split(' '))
-            .join('tspan')
-            .attr('x', xPos)
-            .attr('y', (d, i) => midY + 26 * i)
-            .text(d => d);
+            .attr('y', midY - this.smallRoadmapDotR)
+            .attr('width', 300)
+            .attr('height', 300)
+            .selectAll('div')
+            .data(d => [d])
+            .join('xhtml:div')
+            .classed('medium label', true)
+            .html(d => d.replaceAll(' ', '<br>'));
+
+
     }
 
     play()
