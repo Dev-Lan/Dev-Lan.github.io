@@ -87,7 +87,8 @@ body, html {
 }
 
 .huge.label {
-    font-size: 72pt;
+    /* font-size: 72pt; */
+    font-size: 12vw;
 }
 
 /* .big.label {
@@ -95,11 +96,13 @@ body, html {
 } */
 
 .medium.label {
-    font-size: 22pt;
+    /* font-size: 22pt; */
+    font-size: 3vw;
 }
 
 .small.label {
-    font-size: 18pt;
+    /* font-size: 18pt; */
+    font-size: 2vw;
 }
 
 .no-display {

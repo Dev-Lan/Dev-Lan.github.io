@@ -276,7 +276,7 @@ class IntervalTimerDisplay
             .classed('rest-line', true);
 
         // add next workout text
-        const offset = 20;
+        const offset = 8;
         const xPos = offset + this.smallRoadmapScaleX(restState.length);
         this.smallRoadmapSvg.selectAll('text')
             .data([this.data.nextWorkout()])
