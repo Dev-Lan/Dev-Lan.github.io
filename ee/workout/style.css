@@ -74,15 +74,15 @@ body, html {
 }
 
 .huge.label {
-    font-size: 12vw;
+    font-size: min(14vw, 14vh);
 }
 
 .medium.label {
-    font-size: 3vw;
+    font-size: min(4vw, 4vh);
 }
 
 .small.label {
-    font-size: 2vw;
+    font-size: min(3vw, 3vh);
 }
 
 .no-display {
@@ -92,5 +92,5 @@ body, html {
 .play-pause {
     border: 0;
     background: none;
-    font-size: 80pt;
+    font-size: min(14vw, 14vh);
 }
