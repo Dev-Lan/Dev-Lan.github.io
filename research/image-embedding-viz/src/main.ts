@@ -15,8 +15,7 @@ let currentDatasetDisplayName: string;
 let currentProjectionDisplayName: string;
 
 
-let baseFolder = "https://raw.githubusercontent.com/Dev-Lan/image-embedding-data/master/";
-let lfsBaseFolder = "https://media.githubusercontent.com/media/Dev-Lan/image-embedding-data/master/"
+let baseFolder = "http://www.sci.utah.edu/~devin/data/image-embedding-data/";
 if (location.hostname === "localhost" || location.hostname === "127.0.0.1")
 {
 	baseFolder = "../myData/image-embedding-data/";
@@ -41,7 +40,6 @@ function onDatasetChange(dataAttr: DatasetAttributes, projAttr?: ProjectionAttri
 		extraPath += "/";
 	}
 	let dataFolder = baseFolder + extraPath;
-	let lfsDataFolder = lfsBaseFolder + extraPath;
 	let projectionSwitchOnly = true;
 	if (!projAttr)
 	{
@@ -53,7 +51,7 @@ function onDatasetChange(dataAttr: DatasetAttributes, projAttr?: ProjectionAttri
 	{
 		attributeData.onDataChange(data, dataAttr.imageWidth, dataAttr.imageHeight);
 
-		maybeLoadDistanceMatrix(dataAttr, lfsDataFolder).then(() =>
+		maybeLoadDistanceMatrix(dataAttr, dataFolder).then(() =>
 		{
 			scatterPlot.onDataChange(data, attributeData, projectionSwitchOnly, true);
 

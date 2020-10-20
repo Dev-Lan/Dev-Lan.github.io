@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Dev-Lan</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="robots" content="noindex">
+	<link rel="stylesheet" href="style.css"></link>
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
+	<script src="https://d3js.org/d3.v6.min.js" charset="utf-8"></script>
+	<script src="https://kit.fontawesome.com/de8d467ef5.js"></script>
+</head>
+	<body>
+        
+	<div id="outer-container" class='outer-container run'>
+		<div id="top-roadmap" class='display-flex'>
+			<div class="clock-time small label"></div>
+			<div id="roadmap-viz-container"></div>
+			<div class="clock-time small label"></div>
+		</div>
+
+		<div id="name-container" class="huge label"></div>
+		<div id="small-roadmap-viz-container" class="full-width svg-container"></div>
+		<div id="countdown-time" class="huge label"></div>
+		<div id="play-pause">
+			<button id="play-button" class="play-pause"><i class="fas fa-play"></i></button>
+			<button id="pause-button" class="no-display play-pause"><i class="fas fa-pause"></i></button>
+		</div>
+	</div>
+
+    </body>
+    <script src='IntervalData.js'></script>
+    <script src='IntervalTimerDisplay.js'></script>
+    <script src='script.js'></script>
+</html>
