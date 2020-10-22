@@ -4,7 +4,7 @@ class IntervalData
 
     update(deltaTime)
     {
-        this.timeElapsed += deltaTime;
+        this.timeElapsed += deltaTime * this.speedup;
         let timeRemaining = this.timeRemaining();
         if (timeRemaining <= 0)
         {
@@ -170,9 +170,10 @@ class IntervalData
         return state;
     }
 
-    static BuildData(workoutOptions, bigIntervalCount, intervalPattern)
+    static BuildData(workoutOptions, bigIntervalCount, intervalPattern, speedup)
     {
         let outData = new IntervalData();
+        outData.speedup = speedup;
         let workoutOptionsCopy = _.cloneDeep(workoutOptions);
 
         // WARM UP
@@ -224,7 +225,22 @@ class IntervalData
         }
         else
         {
-            outData.intervalPattern = [20,10, 20,10, 40,20, 60,40];
+            const defaultIntervalPatterns = [
+                [20,10, 20,10, 40,20, 60,40],
+                [20,10,20,10,20,10,20,10],
+                [30,30,30,30,30,30],
+                [35,15,35,15,35,15],
+                [10,5,20,10,30,15,40,20],
+                [20,20,30,20,20,20,30,20,20,20]
+                [60,60],
+                [20,20,20,20,20,20],
+                [15,15,20,20,25,25,30,30],
+                [18,12,24,18,30,20],
+                [24,18,24,18,24,18,24,18],
+                [20,10,24,12,28,14],
+                [18,6,21,7,24,8,27,27]
+            ];
+            outData.intervalPattern = defaultIntervalPatterns[Math.floor(Math.random() * defaultIntervalPatterns.length)];
         }
 
         const singlePassIntervalLength = outData.intervalPattern.reduce((x,y) => x + y)
