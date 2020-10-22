@@ -13,7 +13,11 @@ else
 	speedup = +speedup;
 }
 
-if (!N)
+if (!sheetId)
+{
+
+}
+else if (!N)
 {
 	const Ns = [1,2,3,4];
 	let outerSelect = d3.select('#outer-container').html(null);
@@ -39,5 +43,11 @@ else
 		let intervalData = IntervalData.BuildData(grouped, N, intervalPattern, speedup);
 		let timerDisplay = new IntervalTimerDisplay(intervalData, 'outer-container');
 		console.log(intervalData);
+
+		document.addEventListener("keydown", event => {
+			if (event.code === 'Space') {
+				timerDisplay.togglePlayPause();
+			}
+		});
 	});
 }

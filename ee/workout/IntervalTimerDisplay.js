@@ -345,4 +345,9 @@ class IntervalTimerDisplay
         d3.select('#pause-button').classed('no-display', true);
     }
 
+    togglePlayPause()
+    {
+        this.playing ? this.pause() : this.play();
+    }
+
 }
