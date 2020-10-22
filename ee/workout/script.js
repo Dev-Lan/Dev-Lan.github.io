@@ -13,11 +13,31 @@ else
 	speedup = +speedup;
 }
 
-d3.csv(`https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:csv`).then(data =>
+if (!N)
 {
-	let grouped = d3.group(data, d => d.Category);
-	console.log(grouped);
-	let intervalData = IntervalData.BuildData(grouped, N, intervalPattern, speedup);
-	let timerDisplay = new IntervalTimerDisplay(intervalData, 'outer-container');
-	console.log(intervalData);
-});
+	const Ns = [1,2,3,4];
+	let outerSelect = d3.select('#outer-container').html(null);
+	
+	outerSelect
+		.append('h1')
+		.classed('huge label', true)
+		.text('Workout Length');
+
+	outerSelect.selectAll('a')
+		.data(Ns)
+		.join('a')
+		.attr('href', d => window.location.href + `&n=${d}`)
+		.classed('quick-select-button huge label', true)
+		.text(d => `${d * 15} min`);
+}
+else
+{
+	d3.csv(`https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:csv`).then(data =>
+	{
+		let grouped = d3.group(data, d => d.Category);
+		console.log(grouped);
+		let intervalData = IntervalData.BuildData(grouped, N, intervalPattern, speedup);
+		let timerDisplay = new IntervalTimerDisplay(intervalData, 'outer-container');
+		console.log(intervalData);
+	});
+}

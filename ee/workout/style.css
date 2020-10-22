@@ -104,3 +104,24 @@ body, html {
     background: none;
     font-size: min(14vw, 14vh);
 }
+
+.quick-select-button {
+    text-decoration: none;
+    color: black;
+    flex-grow: 1;
+    width: 100vw;
+    border: solid;
+    border-width: 0px;
+    border-color: black;
+    border-top-width: 1px;
+    line-height: 20vh;
+}
+
+.quick-select-button:hover {
+    background: #ff7359
+    ;
+}
+
+.quick-select-button:active {
+    background: #ff826c;
+}
