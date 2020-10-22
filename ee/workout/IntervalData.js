@@ -231,7 +231,7 @@ class IntervalData
                 [30,30,30,30,30,30],
                 [35,15,35,15,35,15],
                 [10,5,20,10,30,15,40,20],
-                [20,20,30,20,20,20,30,20,20,20]
+                [20,20,30,20,20,20,30,20,20,20],
                 [60,60],
                 [20,20,20,20,20,20],
                 [15,15,20,20,25,25,30,30],
@@ -240,8 +240,10 @@ class IntervalData
                 [20,10,24,12,28,14],
                 [18,6,21,7,24,8,27,27]
             ];
-            outData.intervalPattern = defaultIntervalPatterns[Math.floor(Math.random() * defaultIntervalPatterns.length)];
+            const index = Math.floor(Math.random() * defaultIntervalPatterns.length);
+            outData.intervalPattern = defaultIntervalPatterns[index];
         }
+
 
         const singlePassIntervalLength = outData.intervalPattern.reduce((x,y) => x + y)
         outData.countPerPass = Math.max(1, Math.floor(15 * 60 / singlePassIntervalLength));
