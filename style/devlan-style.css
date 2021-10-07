@@ -23,11 +23,17 @@
   z-index: -5;
 }
 
+.homepageContainer {
+  display: flex;
+  flex-wrap: wrap-reverse;
+}
+
 .aboutMeContainer {
     color: black !important;
     background: rgba(255, 255, 255, 0.8);
-    padding: 20px;
-    box-shadow: 0px 20px 20px 0px rgba(255, 255, 255, 0.8);
+    padding: 45px;
+    max-width: 480px;
+    font-size: 12pt;
 }
 
 .blobFilter {
@@ -331,10 +337,10 @@ h1 {
 }
 
 body {
-  background-image: url("../img/wheat.png");
+  /* background-image: url("../img/wheat.png");
   background-repeat: no-repeat;
   background-attachment: fixed;
-  background-position: bottom left;
+  background-position: bottom left; */
 }
 
 .carousel-inner > .item > img,
@@ -424,12 +430,8 @@ body {
 }
 
 .mePicture {
-    max-width: 100%;
-    max-height: 100%;
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    z-index: -2;
+  width: 400px;
+  margin: 40px;
 }
 
 .videoContainer {

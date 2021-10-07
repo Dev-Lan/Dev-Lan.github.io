@@ -5,30 +5,27 @@
 <head>
   {% include headBoilerplate.html title="Devin Lange" %}
   <meta name="description" content="Devin Lange's personal website.">
-  <script src="scripts/circleAnimator.js"></script>
+  <!-- <script src="scripts/circleAnimator.js"></script> -->
   {% include navOffset.html %}
 
 </head>
-<body onmousemove="updateMousePos(event)"
-	  ontouchmove="handleTouchEvent(event)"
-
-	  onmousedown="handleMouseDown(event)"
-	  ontouchstart="handleTouchEvent(event)"
-
-	  onmouseup="handleMouseUp(event)"
-	  ontouchend="handleTouchEvent(event)">
+<body>
 
 {% include navbarSimple.html %}
-<div id="animateContainer" class="animateContainer"></div>
-<div id="aboutMeContainer" class="aboutMeContainer">
-	<h1>Devin Lange</h1>
-	<p>I am a Computer Science Ph.D. student at the <a href="https://www.utah.edu/">University of Utah</a> in the <a href="https://www.sci.utah.edu/">Scientific Computing and Imaging Institute</a>. I am currently working in the <a href="https://vdl.sci.utah.edu/"> Visualization Design Lab</a> on designing and developing visualization systems to help domain scientists understand their data.</p>
 
-	<h5>Contact</h5>
-	<p>devinscottlange@gmail.com</p>
+<div class="homepageContainer">
+
 	<img id="mePicture" class="mePicture" alt="Devin Lange at Zion National Park" src="./img/me/Devin-Lange-Zion-National-Park.png">
-
-
+	
+	<div id="aboutMeContainer" class="aboutMeContainer">
+		<h1 style="text-align: left;">Devin Lange</h1>
+		<p>I am a Computer Science Ph.D. student at the <a href="https://www.utah.edu/">University of Utah</a> in the <a href="https://www.sci.utah.edu/">Scientific Computing and Imaging Institute</a>. I am currently working in the <a href="https://vdl.sci.utah.edu/"> Visualization Design Lab</a>, advised by <a href="https://vdl.sci.utah.edu/team/lex/">Alexander Lex</a>. My research projects usually involve designing and developing visualization systems to help domain scientists understand their data.</p>
+		
+		<h5>Contact</h5>
+		<p>devinscottlange@gmail.com</p>
+		
+		
+	</div>
 </div>
 
 
