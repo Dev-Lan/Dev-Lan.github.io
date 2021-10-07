@@ -7,6 +7,9 @@
 		<div class="pubIconLinksContainer">
 			<button class="pubIconLink" onclick="window.location.href = '{{ include.pdfURL }}';">Paper <i class="far fa-file-pdf"></i></button>
 			<button class="pubIconLink" onclick='onYouTubeLinkClick("{{ include.youTubeId }}")'>Video <i class="fab fa-youtube"></i></button>
+			{% if include.website %}
+			<button class="pubIconLink" onclick="window.location.href = '{{ include.website }}';">Website <i class="fa fa-globe"></i></button>
+			{% endif %}
 		</div>
 	</div>
 </div>
