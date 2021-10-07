@@ -34,3 +34,7 @@ Gemfile
 Gemfile.lock
 _site/
 myData/
+.jekyll-metadata
+*.code-workspace
+node_modules
+research/boxplot/data

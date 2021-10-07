@@ -1,0 +1,46 @@
+{
+	"direction": "col",
+	"inside": [
+		{
+			"direction": "row",
+			"minSize": 40,
+			"maxSize": 40,
+			"fraction": 0,
+			"inside": "Toolbar"
+		},
+		{
+			"direction": "row",
+			"fraction": 0.5,
+			"inside": [
+				{
+					"direction": "col",
+					"fraction": 0.3333,
+					"inside": "Plot2dPathsWidget"
+				},
+				{
+					"direction": "col",
+					"fraction": 0.6666,
+					"inside": "MetricDistributionWidget"
+				}
+			]
+		},
+		{
+			"direction": "row",
+			"fraction": 0.5,
+			"inside": [
+				{
+					"direction": "col",
+					"inside": "LevelOfDetailWidget"
+				},
+				{
+					"direction": "col",
+					"inside": "TableWidget"
+				},
+				{
+					"direction": "col",
+					"inside": "Console"
+				}
+			]
+		}
+	]
+}

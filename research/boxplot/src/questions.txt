@@ -1,0 +1,52 @@
+Questions:
+* outlier < deepest - (deepest - thresholdDepth) * 1.5
+
+* in the paper they expand the envelope of the functional band.
+
+
+
+* O(n * M^3/ 2):
+
+	for each row:
+		for each value:
+			countInclusions(value,row)
+
+	countInclusions(value, row):
+		count = 0
+		for i in range(len(row)):
+			v1 = row[i]
+			for j in range(i+1, len(row)):
+				v2 = row[j]
+				low = min(v1,v2)
+				high = max(v1,v2)
+				if low <= value <= high:
+					count += 1
+* BD vs MBD -> I've been using MBD (shape vs outlier) the paper implied one was better for shape? I don't understand why exactly
+* Really questions for NASA People:
+	What are they trying to accomplish? Get a nice picture for publication?... for reference? Learn something from their data? Communicate something about their data?
+
+* color plot file (not included in forwarded email)
+
+
+* limitations:
+* * uniformly sampled
+* * functions defined across entire interval
+
+
+
+* administrative:
+* * commit to github
+* * desk
+
+
+* what is the paper / extension for 2D functions? 3D? Arbitrary higher dimensions?
+* * Curve Boxplot: Generalization of Boxplot for Ensembles of Curves
+
+* what's next?
+* * tweak colors back
+* * push envelope
+* * how to compute (statistically - 
+		bootstrapping methods (how good is sampling strategy)
+		how good is my estimator
+
+* * publishing
