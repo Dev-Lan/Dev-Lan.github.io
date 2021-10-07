@@ -420,8 +420,13 @@ body {
     color: #315b7d;
 }
 
-.pubLocationContainer .location{
+.pubLocationContainer .location {
     font-style: italic;
+}
+
+.pubAward {
+  color: #E58035;
+  font-weight: 800;
 }
 
 .pubIconLinksContainer {
