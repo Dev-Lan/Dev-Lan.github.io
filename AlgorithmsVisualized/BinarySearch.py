@@ -48,9 +48,9 @@ def TestSuite():
 	
 	# TODO - test none found.
 
-	allPassed = TestNotFound([1,2,3,4,5],7)
-	allPassed = TestNotFound([1,2,3,4,5],-7)
-	allPassed = TestNotFound([1,2,4,6,8],3)
+	allPassed = allPassed and TestNotFound([1,2,3,4,5],7)
+	allPassed = allPassed and TestNotFound([1,2,3,4,5],-7)
+	allPassed = allPassed and TestNotFound([1,2,4,6,8],3)
 
 	if allPassed:
 		print("All tests passed!")
