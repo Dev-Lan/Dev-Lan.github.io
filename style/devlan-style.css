@@ -353,17 +353,63 @@ h1 {
 }
 
 .hover-glow:hover {
-  /*color: blue;*/
-  /*filter: blur(1px)*/
   background-color: #FFF;
 
 }
 
-body {
-  /* background-image: url("../img/wheat.png");
-  background-repeat: no-repeat;
-  background-attachment: fixed;
-  background-position: bottom left; */
+.navbarContainer
+{
+  display: flex;
+}
+
+.hamburger {
+  border: none;
+  background: none;
+}
+
+.hamburger:hover {
+  color: #0a6ebd;
+}
+
+.show-on-mobile {
+  flex-direction: column;
+  background: #404040;
+}
+
+.show-on-mobile .navbar-brand {
+  padding: 10px 24px;
+  height: 42px;
+}
+
+/* Desktop */
+@media (min-width: 600px) {
+  .hamburger {
+    display: none;
+  }
+
+  .show-on-mobile {
+    display: none;
+  }
+
+  .hide-on-mobile {
+    display: flex;
+  }
+}
+
+/* Mobile */
+@media (max-width: 600px) {
+  .show-on-mobile {
+    display: flex;
+  }
+
+  .hide-on-mobile {
+    display: none;
+  }
+
+  .navbarContainer
+  {
+    flex-direction: column;
+  }
 }
 
 .carousel-inner > .item > img,
