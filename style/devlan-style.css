@@ -43,7 +43,7 @@
 .bigPageLink {
   padding: 20px;
   margin-bottom: 20px;
-  display: inline-block;
+  display: flex;
   width: 100%;
   border-style: solid;
   border-color: #CCC;
@@ -61,11 +61,12 @@
 
 .bigPageLinkLeft {
   float: left;
-  width: 30%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 } 
 
 .bigPageLinkRight {
-  margin-left: 30%;
 }
 
 @media (max-width: 800px) {
@@ -88,17 +89,28 @@
 }
 
 .bigPageLinkLeft > img {
-  width:100%;
-  height: auto;/*
-  width: 300px;
-  height: 225px;*/
+  width: 320px;
+  height: auto;
   padding-right: 20px;
-  /*border: 1px;*/
 }
+
+
 
 .bigPageLinkRightContent > a {
   font-size: 40px;
   font-family: 'Overlock', cursive;
+}
+
+@media (max-width: 1200px) {
+  .bigPageLinkRightContent > a {
+    font-size: 32px;
+  }
+}
+
+@media (max-width: 550px) {
+  .bigPageLinkRightContent > a {
+    font-size: 24px;
+  }
 }
 
 .btn {
