@@ -28,14 +28,6 @@
   flex-wrap: wrap-reverse;
 }
 
-.aboutMeContainer {
-    color: black !important;
-    background: rgba(255, 255, 255, 0.8);
-    padding: 45px;
-    max-width: 480px;
-    font-size: 12pt;
-}
-
 .blobFilter {
   filter:url('#goo');
 }
@@ -334,6 +326,12 @@ p {
   font-size: 1.25em;
 }
 
+@media (max-width: 400px) {
+  p {
+    font-size: 1em;
+  }
+}
+
 li,ol,ul {
   font-size: 1.20em;
 }
@@ -509,9 +507,50 @@ h1 {
   flex-direction: row;
 }
 
+@media (max-width: 400px) {
+  .hide-400 {
+    display: none;
+  }
+}
+
+@media (max-width: 600px) {
+  .hide-600 {
+    display: none;
+  }
+}
+
+.aboutMeContainer {
+  color: black !important;
+  background: rgba(255, 255, 255, 0.8);
+  padding: 45px;
+  max-width: 480px;
+  font-size: 12pt;
+  padding-bottom: 0px;
+  margin-bottom: -30px;
+}
+
 .mePicture {
   width: 400px;
   margin: 40px;
+}
+@media (max-width: 500px) {
+  .mePicture {
+    width: 340px;
+    margin: 30px;
+  }
+  .aboutMeContainer {
+    padding: 30px;
+  }
+}
+
+@media (max-width: 400px) {
+  .mePicture {
+    width: 220px;
+    margin: 20px;
+  }
+  .aboutMeContainer {
+    padding: 20px;
+  }
 }
 
 .videoContainer {
