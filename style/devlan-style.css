@@ -62,11 +62,22 @@
 .bigPageLinkLeft {
   float: left;
   width: 30%;
-}
+} 
 
 .bigPageLinkRight {
   margin-left: 30%;
 }
+
+@media (max-width: 800px) {
+  .bigPageLinkLeft {
+    display: none;
+  } 
+  
+  .bigPageLinkRight {
+    margin-left: 0px;
+  }
+}
+
 
 .bigPageLinkRightContent {
   display: inline-block;
