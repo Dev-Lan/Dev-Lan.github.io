@@ -13,7 +13,16 @@
 {% include blogBodyStart.html %}
 
 <h1>Past Projects</h1>
+<h5>This page contains an eclectic assortment of project pages for publications, class projects, and random personal projects.</h5>
 <hr />
+
+
+{% include bigPageLink.html
+	filepath="img/bigButtons/horizon-chart.png"
+	URL="https://www.horizon-chart-explanation.devinlange.com/"
+	title="Horizon Chart Explanation"
+	description="This interactive page demonstrates how horizon chart visualizations work."
+%}
 
 {% include bigPageLink.html
 	filepath="img/bigButtons/loon.png"
@@ -77,13 +86,6 @@
 	URL="projects/game-of-life.html"
 	title="Conway's Game of Life: Pixel Scale"
 	description="The ever popular <a href='https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life'>Game of Life</a> has been fascinating computer scientists for decades. I use pixel shaders to compute the game logic and add a couple visual tweaks to create some striking visuals."
-%}
-
-{% include bigPageLink.html
-	filepath="img/bigButtons/book.png"
-	URL="ee/words.html"
-	title="Vocab Review"
-	description="A simple word review website I mocked up to review words I've added to a google spreadsheet. I also created an IFTTT applet so I can use Google Assistant to add new words I learn to the google speadsheet."
 %}
 
 {% include bigPageLink.html
