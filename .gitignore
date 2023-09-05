@@ -38,3 +38,4 @@ myData/
 *.code-workspace
 node_modules
 research/boxplot/data
+.vscode
