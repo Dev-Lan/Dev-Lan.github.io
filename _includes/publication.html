@@ -8,12 +8,13 @@
 		<div class="pubAward"><i class="fas fa-award"></i> {{include.award}}</div>
 		{% endif %}	
 		<div class="pubIconLinksContainer">
-			<button class="pubIconLink" onclick="window.location.href = '{{ include.pdfURL }}';">Paper <i class="far fa-file-pdf"></i></button>
+			<a class="pubIconLink" href={{ include.pdfURL }}>Paper <i class="far fa-file-pdf"></i></a>
 			{% if include.youTubeId %}
-			<button class="pubIconLink" onclick='onYouTubeLinkClick("{{ include.youTubeId }}")'>Video <i class="fab fa-youtube"></i></button>
+			{% capture youtubeURL %}{{ "https://www.youtube.com/watch?v=" }}{{ include.youTubeId }}{% endcapture %}
+			<a class="pubIconLink" href={{youtubeURL}}>Video <i class="fab fa-youtube"></i></a>
 			{% endif %}
 			{% if include.website %}
-			<button class="pubIconLink" onclick="window.location.href = '{{ include.website }}';">Website <i class="fa fa-globe"></i></button>
+			<a class="pubIconLink" href={{include.website }}>Website <i class="fa fa-globe"></i></a>
 			{% endif %}
 		</div>
 	</div>
