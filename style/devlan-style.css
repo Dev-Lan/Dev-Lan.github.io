@@ -23,11 +23,6 @@
   z-index: -5;
 }
 
-.homepageContainer {
-  display: flex;
-  flex-wrap: wrap-reverse;
-}
-
 .blobFilter {
   filter:url('#goo');
 }
@@ -518,40 +513,6 @@ h1 {
 @media (max-width: 600px) {
   .hide-600 {
     display: none;
-  }
-}
-
-.aboutMeContainer {
-  color: black !important;
-  background: rgba(255, 255, 255, 0.8);
-  padding: 45px;
-  max-width: 480px;
-  font-size: 12pt;
-  padding-bottom: 0px;
-  margin-bottom: -30px;
-}
-
-.mePicture {
-  width: 400px;
-  margin: 40px;
-}
-@media (max-width: 500px) {
-  .mePicture {
-    width: 340px;
-    margin: 30px;
-  }
-  .aboutMeContainer {
-    padding: 30px;
-  }
-}
-
-@media (max-width: 400px) {
-  .mePicture {
-    width: 220px;
-    margin: 20px;
-  }
-  .aboutMeContainer {
-    padding: 20px;
   }
 }
 
