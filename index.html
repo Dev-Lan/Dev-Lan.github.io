@@ -18,26 +18,21 @@
 		justify-content: center;
 	}
 
+	.outer-circle-container {
+		border-radius: 50%; /* Make the container circular */
+		margin-right: 1em;
+    	border: solid #444444 3px;
+		flex-shrink: 0;
+	}
+
 	.circle-container {
 		width: 200px; /* Set the width of the container */
 		height: 200px; /* Set the height of the container */
 		overflow: hidden; /* Hide the overflowing parts of the image */
 		border-radius: 50%; /* Make the container circular */
-		margin-right: 1em;
-		outline: solid #444444 3px;
     	border: solid white 3px;
 		flex-shrink: 0;
 	}
-
-	/* This junk is to target just safari */
-	@media not all and (min-resolution:.001dpcm) { 
-		@supports (-webkit-appearance:none) {
-			.circle-container {
-				/* rounded outlines don't work on safari :'( */
-				border-radius: 0px;
-			}
-		}
-}
 
 	.circle-image {
 		width: 100%; /* Make the image fill the container */
@@ -64,7 +59,7 @@
 
 
 	.left-column {
-		width: 560px;
+		width: 570px;
 		display: flex;
 		flex-direction: column;
 		align-items: center;
@@ -78,7 +73,7 @@
 		align-items: center;
     }
 
-    @media (max-width: 1330px) {
+    @media (max-width: 1340px) {
       .right-column {
 		width: 100%;
       }
@@ -106,8 +101,10 @@
 	
 	<div class="left-column">
 		<div class="header-container">
-			<div class="circle-container">
-				<img class="circle-image" src="./img/me/square-mountain.jpg" alt="Devin Lange in the mountainse">
+			<div class="outer-circle-container">
+				<div class="circle-container">
+					<img class="circle-image" src="./img/me/square-mountain.jpg" alt="Devin Lange in the mountainse">
+				</div>
 			</div>
 			<h1 class="hide-600" style="text-align: left;">Devin Lange</h1>
 		</div>
