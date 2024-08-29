@@ -1,143 +1,158 @@
 ---
 ---
+
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  {% include headBoilerplate.html title="Devin Lange" %}
-  <meta name="description" content="Devin Lange's personal website.">
-  <!-- <script src="scripts/circleAnimator.js"></script> -->
-  {% include navOffset.html %}
+  <head>
+    {% include headBoilerplate.html title="Devin Lange" %}
+    <meta name="description" content="Devin Lange's personal website." />
+    <!-- <script src="scripts/circleAnimator.js"></script> -->
+    {% include navOffset.html %}
 
-  <style>
-
-	body {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		height: 100vh;
-		justify-content: center;
-	}
-
-	.outer-circle-container {
-		border-radius: 50%; /* Make the container circular */
-		margin-right: 1em;
-    	border: solid #444444 3px;
-		flex-shrink: 0;
-	}
-
-	.circle-container {
-		width: 200px; /* Set the width of the container */
-		height: 200px; /* Set the height of the container */
-		overflow: hidden; /* Hide the overflowing parts of the image */
-		border-radius: 50%; /* Make the container circular */
-    	border: solid white 3px;
-		flex-shrink: 0;
-	}
-
-	.circle-image {
-		width: 100%; /* Make the image fill the container */
-		height: auto; /* Maintain the aspect ratio of the image */
-		display: block; /* Remove any default inline styling */
-	}
-
-	.header-container {
-		display: flex;
-		margin: 1em 2em;
-		align-items: center;
-	}
-
-
-	.homepageContainer {
-		display: flex;
-		flex-direction: row;
-		align-items: center;
-		flex-wrap: wrap;
-		color: black !important;
-		padding: 0px 45px;
-		font-size: 12pt;
-	}
-
-
-	.left-column {
-		width: 570px;
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		margin-right: 80px;
-    }
-
-	.right-column {
-		width: 600px;
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-    }
-
-    @media (max-width: 1340px) {
-      .right-column {
-		width: 100%;
+    <style>
+      body {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        height: 100vh;
+        justify-content: center;
       }
 
-	  .left-column {
-		margin-right: 0px;
-		width: 100%;
-	  }
-	  body {
-		height: auto;
-	  }
-    }
+      .outer-circle-container {
+        border-radius: 50%; /* Make the container circular */
+        margin-right: 1em;
+        border: solid #444444 3px;
+        flex-shrink: 0;
+      }
 
-	.max-width-600 {
-		max-width: 600px;
-	}
-</style>
-</head>
-<body>
+      .circle-container {
+        width: 200px; /* Set the width of the container */
+        height: 200px; /* Set the height of the container */
+        overflow: hidden; /* Hide the overflowing parts of the image */
+        border-radius: 50%; /* Make the container circular */
+        border: solid white 3px;
+        flex-shrink: 0;
+      }
 
-{% include navbarSimple.html %}
+      .circle-image {
+        width: 100%; /* Make the image fill the container */
+        height: auto; /* Maintain the aspect ratio of the image */
+        display: block; /* Remove any default inline styling */
+      }
 
-<div class="homepageContainer">
+      .header-container {
+        display: flex;
+        margin: 1em 2em;
+        align-items: center;
+      }
 
-	
-	<div class="left-column">
-		<div class="header-container">
-			<div class="outer-circle-container">
-				<div class="circle-container">
-					<img class="circle-image" src="./img/me/square.jpg" alt="Headshot of Devin Lange">
-				</div>
-			</div>
-			<h1 class="hide-600" style="text-align: left;">Devin Lange</h1>
-		</div>
-		
-		<div class="max-width-600" style="width: 100%; text-align: center;">
-			<a href="mailto:devinscottlange@gmail.com"><i class="fas fa-envelope"></i> devinscottlange@gmail.com</a><br>
-			<a href="https://twitter.com/Dev_Lange"><i class="fab fa-twitter"></i> Twitter</a><br>
-			<a rel="me" href="https://vis.social/@dev_lange"><i class="fab fa-mastodon"></i> Mastodon</a><br>
-			<a href="https://bsky.app/profile/devlange.bsky.social"><i class="fas fa-square"></i> Bluesky</a><br>
-			<a href="https://www.linkedin.com/in/devin-lange/"><i class="fab fa-linkedin"></i> LinkedIn</a><br>
-			<a href="https://github.com/Dev-Lan"><i class="fab fa-github"></i> GitHub</a><br>
-			<a href="https://scholar.google.com/citations?user=89FtTfUAAAAJ"><i class="fab fa-google"></i> Google Scholar</a><br>
-		</div>
-	</div>
+      .homepageContainer {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        flex-wrap: wrap;
+        color: black !important;
+        padding: 0px 45px;
+        font-size: 12pt;
+      }
 
-	<div class="right-column">	
-		<p class="max-width-600">I am a Computer Science Ph.D. candidate at the <a href="https://www.utah.edu/">University of Utah</a>
-			in the <a href="https://www.sci.utah.edu/">Scientific Computing and Imaging Institute</a>.
-			I am currently working in the <a href="https://vdl.sci.utah.edu/"> Visualization Design Lab</a>,
-			advised by <a href="https://vdl.sci.utah.edu/team/lex/">Alexander Lex</a>.
-			<br><br>
-			My research interests span various data visualization challenges. I have worked with single cell
-			microscopy data to help researchers <a href="https://loon.sci.utah.edu/">improve cancer treatment</a>, and have investigated how visualizations
-			can help <a href="https://ferret.sci.utah.edu/">review tabular datasets for falsification and fabrication</a>.
-			<br><br>
-			I thoroughly enjoy teaching, and have had the good fortune of being an instructor for
-			an Introduction to Data Structures and Algorithms course at the University of Utah.
-		</p>
-		
-		
-	</div>
-</div>
+      .left-column {
+        width: 570px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-right: 80px;
+      }
 
+      .right-column {
+        width: 600px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
 
-</body>
+      @media (max-width: 1340px) {
+        .right-column {
+          width: 100%;
+        }
+
+        .left-column {
+          margin-right: 0px;
+          width: 100%;
+        }
+        body {
+          height: auto;
+        }
+      }
+
+      .max-width-600 {
+        max-width: 600px;
+      }
+    </style>
+  </head>
+  <body>
+    {% include navbarSimple.html %}
+
+    <div class="homepageContainer">
+      <div class="left-column">
+        <div class="header-container">
+          <div class="outer-circle-container">
+            <div class="circle-container">
+              <img
+                class="circle-image"
+                src="./img/me/square.jpg"
+                alt="Headshot of Devin Lange"
+              />
+            </div>
+          </div>
+          <h1 class="hide-600" style="text-align: left">Devin Lange</h1>
+        </div>
+
+        <div class="max-width-600" style="width: 100%; text-align: center">
+          <a href="mailto:devinscottlange@gmail.com"
+            ><i class="fas fa-envelope"></i> devinscottlange@gmail.com</a
+          ><br />
+          <a href="https://www.linkedin.com/in/devin-lange/"
+            ><i class="fab fa-linkedin"></i> LinkedIn</a
+          ><br />
+          <a rel="me" href="https://vis.social/@dev_lange"
+            ><i class="fab fa-mastodon"></i> Mastodon</a
+          ><br />
+          <a href="https://bsky.app/profile/devlange.bsky.social"
+            ><i class="fas fa-square"></i> Bluesky</a
+          ><br />
+          <a href="https://github.com/Dev-Lan"
+            ><i class="fab fa-github"></i> GitHub</a
+          ><br />
+          <a href="https://scholar.google.com/citations?user=89FtTfUAAAAJ"
+            ><i class="fab fa-google"></i> Google Scholar</a
+          ><br />
+        </div>
+      </div>
+
+      <div class="right-column">
+        <p class="max-width-600">
+          I am a Computer Science Ph.D. candidate at the
+          <a href="https://www.utah.edu/">University of Utah</a> in the
+          <a href="https://www.sci.utah.edu/"
+            >Scientific Computing and Imaging Institute</a
+          >. I am currently working in the
+          <a href="https://vdl.sci.utah.edu/"> Visualization Design Lab</a>,
+          advised by
+          <a href="https://vdl.sci.utah.edu/team/lex/">Alexander Lex</a>.
+          <br /><br />
+          My research interests span various data visualization challenges. I
+          have worked with single cell microscopy data to help researchers
+          <a href="https://loon.sci.utah.edu/">improve cancer treatment</a>, and
+          have investigated how visualizations can help
+          <a href="https://ferret.sci.utah.edu/"
+            >review tabular datasets for falsification and fabrication</a
+          >. <br /><br />
+          I thoroughly enjoy teaching, and have had the good fortune of being an
+          instructor for an Introduction to Data Structures and Algorithms
+          course at the University of Utah.
+        </p>
+      </div>
+    </div>
+  </body>
 </html>
