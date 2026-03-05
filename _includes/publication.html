@@ -1,8 +1,12 @@
 <div class="pubContainer">
+	{% if include.thumbnailURL %}
 	<a class="pubThumbnailLink" href="{{ include.paperURL }}"><img class="pubThumbnail" src="{{ include.thumbnailURL }}"></a>
+	{% else %}
+	<div class="pubThumbnailLink" style="width:200px;min-width:200px;"></div>
+	{% endif %}
 	<div class="pubContentContainer">
 		<div class="pubTitleContainer"><a href="{{ include.paperURL }}">{{ include.paperTitle }}</a></div>
-		<div class="pubAuthorContainer">{{ include.authors }}</div>
+		<div class="pubAuthorContainer">{{ include.authors | replace: "Devin Lange", "<strong>Devin Lange</strong>" }}</div>
 		<div class="pubLocationContainer">In <span class="location">{{ include.locationTitle }}<span></div>
 		{% if include.award %}
 		<div class="pubAward"><i class="fas fa-award"></i> {{include.award}}</div>
